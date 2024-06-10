@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        'roboto': ['Roboto', 'sans-serif'], 
+        'rob': ['Roboto', 'sans-serif'], 
       },
       colors: {
         gray900: {
