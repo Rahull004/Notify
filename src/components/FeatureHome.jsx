@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 // import Transition from '../utils/Transition';
 
-import FeaturesBg from "../../public/features-bg.png";
+import FeaturesBg from "/features-bg.png";
 
 function FeatureHome() {
   const [tab, setTab] = useState(1);
@@ -21,7 +21,6 @@ function FeatureHome() {
 
   return (
     <section className="relative">
-    
       <div
         className="absolute inset-0 bg-gray-100 pointer-events-none mb-16"
         aria-hidden="true"
@@ -57,13 +56,12 @@ function FeatureHome() {
               </div>
               {/* Tabs buttons */}
               <div className="mb-8 md:mb-0">
-                <a
+                <div
                   className={`flex items-center text-lg p-5 rounded border transition duration-300 ease-in-out mb-3 ${
                     tab !== 1
                       ? "bg-white shadow-md border-gray-200 hover:shadow-lg"
                       : "bg-gray-200/90 border-transparent"
                   }`}
-                  href="#0"
                   onClick={(e) => {
                     e.preventDefault();
                     setTab(1);
@@ -88,14 +86,13 @@ function FeatureHome() {
                       <path d="M11.953 4.29a.5.5 0 00-.454-.292H6.14L6.984.62A.5.5 0 006.12.173l-6 7a.5.5 0 00.379.825h5.359l-.844 3.38a.5.5 0 00.864.445l6-7a.5.5 0 00.075-.534z" />
                     </svg>
                   </div>
-                </a>
-                <a
+                </div>
+                <div
                   className={`flex items-center text-lg p-5 rounded border transition duration-300 ease-in-out mb-3 ${
                     tab !== 2
                       ? "bg-white shadow-md border-gray-200 hover:shadow-lg"
                       : "bg-gray-200/90 border-transparent"
                   }`}
-                  href="#0"
                   onClick={(e) => {
                     e.preventDefault();
                     setTab(2);
@@ -123,14 +120,13 @@ function FeatureHome() {
                       />
                     </svg>
                   </div>
-                </a>
-                <a
+                </div>
+                <div
                   className={`flex items-center text-lg p-5 rounded border transition duration-300 ease-in-out mb-3 ${
                     tab !== 3
                       ? "bg-white shadow-md border-gray-200 hover:shadow-lg"
                       : "bg-gray-200/90 border-transparent"
                   }`}
-                  href="#0"
                   onClick={(e) => {
                     e.preventDefault();
                     setTab(3);
@@ -159,7 +155,7 @@ function FeatureHome() {
                       />
                     </svg>
                   </div>
-                </a>
+                </div>
               </div>
             </div>
 
