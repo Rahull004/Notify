@@ -12,7 +12,7 @@ export default {
       colors: {
         gray900: {
           DEFAULT: "#212121",
-          87: "rgba(33, 33, 33, 0.87",
+          87: "rgba(33, 33, 33, 0.87)",
           60: "rgba(33, 33, 33, 0.60)",
           36: "rgba(33, 33, 33, 0.36)",
         },
@@ -29,6 +29,7 @@ export default {
         },
         blue400: "#42A5F5",
         blue500: "#2196F3",
+        blue600: "#1E88E5",
         orange900: "#E65100",
         orange200: "#FFCC80",
         green900: "#1B5E20",
