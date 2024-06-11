@@ -18,6 +18,8 @@ export const AllNotes = () => {
     setShowNewNoteCard(false);
   };
 
+  
+
   return (
     <div className='bg-gray-200 w-screen h-screen font-rob'>
         <div className='bg-white flex p-4 items-center shadow-lg'>
