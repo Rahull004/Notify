@@ -5,6 +5,7 @@ import { Note } from './pages/Note';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
 import ResetPassword from './pages/ResetPassword';
+import SignUpCllg from './pages/SignUpCllg';
 
 export default function App() {
   return (
@@ -15,6 +16,7 @@ export default function App() {
       <Route path="/notes/:id" element={<Note />}/>
       <Route path="/signup" element={<SignUp />}/>
       <Route path="/signin" element={<SignIn />}/>
+      <Route path="/signupcllg" element={<SignUpCllg />}/>
       <Route path="/reset-password" element={<ResetPassword />}/>
     </Routes>
     </div>
