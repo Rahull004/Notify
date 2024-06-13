@@ -1,9 +1,57 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import Navbar from "../components/Navbar";
+import { createUserAccount } from "../appwrite/api";
 
 function SignUp() {
+
+  const navigate = useNavigate();
+  const [name, setname] = useState("");
+  const [email, setemail] = useState("");
+  const [password, setpassword] = useState("");
+  const searchParams = useLocation();
+  const [loading, setloading] = useState(false)
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "name") {
+      setname(value);
+    } else if (name === "email") {
+      setemail(value);
+    } else if (name === "password") {
+      setpassword(value);
+    }
+  };
+
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+    try {
+      setloading(true)
+      const user = await createUserAccount({name,email,password})
+      if(!user){
+        alert("Account cannot be created")
+      }
+
+      setloading(false)
+      console.log(user);
+
+      // navigate("/login");
+
+    } catch (error) {
+      console.log(error);
+      alert("error while creating new account");
+      return error;
+    }
+  };
+
+  const handleGoogleAuth = async (e) => {
+    e.preventDefault();
+
+    await googleAuth(searchParams.pathname);
+  };
+
+
   return (
     <div className="flex flex-col min-h-screen overflow-hidden">
       {/*  Site header */}
@@ -36,6 +84,8 @@ function SignUp() {
                       </label>
                       <input
                         id="name"
+                        onChange={handleChange}
+                        name="name"
                         type="text"
                         className="form-input w-full text-gray-800"
                         placeholder="Enter your name"
@@ -54,6 +104,8 @@ function SignUp() {
                       <input
                         id="email"
                         type="email"
+                        name="email"
+                        onChange={handleChange}
                         className="form-input w-full text-gray-800"
                         placeholder="Enter your email address"
                         required
@@ -70,6 +122,8 @@ function SignUp() {
                       </label>
                       <input
                         id="password"
+                        name="password"
+                        onChange={handleChange}
                         type="password"
                         className="form-input w-full text-gray-800"
                         placeholder="Enter your password"
@@ -79,7 +133,7 @@ function SignUp() {
                   </div>
                   <div className="flex flex-wrap -mx-3 mt-6">
                     <div className="w-full px-3">
-                      <button className="btn text-white bg-blue600 hover:bg-blue-600 w-full">
+                      <button className="btn text-white bg-blue600 hover:bg-blue-600 w-full" onClick={handleSignUp}>
                         Sign up
                       </button>
                     </div>
