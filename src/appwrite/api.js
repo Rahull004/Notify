@@ -68,8 +68,8 @@ export const googleAuth = async (path) => {
   try {
     const res = await account.createOAuth2Session(
       "google",
-      `https://scribble-k76k.vercel.app${path}`,
-      `https://scribble-k76k.vercel.app${path}`
+      `http://localhost:5173/signin`,
+      `http://localhost:5173/signin`,
     );
     console.log(res.href);
   } catch (error) {
@@ -135,7 +135,7 @@ export const getCurrentUser = async () => {
     const currentUser = await databases.listDocuments(
       appwriteConfig.databaseId,
       appwriteConfig.userId,
-      [Query.equal("accountId", currentAccount.$id)]
+      [Query.equal("accountid", currentAccount.$id)]
     );
 
     const avatar = avatars.getInitials(currentAccount.name);
@@ -177,15 +177,32 @@ export const saveNote = async (note) => {
   }
 };
 
-export const getNotes = async (id) => {
+export const getCommunityNotes = async (id) => {
   try {
     const notes = await databases.listDocuments(
       appwriteConfig.databaseId,
       appwriteConfig.noteId,
-      [Query.equal("user", id)],
+      [Query.equal("user", id), Query.equal("category", "COMMUNITY")],
       100,
       0,
       "DESC"
+    );
+    return notes;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+export const getPersonalNotes = async (id) => {
+  try {
+    const notes = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.noteId,
+      [Query.equal("user", id), Query.equal("category", "COMMUNITY")],
+      100,
+      0,
+      "DESC",
     );
     return notes;
   } catch (error) {
@@ -342,7 +359,10 @@ export const getPdfByNoteId = async (id) => {
     console.log(error);
     return error;
   }
+
+  
 };
+
 
 export const deletePdfById = async (id) => {
   try {

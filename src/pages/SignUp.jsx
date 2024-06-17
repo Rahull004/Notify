@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import Navbar from "../components/Navbar";
-import { createUserAccount } from "../appwrite/api";
+import { createUserAccount, getCurrentUser, googleAuth, saveUser } from "../appwrite/api";
 
 function SignUp() {
 
@@ -50,6 +50,31 @@ function SignUp() {
 
     await googleAuth(searchParams.pathname);
   };
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const user = await getCurrentUser();
+      console.log("user", user[0]);
+      if (user[0] === 0) {
+        const avatar = user[2];
+        const newUser = await saveUser({
+          accountid: user[1].$id,
+          email: user[1].email,
+          url: avatar,
+          fullname: user[1].name,
+        });
+        console.log("new user", newUser);
+        if (newUser) {
+          navigate("/allnotes");
+        } else {
+          alert("something went wrong");
+        }
+      } else if (user[0] !== undefined) {
+        navigate("/allnotes");
+      }
+    };
+    checkSession();
+  }, []);
 
 
   return (
@@ -169,7 +194,7 @@ function SignUp() {
                   </div>
                   <div className="flex flex-wrap -mx-3">
                     <div className="w-full px-3">
-                      <button className="btn px-0 text-white bg-red-600 hover:bg-red-700 w-full relative flex items-center">
+                      <button className="btn px-0 text-white bg-red-600 hover:bg-red-700 w-full relative flex items-center" onClick={handleGoogleAuth}>
                         <svg
                           className="w-4 h-4 fill-current text-white opacity-75 flex-shrink-0 mx-4"
                           viewBox="0 0 16 16"

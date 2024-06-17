@@ -1,9 +1,72 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import Navbar from "../components/Navbar";
+import { getCurrentUser, googleAuth, saveUser, signInAccount } from "../appwrite/api";
 
 function SignIn() {
+
+  const navigate = useNavigate();
+  const [email, setemail] = useState("");
+  const [password, setpassword] = useState("");
+  const searchParams = useLocation();
+  const [loading, setloading] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "email") {
+      setemail(value);
+    } else if (name === "password") {
+      setpassword(value);
+    }
+  };
+
+  const handleGoogleAuth = async (e) => {
+    e.preventDefault();
+
+    await googleAuth(searchParams.pathname);
+  };
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const user = await getCurrentUser();
+      console.log("user", user[0]);
+      if (user[0] === 0) {
+        const avatar = user[2];
+        const newUser = await saveUser({
+          accountid: user[1].$id,
+          email: user[1].email,
+          imageurlurl: avatar,
+          fullname: user[1].name,
+        });
+        console.log("new user", newUser);
+        if (newUser) {
+          navigate("/allnotes");
+        } else {
+          alert("something went wrong");
+        }
+      } else if (user[0] !== undefined) {
+        navigate("/allnotes");
+      }
+    };
+    checkSession();
+  }, []);
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const user = await signInAccount(email,password);
+      if (!user) {
+        alert("something went wrong");
+      }
+      navigate("/allnotes");
+    } catch (error) {
+      console.log(error);
+      return error;
+      alert("error while login");
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-screen overflow-hidden">
       {/*  Site header */}
@@ -36,6 +99,8 @@ function SignIn() {
                         Email
                       </label>
                       <input
+                        name="email"
+                        onChange={handleChange}
                         id="email"
                         type="email"
                         className="form-input w-full text-gray-800"
@@ -61,6 +126,8 @@ function SignIn() {
                         </Link>
                       </div>
                       <input
+                        name="password"
+                        onChange={handleChange}
                         id="password"
                         type="password"
                         className="form-input w-full text-gray900"
@@ -83,7 +150,7 @@ function SignIn() {
                   </div>
                   <div className="flex flex-wrap -mx-3 mt-6">
                     <div className="w-full px-3">
-                      <button className="btn text-white bg-blue600 hover:bg-blue-600 w-full">
+                      <button className="btn text-white bg-blue600 hover:bg-blue-600 w-full" onClick={handleLogin}>
                         Sign in
                       </button>
                     </div>
@@ -119,7 +186,7 @@ function SignIn() {
                   </div>
                   <div className="flex flex-wrap -mx-3">
                     <div className="w-full px-3">
-                      <button className="btn px-0 text-white bg-red-600 hover:bg-red-700 w-full relative flex items-center">
+                      <button className="btn px-0 text-white bg-red-600 hover:bg-red-700 w-full relative flex items-center" onClick={handleGoogleAuth}>
                         <svg
                           className="w-4 h-4 fill-current text-white opacity-75 flex-shrink-0 mx-4"
                           viewBox="0 0 16 16"
