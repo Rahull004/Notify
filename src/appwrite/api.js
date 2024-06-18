@@ -182,10 +182,10 @@ export const getCommunityNotes = async (id) => {
     const notes = await databases.listDocuments(
       appwriteConfig.databaseId,
       appwriteConfig.noteId,
-      [Query.equal("user", id), Query.equal("category", "COMMUNITY")],
+      [Query.equal("user", id), Query.equal("category", "Community")],
       100,
       0,
-      "DESC"
+      "DESC",
     );
     return notes;
   } catch (error) {
@@ -199,7 +199,7 @@ export const getPersonalNotes = async (id) => {
     const notes = await databases.listDocuments(
       appwriteConfig.databaseId,
       appwriteConfig.noteId,
-      [Query.equal("user", id), Query.equal("category", "COMMUNITY")],
+      [Query.equal("user", id), Query.equal("category", "Personal")],
       100,
       0,
       "DESC",

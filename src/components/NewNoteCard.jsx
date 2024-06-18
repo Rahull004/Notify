@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { saveNote } from '../appwrite/api';
+import { getCurrentUser, saveNote, saveUser } from '../appwrite/api';
+import { avatars } from '../appwrite/config';
 
 
 export const NewNoteCard = () => {
@@ -22,10 +23,41 @@ export const NewNoteCard = () => {
     setIsOpen(false);
   };
 
+  useEffect(()=> {
+    const getUser = async () => {
+      try {
+         const data = await getCurrentUser();
+         const account = data[1];
+         const user = data[3];
+         if (!account) {
+           navigate("/login");
+           return;
+         }
+         if (!user) {
+           const accountId = account.$id;
+           const avatar = avatars.getInitials(account.name);
+           const newUser = await saveUser({
+             accountid: accountId,
+             email: account.email,
+             url: avatar,
+             fullname: account.name,
+           });
+           setUser(newUser);
+          }
+          setUser(user);
+         } catch (error) {
+        console.log(error);
+      }
+    }
+    getUser();
+  
+  })
+
+
    const handleNewNote = async () => {
     try {
       const note = await saveNote({
-        user: "6667789300094fcbd736",
+        user: user?.$id,
         title: title,
         category: selectedOption,
         description: description,
