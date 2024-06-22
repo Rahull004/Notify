@@ -97,6 +97,28 @@ export const getSession = async () => {
   }
 };
 
+{/* export const changeUserPassword = async (newPassword) => {
+  try {
+      const response = await account.updatePassword(newPassword);
+      return response;
+  } catch (error) {
+      console.log(error);
+      return error;
+  }
+};
+
+
+export const changeUserName = async (newUsername) => {
+  try {
+      const response = await account.updateName(newUsername);
+      return response;
+  } catch (error) {
+      console.log(error);
+      return error;
+  }
+};
+*/}
+
 export const passwordEmail = async (email) => {
   try {
     const response = await account.createRecovery(

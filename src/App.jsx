@@ -7,6 +7,8 @@ import SignUp from './pages/SignUp';
 import ResetPassword from './pages/ResetPassword';
 import SignUpCllg from './pages/SignUpCllg';
 import TiptapEditor from './Editor/Tiptap';
+import ChatbotPopup from './components/Chatbot/ChatbotPopup';
+import ProfilePage from './pages/ProfilePage';
 
 export default function App() {
   return (
@@ -20,7 +22,10 @@ export default function App() {
       <Route path="/note/:id" element={<TiptapEditor />} />
       <Route path="/signupcllg" element={<SignUpCllg />}/>
       <Route path="/reset-password" element={<ResetPassword />}/>
+      <Route path="/profile" element={<ProfilePage />}/>
+
     </Routes>
+    {/*<ChatbotPopup />*/}
     </div>
   )
 }
