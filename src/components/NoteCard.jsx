@@ -13,23 +13,31 @@ export const NoteCard = (note) => {
     }
   }
 
+  console.log(note.note.category);
+
   const handleEditClick = () => {
-    navigate(`/notes/${id}`)
+    navigate(`/note/${id}`)
   }
+
+  let isoString = "2024-06-18T00:05:05.665+00:00";
+  let date = new Date(isoString);
+  console.log(date);
 
 
   return (
     <div>
       <div className="bg-white py-4 px-5 rounded-lg shadow-lg">
         <div className="flex items-center justify-between">
-          <h1 className="text-[12px] py-2 px-3 bg-orange-200 rounded-3xl">
+          <h1
+            className={`text-[12px] py-2 px-3 ${note.note.category === "Community" ? "bg-green-200" : "bg-orange-200"} rounded-3xl`}
+          >
             {note.note.category.toUpperCase()}
           </h1>
-          <div className="flex gap-4">
-            <Link to={`/note/${note.note.$id}`} onClick={()=>handleEditClick}>
+          <div className="flex gap-8">
+            <Link to={`/note/${note.note.$id}`} onClick={() => handleEditClick}>
               <img src="../../public/Edit.png" alt="" className="w-4 h-4" />
             </Link>
-            <button onClick={()=>handleDelete(note.note.$id)}>
+            <button onClick={() => handleDelete(note.note.$id)}>
               <img src="../../public/Delete.png" alt="" className="w-5 h-5" />
             </button>
           </div>
@@ -39,7 +47,10 @@ export const NoteCard = (note) => {
           <p className="text-gray-500 text-sm truncate">
             {note.note.description}
           </p>
-          <p className="text-sm text-gray-500/70 text-end py-2">Date</p>
+          <div className='flex justify-between'>
+            <p className="text-sm text-gray-500/70 text-end py-2">{note.note.user.fullname}</p>
+            <p className="text-sm text-gray-500/70 text-end py-2">{note.note.$createdAt.substring(0,10)}</p>
+          </div>
         </div>
       </div>
     </div>

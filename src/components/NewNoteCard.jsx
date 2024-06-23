@@ -62,7 +62,7 @@ export const NewNoteCard = () => {
         category: selectedOption,
         description: description,
       });
-      navigate(`/notes/${note.$id}`);
+      navigate(`/note/${note.$id}`);
     } catch (error) {
       console.log(error);
     }
