@@ -62,12 +62,12 @@ export const AllNotes = () => {
   };
 
   return (
-    <div className="bg-gray-200 w-screen h-screen font-rob">
+    <div className="bg-gray200 w-screen h-screen font-rob">
       <div className="bg-white flex p-4 items-center shadow-lg">
         <div className="w-full flex items-center gap-4 px-8">
           <div className="relative mx-auto w-full">
             <input
-              className="bg-gray-200 w-full py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 pl-10"
+              className="bg-gray200 w-full py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue400 pl-10"
               type="text"
               placeholder="Search"
             />
@@ -78,7 +78,7 @@ export const AllNotes = () => {
             />
           </div>
           <button
-            className="bg-blue-400 px-4 rounded-3xl py-2 md:py-3  w-24 md:w-28 text-white"
+            className="bg-blue400 px-4 rounded-3xl py-2 md:py-3  w-24 md:w-28 text-white"
             onClick={handleAddClick}
           >
             + Add
@@ -88,18 +88,18 @@ export const AllNotes = () => {
 
       <div>
         <div className="flex justify-between mt-6 px-12 flex-col items-start gap-8">
-          <h1 className="text-2xl font-semibold">Your notes</h1>
+          <h1 className="text-2xl font-semibold text-gray900">Your notes</h1>
           <div className="flex">
             <div>
               <div>
                 <button
-                  className={`mr-4 ${activeTab === "PERSONAL" ? "text-blue-500" : "text-gray-500"}`}
+                  className={`mr-4 ${activeTab === "PERSONAL" ? "text-blue500" : "text-gray900-60"}`}
                   onClick={() => handleTabClick("PERSONAL")}
                 >
                   PERSONAL
                 </button>
                 <button
-                  className={`mx-4 ${activeTab === "COMMUNITY" ? "text-blue-500" : "text-gray-500"}`}
+                  className={`mx-4 ${activeTab === "COMMUNITY" ? "text-blue500" : "text-gray900-60"}`}
                   onClick={() => handleTabClick("COMMUNITY")}
                 >
                   COMMUNITY
@@ -107,13 +107,13 @@ export const AllNotes = () => {
               </div>
               {activeTab === "PERSONAL" ? (
                 <div className="flex">
-                  <div className="border-[1px] border-blue-300 w-1/2"></div>
+                  <div className="border-[1px] border-blue400 w-1/2"></div>
                   <div className="border-[1px] border-black/10 w-1/2"></div>
                 </div>
               ) : (
                 <div className="flex">
                   <div className="border-[1px] border-black/10 w-1/2"></div>
-                  <div className="border-[1px] border-blue-300 w-1/2"></div>
+                  <div className="border-[1px] border-blue400 w-1/2"></div>
                 </div>
               )}
             </div>
@@ -130,7 +130,7 @@ export const AllNotes = () => {
       </div>
 
       {showNewNoteCard && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 w-full h-full">
+        <div className="fixed inset-0 bg-black bg-opacity-35 z-50 w-full h-full">
           <NewNoteCard />
         </div>
       )}
