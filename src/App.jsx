@@ -25,7 +25,7 @@ export default function App() {
       <Route path="/profile" element={<ProfilePage />}/>
 
     </Routes>
-    {/*<ChatbotPopup />*/}
+    <ChatbotPopup />
     </div>
   )
 }
