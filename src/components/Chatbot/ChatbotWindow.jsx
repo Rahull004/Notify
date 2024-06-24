@@ -2,7 +2,8 @@ import React, { useState,useEffect,useRef } from 'react';
 import axios from 'axios';
 import './ChatbotWindow.css'; // Import necessary styles
 import SendIcon from '@mui/icons-material/Send';
-import SmartToyIcon from '@mui/icons-material/SmartToy';
+import { RiRobot2Fill } from "react-icons/ri";
+
 
 const ChatbotWindow = () => {
   const [messages, setMessages] = useState([{text: 'Hey there! Have any questions?', sender: 'bot'}]);
@@ -74,7 +75,7 @@ const newChat = () => {
     <div className="chatbot-window">
       <div className="chatbot-header">
         <div className='chatbot-header-left'>
-        <SmartToyIcon />
+        <RiRobot2Fill style={{ fontSize: '25px' }} />
         <div className="chatbot-header-side">
         <span className='bot-name'>Skribbl</span>
         {running && <span className="chatbot-header-light">Generating...</span> }

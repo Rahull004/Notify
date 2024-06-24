@@ -81,7 +81,7 @@
   
   
   .chatbot-message.user {
-    background: linear-gradient(to right, #F06292, #536DFE);
+    background: linear-gradient(to right, #F06292 35%, #536DFE 75%);
     color: #fff;
     align-self: flex-start;
     margin-left:0;
@@ -98,13 +98,13 @@
     color: #333;
     align-self: flex-end;
     border-radius: 15px;
-    border-bottom-right-radius: 0px;
+    border-top-right-radius: 0px;
     margin-right:0;
     margin-left:auto;
     margin-bottom: 15px;
     padding: 19px;
   }
-  
+
   .chatbot-input-container {
     display: flex;
     border-top: 1px solid #ccc;
