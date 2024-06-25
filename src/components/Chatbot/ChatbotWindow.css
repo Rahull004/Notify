@@ -21,20 +21,20 @@
   flex: 1;
   background-color: white;
   overflow-y: scroll;
+  font-size: 15px;
 }
 
 .chatbot-header {
   color: white;
-  padding: 20px;
+  padding: 18px;
   margin: 0 10px;
   display: flex;
-
   align-items: center;
   justify-content: space-between;
   font-family: "Roboto", sans-serif;
   font-weight: 400;
   font-style: normal;
-  font-size: 18px;
+  font-size: 17px;
 }
 
 .chatbot-header-left {
@@ -49,7 +49,7 @@
 
 .chatbot-header SmartToyIcon {
   margin-right: 80px;
-  size: 40px;
+  size: 35px;
 }
 
 .chatbot-header-side {
@@ -60,12 +60,12 @@
 
 .bot-name {
   font-weight: 450;
-  font-size: 20px;
+  font-size: 18px;
 }
 
 .chatbot-header-light {
   color: wheat;
-  font-size: 15px;
+  font-size: 14px;
 }
 
 .chatbot-header button {
@@ -79,9 +79,8 @@
 }
 
 
-
 .chatbot-message.user {
-  background: linear-gradient(to right, #3B82F6 35%, #2DD4BF 75%);
+  background: linear-gradient(to right, #3B82F6, #2DD4BF);
   color: #fff;
   align-self: flex-start;
   margin-left: 0;
@@ -89,8 +88,8 @@
   width: fit-content;
   border-radius: 15px;
   border-top-left-radius: 0;
-  margin-bottom: 15px;
-  padding: 12px;
+  margin-bottom: 10px;
+  padding: 10px;
 }
 
 .chatbot-message.bot {
@@ -101,16 +100,17 @@
   border-top-right-radius: 0px;
   margin-right: 0;
   margin-left: auto;
-  margin-bottom: 15px;
-  padding: 19px;
+  margin-bottom: 10px;
+  padding: 14px;
 }
 
 .chatbot-input-container {
   display: flex;
   border-top: 1px solid #ccc;
-  padding: 10px;
+  padding: 5px;
   background: linear-gradient(to right, #3B82F6, #2DD4BF);
   border-radius: 10px;
+  font-size: 15px;
 }
 
 .chatbot-input-container input[type='text'] {
