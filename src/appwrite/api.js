@@ -78,6 +78,20 @@ export const googleAuth = async (path) => {
   }
 };
 
+export const githubAuth = async (path) => {
+  try {
+    const res = await account.createOAuth2Session(
+      "github",
+      `http://localhost:5173/signin`,
+      `http://localhost:5173/signin`,
+    );
+    console.log(res.href);
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
 export const getSession = async () => {
   try {
     const session = account.getSession("current");
@@ -123,7 +137,7 @@ export const passwordEmail = async (email) => {
   try {
     const response = await account.createRecovery(
       email,
-      "https://scribble-k76k.vercel.app/forgetPassword"
+      "http://localhost:5173/forgetpassword",
     );
     return response;
   } catch (error) {

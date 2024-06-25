@@ -5,6 +5,8 @@ import Navbar from "../components/Navbar";
 import { getCurrentUser, saveUser } from "../appwrite/api";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { MdOutlineDriveFileRenameOutline } from "react-icons/md";
+import { useUserContext } from "../AuthContext";
+import { account } from "../appwrite/config";
 
 function ProfilePage() {
   const navigate = useNavigate();
@@ -17,6 +19,30 @@ function ProfilePage() {
   const [newImageUrl, setnewImageUrl] = useState("");
   const searchParams = useLocation();
   const [loading, setloading] = useState(false);
+  const [isGoogle, setIsGoogle] = useState(false);
+
+  const { user, isLoading } = useUserContext();
+
+  useEffect(()=> {
+    const getAccDetails = async () => {
+      try {
+        const accountDetails = await account.getSession("current");
+        if(accountDetails.provider === "google") {
+          setIsGoogle(true);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getAccDetails();
+
+  },[])
+   
+
+  if(user.email==="" && !isLoading) {
+    navigate("/signin");
+  }
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -109,10 +135,14 @@ function ProfilePage() {
     }
   };
 
+  if(isLoading) {
+    return <div>Loading...</div>
+  }
+
   return (
     <div className="flex flex-col min-h-screen overflow-hidden">
       {/*  Site header */}
-      <Navbar />
+      {/* <Navbar /> */}
 
       {/*  Page content */}
       <main className="flex-grow">
@@ -123,9 +153,9 @@ function ProfilePage() {
 
               <div className="max-w-3xl mx-auto text-center pb-12 md:pb-20 flex justify-center items-center flex-col">
                 <label className="cursor-pointer">
-                  {newImageUrl ? (
+                  {user.url ? (
                     <img
-                      src={newImageUrl}
+                      src={user.url}
                       alt="Profile"
                       className="rounded-full w-[30vh] h-[30vh]"
                     />
@@ -144,8 +174,8 @@ function ProfilePage() {
                   />
                 </label>
                 <br />
-                <h1 className="h1">UserNAME</h1>
-                <h2 className="h2">@username</h2>
+                <h1 className="h1">{user.fullname}</h1>
+                <h2 className="h2">{user.email}</h2>
               </div>
 
               {/* Form */}
@@ -165,18 +195,18 @@ function ProfilePage() {
                     </div>
                   </div>
                   {showChangeUsernameForm && (
-                    <div className="flex flex-wrap -mx-3 mb-3">
-                      <div className="w-full px-3">
+                    <div className="flex flex-col w-full">
+                      <div className="w-full">
                         <input
                           type="text"
                           name="newUsername"
                           placeholder="New Username"
                           value={newUsername}
                           onChange={handleChange}
-                          className="form-input w-full"
+                          className="w-full"
                         />
                       </div>
-                      <div className="w-full px-3 mt-3">
+                      <div className="w-full mt-3">
                         <button
                           className="btn text-white bg-blue-600 hover:bg-blue-700 w-full"
                           onClick={handleChangeUsername}
@@ -186,19 +216,21 @@ function ProfilePage() {
                       </div>
                     </div>
                   )}
-                  <div className="flex flex-wrap -mx-3 mb-3">
-                    <div className="w-full px-3">
-                      <button
-                        className="btn px-0 text-white bg-red-600 hover:bg-red-700 w-full relative flex items-center"
-                        onClick={passwordForm}
-                      >
-                        <RiLockPasswordLine className="h-[25px] w-[25px]" />
-                        <span className="flex-auto pl-16 pr-8 -ml-16">
-                          Change Passsword
-                        </span>
-                      </button>
+                  {!isGoogle && (
+                    <div className="flex flex-wrap -mx-3 mb-3">
+                      <div className="w-full px-3">
+                        <button
+                          className="btn px-0 text-white bg-red-600 hover:bg-red-700 w-full relative flex items-center"
+                          onClick={passwordForm}
+                        >
+                          <RiLockPasswordLine className="h-[25px] w-[25px]" />
+                          <span className="flex-auto pl-16 pr-8 -ml-16">
+                            Change Passsword
+                          </span>
+                        </button>
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   {showChangePasswordForm && (
                     <div className="flex flex-wrap -mx-3 mb-3">

@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import Navbar from "../components/Navbar";
 import { getCurrentUser, googleAuth, saveUser, signInAccount } from "../appwrite/api";
+import { useUserContext } from "../AuthContext";
 
 function SignIn() {
 
@@ -11,6 +12,7 @@ function SignIn() {
   const [password, setpassword] = useState("");
   const searchParams = useLocation();
   const [loading, setloading] = useState(false);
+  const {user,isLoading} = useUserContext()
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -27,30 +29,36 @@ function SignIn() {
     await googleAuth(searchParams.pathname);
   };
 
-  useEffect(() => {
-    const checkSession = async () => {
-      const user = await getCurrentUser();
-      console.log("user", user[0]);
-      if (user[0] === 0) {
-        const avatar = user[2];
-        const newUser = await saveUser({
-          accountid: user[1].$id,
-          email: user[1].email,
-          imageurlurl: avatar,
-          fullname: user[1].name,
-        });
-        console.log("new user", newUser);
-        if (newUser) {
-          navigate("/allnotes");
-        } else {
-          alert("something went wrong");
-        }
-      } else if (user[0] !== undefined) {
-        navigate("/allnotes");
-      }
-    };
-    checkSession();
-  }, []);
+  // useEffect(() => {
+  //   const checkSession = async () => {
+  //     const user = await getCurrentUser();
+  //     console.log("user", user[0]);
+  //     if (user[0] === 0) {
+  //       const avatar = user[2];
+  //       const newUser = await saveUser({
+  //         accountid: user[1].$id,
+  //         email: user[1].email,
+  //         imageurlurl: avatar,
+  //         fullname: user[1].name,
+  //       });
+  //       console.log("new user", newUser);
+  //       if (newUser) {
+  //         navigate("/allnotes");
+  //       } else {
+  //         alert("something went wrong");
+  //       }
+  //     } else if (user[0] !== undefined) {
+  //       navigate("/allnotes");
+  //     }
+  //   };
+  //   checkSession();
+  // }, []);
+
+   if(user.email !== "" && !isLoading) {
+    navigate("/allnotes");
+  }
+
+
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -63,9 +71,12 @@ function SignIn() {
     } catch (error) {
       console.log(error);
       return error;
-      alert("error while login");
     }
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="flex flex-col min-h-screen overflow-hidden">
@@ -119,7 +130,7 @@ function SignIn() {
                           Password
                         </label>
                         <Link
-                          to="/reset-password"
+                          to="/forgetpassword/email"
                           className="text-sm font-medium text-blue600 hover:underline"
                         >
                           Having trouble signing in?
