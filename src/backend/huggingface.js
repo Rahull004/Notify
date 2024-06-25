@@ -18,7 +18,7 @@ app.post('/generate', async (req, res) => {
   const inference = new HfInference(HF_TOKEN);
 
   const parameters = {
-      max_length: 100, // Maximum length of the generated text
+      max_length: 200, // Maximum length of the generated text
       num_return_sequences: 1, // Number of generated sequences
       temperature: 0.3, // Lower temperature for more deterministic output
       top_p: 0.9, // Only consider the top 90% probability mass

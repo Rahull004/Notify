@@ -12,12 +12,15 @@ const ChatbotPopup = () => {
   };
 
   return (
+    <div>
     <div className="chatbot-popup">
+      {isOpen && <ChatbotWindow />} 
       <button className="chatbot-toggle h-[60px] w-[60px] flex justify-center items-center" onClick={toggleChatbot}>
-        {isOpen ? <ExpandMoreIcon className='open'/> : ( <><AssistantIcon className='close'/> </>)} 
-      </button>
-      {isOpen && <ChatbotWindow />}
+         <AssistantIcon className='closed'/>
+      </button> 
     </div>
+    
+    </div>  
   );
 };
 

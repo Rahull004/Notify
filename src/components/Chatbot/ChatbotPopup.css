@@ -1,7 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
+@keyframes popupAnimation {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
 
 .chatbot-popup {
+  display: flex;
   position: fixed;
   bottom: 20px;
   right: 20px;
@@ -9,7 +20,9 @@
   font-family: "Roboto", sans-serif;
   font-weight: 400;
   font-style: normal;
-
+  flex-direction: column;
+  align-items: flex-end;
+  
 }
 
 .chatbot-toggle {
@@ -25,22 +38,6 @@
   font-size: 20px;
 }
 
-.chatbot-toggle.open {
-  padding: 0px;
-  /* Reduced padding */
-  margin: 0px;
-  background: linear-gradient(to right, #3B82F6, #2DD4BF);
-  color: white;
-  border: none;
-  border-radius: 50px;
-  font-size: 16px;
-  /* Reduced font size */
-  cursor: pointer;
-  width: 100px;
-  /* New width for a smaller button */
-  height: 40px;
-  /* New height for a smaller button */
-}
 
 .chatbot-window {
   background-color: white;
@@ -50,6 +47,8 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  margin:5px 5px;
+  animation: popupAnimation 0.2s ease-out ;
 }
 
 .chatbot-messages {

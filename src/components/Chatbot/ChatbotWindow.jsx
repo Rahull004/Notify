@@ -59,12 +59,15 @@ const ChatbotWindow = () => {
   }, []);
 
   useEffect(() => {
-    const welcomeMessage = {
-      text: "Hey there! Have any questions?",
-      sender: "bot",
+    const handleBeforeUnload = () => {
+      localStorage.removeItem("chatMessages");
     };
-    setMessages([welcomeMessage]);
-    localStorage.removeItem("chatMessages");
+  
+    window.addEventListener("beforeunload", handleBeforeUnload);
+  
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
   }, []);
 
   useEffect(() => {
