@@ -11,6 +11,17 @@
   }
 }
 
+@keyframes popoutAnimation {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+}
+
 .chatbot-popup {
   display: flex;
   position: fixed;
@@ -38,17 +49,25 @@
   font-size: 20px;
 }
 
+.show{
+animation: popupAnimation 0.2s ease-out ;
+}
+
+.hide{
+  animation: popoutAnimation 0.2s ease-out forwards;
+}
+
 
 .chatbot-window {
   background-color: white;
   border-radius: 20px;
-  width: 400px;
-  height: 500px;
+  width: 350px;
+  height: 450px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   margin:5px 5px;
-  animation: popupAnimation 0.2s ease-out ;
+  
 }
 
 .chatbot-messages {
