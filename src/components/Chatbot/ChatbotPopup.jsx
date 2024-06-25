@@ -13,8 +13,8 @@ const ChatbotPopup = () => {
 
   return (
     <div className="chatbot-popup">
-      <button className="chatbot-toggle" onClick={toggleChatbot}>
-        {isOpen ? <ExpandMoreIcon className='open'/> : ( <><AssistantIcon className='close'/>  Skribbl! </>)} 
+      <button className="chatbot-toggle h-[60px] w-[60px] flex justify-center items-center" onClick={toggleChatbot}>
+        {isOpen ? <ExpandMoreIcon className='open'/> : ( <><AssistantIcon className='close'/> </>)} 
       </button>
       {isOpen && <ChatbotWindow />}
     </div>
