@@ -446,7 +446,7 @@ const EditorComponent = ({ content, id }) => {
 
 
   return (
-    <div className="editor">
+    <div className="editor mt-4">
       {editor && (
         <FloatingMenu
           className="floating-menu"
