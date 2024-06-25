@@ -67,7 +67,7 @@ export const AllNotes = () => {
         <div className="w-full flex items-center gap-4 px-8">
           <div className="relative mx-auto w-full">
             <input
-              className="bg-gray200 w-full py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue400 pl-10"
+              className="bg-gray200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue400 placeholder:pl-6"
               type="text"
               placeholder="Search"
             />
@@ -121,7 +121,7 @@ export const AllNotes = () => {
         </div>
       </div>
 
-      <div className="px-12 mt-10 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
+      <div className="px-12 mt-10 grid grid-cols-2 max-sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
         {activeTab === "PERSONAL"
           ? personalNotes.map((note) => <NoteCard key={note.$id} note={note} />)
           : communityNotes.map((note) => (
