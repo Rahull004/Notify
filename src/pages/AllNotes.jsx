@@ -60,6 +60,8 @@ export const AllNotes = () => {
     navigate("/signin");
   }
 
+  console.log(user);
+
   return (
     <div className="bg-gray200 w-screen h-screen font-rob">
       <div className="bg-white flex p-4 items-center shadow-lg">
