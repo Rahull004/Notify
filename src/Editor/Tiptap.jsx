@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import EditorComponent from "./Editor";
-
+import EditorNavbar from "../components/EditorNavbar";
 import React from "react";
 
 
@@ -8,7 +8,8 @@ const TiptapEditor = () => {
 
   return (
     <>
-      <div className="TiptapEditor">
+      <div className="">
+        <EditorNavbar />
         <EditorComponent />
       </div>
     </>
