@@ -1,513 +1,482 @@
-import React, { useState } from "react";
-import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
-import { common, createLowlight } from "lowlight";
-import css from "highlight.js/lib/languages/css";
-import Underline from "@tiptap/extension-underline";
-import Italic from "@tiptap/extension-italic";
-import Strike from "@tiptap/extension-strike";
-import Subscript from "@tiptap/extension-subscript";
-import Superscript from "@tiptap/extension-superscript";
-import Highlight from "@tiptap/extension-highlight";
+import "./styles.scss";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { EditorContent } from "@tiptap/react";
-import Link from "@tiptap/extension-link";
 
-import { Extension } from "@tiptap/react";
-import { useEditor, FloatingMenu } from "@tiptap/react";
-import { useCallback } from "react";
-import Heading from "@tiptap/extension-heading";
-import BulletList from "@tiptap/extension-bullet-list";
-import ListItem from "@tiptap/extension-list-item";
-import Document from "@tiptap/extension-document";
-import Dropcursor from "@tiptap/extension-dropcursor";
-import Image from "@tiptap/extension-image";
-import Paragraph from "@tiptap/extension-paragraph";
-import Text from "@tiptap/extension-text";
-import History from "@tiptap/extension-history";
-import Youtube from "@tiptap/extension-youtube";
-import Bold from "@tiptap/extension-bold";
-import { useEffect } from "react";
+import { Icons } from "../components/icons.jsx";
+import {
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarTrigger,
+} from "../components/ui/menubar";
+import { TiptapContext } from "../contexts/tiptap_context";
 
-import "./editor.css";
-
-import { IconContext } from "react-icons";
-import { LuHeading1 } from "react-icons/lu";
-import { LuHeading2 } from "react-icons/lu";
-
-import Button from "@mui/material/Button";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import LockIcon from "@mui/icons-material/Lock";
-import LockOpenIcon from "@mui/icons-material/LockOpen";
-import AddLinkIcon from "@mui/icons-material/AddLink";
-import CodeIcon from "@mui/icons-material/Code";
-import FormatBoldIcon from "@mui/icons-material/FormatBold";
-import FormatItalicIcon from "@mui/icons-material/FormatItalic";
-import FormatUnderlinedIcon from "@mui/icons-material/FormatUnderlined";
-import BorderColorIcon from "@mui/icons-material/BorderColor";
-import FormatStrikethroughIcon from "@mui/icons-material/FormatStrikethrough";
-import TextIncreaseIcon from "@mui/icons-material/TextIncrease";
-import TextDecreaseIcon from "@mui/icons-material/TextDecrease";
-import SuperscriptIcon from "@mui/icons-material/Superscript";
-import SubscriptIcon from "@mui/icons-material/Subscript";
-import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
-import LinkOffIcon from "@mui/icons-material/LinkOff";
-import InsertLinkIcon from "@mui/icons-material/InsertLink";
-import YouTubeIcon from "@mui/icons-material/YouTube";
-import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
-
-
-// import renderItems from "./suggestion/renderitems";
-
-// Create lowlight instance with common languages
-const lowlight = createLowlight(common);
-
-// Register the languages with lowlight
-lowlight.register("css", css);
-// console.log("====================================");
-// console.log(lowlight.registered("css"));
-// console.log("====================================");
-
-export const FontSize = Extension.create({
-  name: "fontSize",
-  addOptions() {
-    return {
-      types: ["textStyle"],
-    };
+const TableMenu = ({ editor }) => [
+  {
+    id: 1,
+    name: 'Insert Table',
+    action: () =>
+      editor
+        .chain()
+        .focus()
+        .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
+        .run(),
   },
-  addGlobalAttributes() {
-    return [
-      {
-        types: this.options.types,
-        attributes: {
-          fontSize: {
-            default: null,
-            parseHTML: (element) =>
-              element.style.fontSize.replace(/['"]+/g, ""),
-            renderHTML: (attributes) => {
-              if (!attributes.fontSize) {
-                return {};
-              }
-              return {
-                style: `font-size: ${attributes.fontSize}`,
-              };
-            },
-          },
-        },
-      },
-    ];
+  {
+    id: 2,
+    name: 'Add Column Before',
+    action: () => editor.chain().focus().addColumnBefore().run(),
   },
-  addCommands() {
-    return {
-      setFontSize:
-        (fontSize) =>
-        ({ chain }) => {
-          return chain()
-            .setMark("textStyle", { fontSize: fontSize + "px" })
-            .run();
-        },
-      unsetFontSize:
-        () =>
-        ({ chain }) => {
-          return chain()
-            .setMark("textStyle", { fontSize: null })
-            .removeEmptyTextStyle()
-            .run();
-        },
-    };
+  {
+    id: 3,
+    name: 'Add Column After',
+    action: () => editor.chain().focus().addColumnAfter().run(),
   },
-});
+  {
+    id: 4,
+    name: 'Delete Column',
+    action: () => editor.chain().focus().deleteColumn().run(),
+  },
+  {
+    id: 5,
+    name: 'Add Row Before',
+    action: () => editor.chain().focus().addRowBefore().run(),
+  },
+  {
+    id: 6,
+    name: 'Add Row After',
+    action: () => editor.chain().focus().addRowAfter().run(),
+  },
+  {
+    id: 7,
+    name: 'Delete Row',
+    action: () => editor.chain().focus().deleteRow().run(),
+  },
+  {
+    id: 8,
+    name: 'Delete Table',
+    action: () => editor.chain().focus().deleteTable().run(),
+  },
+  {
+    id: 9,
+    name: 'Merge Cells',
+    action: () => editor.chain().focus().mergeCells().run(),
+  },
+  {
+    id: 11,
+    name: 'Toggle Header Column',
+    action: () => editor.chain().focus().toggleHeaderColumn().run(),
+  },
+  {
+    id: 12,
+    name: 'Toggle Header Row',
+    action: () => editor.chain().focus().toggleHeaderRow().run(),
+  },
+  {
+    id: 13,
+    name: 'Toggle Header Cell',
+    action: () => editor.chain().focus().toggleHeaderCell().run(),
+  },
+  {
+    id: 14,
+    name: 'Merge Or Split',
+    action: () => editor.chain().focus().mergeOrSplit().run(),
+  },
+  {
+    id: 15,
+    name: 'Set Cell Attribute',
+    action: () => editor.chain().focus().setCellAttribute('colspan', 2).run(),
+  },
+];
+const MenuBarIcon = ({ editor }) => [
+  {
+    id: 1,
+    name: 'bold',
+    icon: Icons.bold,
+    onClick: () => editor.chain().focus().toggleBold().run(),
+    disable: !editor.can().chain().focus().toggleBold().run(),
+    isActive: editor.isActive('bold') ? 'is-active text-green-700' : '',
+    hover: false,
+    split: false,
+  },
+  {
+    id: 2,
+    name: 'italic',
+    icon: Icons.italic,
+    onClick: () => editor.chain().focus().toggleItalic().run(),
+    disable: !editor.can().chain().focus().toggleItalic().run(),
+    isActive: editor.isActive('italic') ? 'is-active text-green-700' : '',
+    hover: false,
+    split: false,
+  },
+  {
+    id: 21,
+    name: 'underline',
+    icon: Icons.underline,
+    onClick: () => editor.chain().focus().toggleUnderline().run(),
+    disable: false,
+    isActive: editor.isActive('underline') ? 'is-active text-green-700' : '',
+    hover: false,
+    split: false,
+  },
+  {
+    id: 3,
+    name: 'strike',
+    icon: Icons.strikethrough,
+    onClick: () => editor.chain().focus().toggleStrike().run(),
+    disable: !editor.can().chain().focus().toggleStrike().run(),
+    isActive: editor.isActive('strike') ? 'is-active text-green-700' : '',
+    hover: false,
+    split: false,
+  },
+  {
+    id: 4,
+    name: 'code',
+    icon: Icons.code,
+    onClick: () => editor.chain().focus().toggleCode().run(),
+    disable: !editor.can().chain().focus().toggleCode().run(),
+    isActive: editor.isActive('code') ? 'is-active text-green-700' : '',
+    hover: false,
+    split: true,
+  },
+  {
+    id: 5,
+    name: 'heading1',
+    icon: Icons.h1,
+    onClick: () => editor.chain().focus().toggleHeading({ level: 1 }).run(),
+    disable: false,
+    isActive: editor.isActive('heading', { level: 1 })
+      ? 'is-active text-green-700'
+      : '',
+    hover: false,
+    split: false,
+  },
+  {
+    id: 6,
+    name: 'heading2',
+    icon: Icons.h2,
+    onClick: () => editor.chain().focus().toggleHeading({ level: 2 }).run(),
+    disable: false,
+    isActive: editor.isActive('heading', { level: 2 })
+      ? 'is-active text-green-700'
+      : '',
+    hover: false,
+    split: false,
+  },
+  {
+    id: 13,
+    name: 'heading3',
+    icon: Icons.h3,
+    onClick: () => editor.chain().focus().toggleHeading({ level: 3 }).run(),
+    disable: false,
+    isActive: editor.isActive('heading', { level: 3 })
+      ? 'is-active text-green-700'
+      : '',
+    hover: false,
+    split: false,
+  },
+  {
+    id: 14,
+    name: 'heading4',
+    icon: Icons.h4,
+    onClick: () => editor.chain().focus().toggleHeading({ level: 4 }).run(),
+    disable: false,
+    isActive: editor.isActive('heading', { level: 4 })
+      ? 'is-active text-green-700'
+      : '',
+    hover: false,
+    split: false,
+  },
+  {
+    id: 15,
+    name: 'heading5',
+    icon: Icons.h5,
+    onClick: () => editor.chain().focus().toggleHeading({ level: 5 }).run(),
+    disable: false,
+    isActive: editor.isActive('heading', { level: 5 })
+      ? 'is-active text-green-700'
+      : '',
+    hover: false,
+    split: false,
+  },
+  {
+    id: 7,
+    name: 'paragraph',
+    icon: Icons.paragraph,
+    onClick: () => editor.chain().focus().setParagraph().run(),
+    disable: false,
+    isActive: editor.isActive('paragraph') ? 'is-active text-green-700' : '',
+    hover: false,
+    split: true,
+  },
+  {
+    id: 8,
+    name: 'bullet list',
+    icon: Icons.ul,
+    onClick: () => editor.chain().focus().toggleBulletList().run(),
+    disable: false,
+    isActive: editor.isActive('bulletList')
+      ? 'is-active text-green-700 list-disc'
+      : '',
+    hover: false,
+    split: false,
+  },
+  {
+    id: 9,
+    name: 'ordered list',
+    icon: Icons.ol,
+    onClick: () => editor.chain().focus().toggleOrderedList().run(),
+    disable: false,
+    isActive: editor.isActive('orderedList')
+      ? 'is-active text-green-700 list-decimal'
+      : '',
+    hover: false,
+    split: false,
+  },
+  {
+    id: 16,
+    name: 'align left',
+    icon: Icons.alignLeft,
+    onClick: () => editor.chain().focus().setTextAlign('left').run(),
+    disable: false,
+    isActive: editor.isActive({ textAlign: 'left' }) ? 'is-active' : '',
+    hover: false,
+    split: false,
+  },
+  {
+    id: 17,
+    name: 'align center',
+    icon: Icons.alignCenter,
+    onClick: () => editor.chain().focus().setTextAlign('center').run(),
+    disable: false,
+    isActive: editor.isActive({ textAlign: 'center' })
+      ? 'is-active text-green-700 text-center'
+      : '',
+    hover: false,
+    split: false,
+  },
+  {
+    id: 18,
+    name: 'align right',
+    icon: Icons.alignRight,
+    onClick: () => editor.chain().focus().setTextAlign('right').run(),
+    disable: false,
+    isActive: editor.isActive({ textAlign: 'right' }) ? 'is-active' : '',
+    hover: false,
+    split: false,
+  },
+  {
+    id: 19,
+    name: 'align justify',
+    icon: Icons.alignJustify,
+    onClick: () => editor.chain().focus().setTextAlign('justify').run(),
+    disable: false,
+    isActive: editor.isActive({ textAlign: 'justify' }) ? 'is-active' : '',
+    hover: false,
+    split: true,
+  },
+  {
+    id: 20,
+    name: 'highlight',
+    icon: Icons.bg,
+    onClick: () => editor.chain().focus().toggleHighlight().run(),
+    disable: false,
+    isActive: editor.isActive('highlight') ? 'is-active text-green-700' : '',
+    hover: false,
+    split: false,
+  },
+  {
+    id: 10,
+    name: 'code block',
+    icon: Icons.codeblock,
+    onClick: () => editor.chain().focus().toggleCodeBlock().run(),
+    disable: false,
+    isActive: editor.isActive('codeBlock') ? 'is-active text-green-700' : '',
+    hover: false,
+    split: false,
+  },
+  {
+    id: 11,
+    name: 'blockquote',
+    icon: Icons.blockquote,
+    onClick: () => editor.chain().focus().toggleBlockquote().run(),
+    disable: false,
+    isActive: editor.isActive('blockquote') ? 'is-active text-green-700' : '',
+    hover: false,
+    split: false,
+  },
+  {
+    id: 12,
+    name: 'table',
+    icon: Icons.table,
+    onClick: () =>
+      editor
+        .chain()
+        .focus()
+        .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
+        .run(),
+    disable: false,
+    isActive: editor.isActive('table') ? 'is-active text-green-700' : '',
+    hover: true,
+    split: true,
+  },
+  {
+    id: 30,
+    name: 'undo',
+    icon: Icons.undo,
+    onClick: () => editor.chain().focus().undo().run(),
+    disable: !editor.can().undo(),
+    isActive: editor.isActive('table') ? 'is-active text-green-700' : '',
+    hover: false,
+    split: false,
+  },
+  {
+    id: 31,
+    name: 'redo',
+    icon: Icons.redo,
+    onClick: () => editor.chain().focus().redo().run(),
+    disable: !editor.can().redo(),
+    isActive: editor.isActive('table') ? 'is-active text-green-700' : '',
+    hover: false,
+    split: true,
+  },
+];
 
-const MenuBar = ({ editor }) => {
+function MenuBar({ setImageURL }) {
+  const { editor } = useContext(TiptapContext);
+  const fileInputRef = useRef(null);
+
   if (!editor) {
     return null;
   }
-  const setLink = useCallback(() => {
-    const previousUrl = editor.getAttributes("link").href;
-    const url = window.prompt("URL", previousUrl);
 
-    // cancelled
-    if (url === null) {
-      return;
-    }
+  const MenuBarIconValue = MenuBarIcon({ editor });
 
-    // empty
-    if (url === "") {
-      editor.chain().focus().extendMarkRange("link").unsetLink().run();
-
-      return;
-    }
-
-    // update link
-    editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
-  }, [editor]);
-
-  const addYoutubeVideo = () => {
-    const url = prompt("Enter YouTube URL");
-    if (url) {
-      editor.commands.setYoutubeVideo({ src: url });
-    }
-  };
-  const setFontSize = () => {
-    const fontSize = window.prompt("Enter font size (e.g., 16):");
-    if (fontSize) {
-      editor.chain().focus().setFontSize(fontSize).run();
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (typeof reader.result === "string") {
+          setImageURL(reader.result);
+        }
+      };
+      reader.readAsDataURL(file);
     }
   };
 
-  const unsetFontSize = () => {
-    editor.chain().focus().unsetFontSize().run();
-  };
-
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-  const [anchorEl2, setAnchorEl2] = React.useState(null);
-  const open2 = Boolean(anchorEl2);
-  const handleClick2 = (event) => {
-    setAnchorEl2(event.currentTarget);
-  };
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-    setAnchorEl2(null);
+  const handleIconClick = () => {
+    fileInputRef.current?.click();
   };
 
   return (
-    <div className="menu-bar">
-      <button
-        onClick={() =>
-          editor.chain().focus().toggleCodeBlock({ language: "js" }).run()
+    <div className="flex items-center justify-center gap-2 bg-gray900 p-2 text-white w-full">
+      <input
+        type="color"
+        onInput={(event) =>
+          editor.chain().focus().setColor(event.target.value).run()
         }
-        className={editor.isActive("codeBlock") ? "is-active" : ""}
-      >
-        <CodeIcon />
-      </button>
+        value={editor.getAttributes("textStyle").color}
+      />
+      {MenuBarIconValue.map((item) =>
+        item.hover ? (
+          <Menubar className="bg-transparent border-none" key={item.id}>
+            <MenubarMenu>
+              <MenubarTrigger className="mr-1 p-0 ">
+                <button
+                  key={item.id}
+                  disabled={item.disable}
+                  className={`hover:bg-gray-600 p-1 rounded-lg ${
+                    item.disable ? "cursor-not-allowed" : "cursor-pointer"
+                  }`}
+                >
+                  <item.icon />
+                </button>
+              </MenubarTrigger>
+              {item.split && (
+                <div className="mx-1 w-[1px] flex bg-gray-500 h-6" />
+              )}
+              <MenubarContent>
+                {TableMenu({ editor }).map((menuItem) => (
+                  <MenubarItem key={menuItem.id} onClick={menuItem.action} className=" hover:bg-gray200">
+                    {menuItem.name}
+                  </MenubarItem>
+                ))}
+              </MenubarContent>
+            </MenubarMenu>
+          </Menubar>
+        ) : (
+          <div className="flex items-center h-full gap-1" key={item.id}>
+            <button
+              onClick={item.onClick}
+              disabled={item.disable}
+              className={`${
+                item.disable
+                  ? "cursor-not-allowed p-1"
+                  : "cursor-pointer hover:bg-gray-600 hover:rounded-lg p-1"
+              } ${item.isActive ? item.isActive : ""}`}
+            >
+              <item.icon />
+            </button>
 
-      <button
-        onClick={() => editor.chain().focus().toggleBold().run()}
-        className={editor.isActive("bold") ? "is-active" : ""}
-      >
-        <FormatBoldIcon />
-      </button>
-      <button
-        onClick={() => editor.chain().focus().toggleItalic().run()}
-        className={editor.isActive("italic") ? "is-active" : ""}
-      >
-        <FormatItalicIcon />
-      </button>
-      <button
-        onClick={() => editor.chain().focus().toggleUnderline().run()}
-        className={editor.isActive("underline") ? "is-active" : ""}
-      >
-        <FormatUnderlinedIcon />
-      </button>
-
-      <button
-        onClick={() => editor.chain().focus().toggleStrike().run()}
-        className={editor.isActive("strike") ? "is-active" : ""}
-      >
-        <FormatStrikethroughIcon />
-      </button>
-
-      {/* <button onClick={setFontSize}>
-        <TextIncreaseIcon />
-      </button>
-      <button onClick={unsetFontSize}>
-        <TextDecreaseIcon />
-      </button> */}
-
-      <button
-        onClick={() => editor.chain().focus().toggleSubscript().run()}
-        className={editor.isActive("subscript") ? "is-active" : ""}
-      >
-        <SubscriptIcon />
-      </button>
-      <button
-        onClick={() => editor.chain().focus().toggleSuperscript().run()}
-        className={editor.isActive("superscript") ? "is-active" : ""}
-      >
-        <SuperscriptIcon />
-      </button>
-
-      <button
-        onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-        className={editor.isActive("heading", { level: 1 }) ? "is-active" : ""}
-      >
-        <IconContext.Provider value={{ size: "25px" }}>
-          <div>
-            <LuHeading1 />
+            {item.split && (
+              <div className="mx-1 w-[1px] flex bg-gray-500 h-6" />
+            )}
           </div>
-        </IconContext.Provider>
-      </button>
-
-      <button
-        onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-        className={editor.isActive("heading", { level: 2 }) ? "is-active" : ""}
-      >
-        <IconContext.Provider value={{ size: "25px" }}>
-          <div>
-            <LuHeading2 />
-          </div>
-        </IconContext.Provider>
-      </button>
-
-      <button
-        onClick={() => editor.chain().focus().toggleBulletList().run()}
-        className={editor.isActive("bulletList") ? "is-active" : ""}
-      >
-        <FormatListBulletedIcon />
-      </button>
-
-      <Button
-        id="basic-button"
-        aria-controls={open ? "basic-menu" : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? "true" : undefined}
-        onClick={handleClick}
-      >
-        <BorderColorIcon />
-      </Button>
-      <Menu
-        id="basic-menu"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        MenuListProps={{
-          "aria-labelledby": "basic-button",
-        }}
-      >
-        <MenuItem onClick={handleClose}>
-          <div
-            className={`orange-highlight ${editor.isActive("highlight", { color: "#ffc078" }) ? "is-active" : ""}`}
-            onClick={() =>
-              editor.chain().focus().toggleHighlight({ color: "#ffc078" }).run()
-            }
-          >
-            Orange
-          </div>
-        </MenuItem>
-
-        <MenuItem onClick={handleClose}>
-          <div
-            onClick={() =>
-              editor.chain().focus().toggleHighlight({ color: "#8ce99a" }).run()
-            }
-            className={`green-highlight ${editor.isActive("highlight", { color: "#8ce99a" }) ? "is-active" : ""}`}
-          >
-            Green
-          </div>
-        </MenuItem>
-
-        <MenuItem onClick={handleClose}>
-          <div
-            onClick={() =>
-              editor.chain().focus().toggleHighlight({ color: "#74c0fc" }).run()
-            }
-            className={`blue-highlight ${editor.isActive("highlight", { color: "#74c0fc" }) ? "is-active" : ""}`}
-          >
-            Blue
-          </div>
-        </MenuItem>
-
-        <MenuItem onClick={handleClose}>
-          <div
-            onClick={() =>
-              editor.chain().focus().toggleHighlight({ color: "#b197fc" }).run()
-            }
-            className={`purple-highlight ${editor.isActive("highlight", { color: "#b197fc" }) ? "is-active" : ""}`}
-          >
-            Purple
-          </div>
-        </MenuItem>
-
-        <MenuItem onClick={handleClose}>
-          <div
-            onClick={() =>
-              editor.chain().focus().toggleHighlight({ color: "#ffa8a8" }).run()
-            }
-            className={`red-highlight ${editor.isActive("highlight", { color: "#ffa8a8" }) ? "is-active" : ""}`}
-          >
-            red
-          </div>
-        </MenuItem>
-      </Menu>
-
-      <Button
-        id="basic-button2"
-        aria-controls={anchorEl2 ? "basic-menu2" : undefined}
-        aria-haspopup="true"
-        aria-expanded={anchorEl2 ? "true" : undefined}
-        onClick={handleClick2}
-      >
-        <AddLinkIcon />
-      </Button>
-      <Menu
-        id="basic-menu2"
-        anchorEl={anchorEl2}
-        open={Boolean(anchorEl2)}
-        onClose={handleClose}
-        MenuListProps={{
-          "aria-labelledby": "basic-button2",
-        }}
-      >
-        <MenuItem onClick={handleClose}>
-          <div onClick={addYoutubeVideo}>
-            <YouTubeIcon />
-          </div>
-        </MenuItem>
-
-        <MenuItem onClick={handleClose}>
-          <div
-            onClick={setLink}
-            className={editor.isActive("link") ? "is-active" : ""}
-          >
-            <InsertLinkIcon />
-          </div>
-        </MenuItem>
-
-        <MenuItem onClick={handleClose}>
-          <div
-            onClick={() => editor.chain().focus().unsetLink().run()}
-            disabled={!editor.isActive("link")}
-          >
-            <LinkOffIcon />
-          </div>
-        </MenuItem>
-      </Menu>
+        ),
+      )}
+      <div className="cursor-pointer hover:bg-gray-600 hover:rounded-lg p-1">
+        <input
+          type="file"
+          onChange={handleImageChange}
+          ref={fileInputRef}
+          className="hidden"
+        />
+        <Icons.image onClick={handleIconClick} />
+      </div>
     </div>
   );
-};
+}
 
-const EditorComponent = ({ content, id }) => {
-  const [files, setFiles] = useState([]);
-  const [debounceTimer, setDebounceTimer] = useState(null);
-  const updateNoteWithDebounce = useCallback(async (editor) => {
-    if (debounceTimer) clearTimeout(debounceTimer);
-    const timerId = setTimeout(async () => {
-      const jsoner = await editor.getJSON();
-      const text = await editor.getText();
-    }, 500); // 500ms delay
-    setDebounceTimer(timerId);
-  }, []);
-
-  const editor = useEditor({
-    extensions: [
-      Document,
-      Paragraph,
-      Text,
-      Bold,
-      Italic,
-      Strike,
-      Underline,
-      Subscript,
-      Superscript,
-      BulletList,
-      FontSize,
-      Highlight.configure({ multicolor: true }),
-      ListItem,
-      Heading.configure({
-        levels: [1, 2, 3],
-      }),
-      History,
-      Image,
-      Dropcursor,
-      Youtube.configure({
-        controls: false,
-      }),
-      CodeBlockLowlight.configure({
-        lowlight,
-      }),
-      Link.configure({
-        openOnClick: false,
-        autolink: true,
-      }),
-    ],
-    content: content,
-    onUpdate: ({ editor }) => {
-      updateNoteWithDebounce(editor);
-    },
-  });
-  const [isEditable, setIsEditable] = React.useState(true);
+function Editor() {
+  const { editor, content, editorText } = useContext(TiptapContext);
+  const [imageURL, setImageURL] = useState(null);
 
   useEffect(() => {
-    if (editor) {
-      editor.setEditable(isEditable);
+    if (editor && imageURL) {
+      editor.commands.setImage({
+        src: imageURL,
+      });
     }
-  }, [isEditable, editor]);
+  }, [imageURL, editor]);
 
-  const addImage = useCallback(() => {
-    const url = window.prompt("URL");
-
-    if (url) {
-      editor.chain().focus().setImage({ src: url }).run();
+  useEffect(() => {
+    if (editor && editorText) {
+      editor
+        .chain()
+        .focus()
+        .insertContent(editorText)
+        .insertContent("<br />")
+        .run();
     }
-  }, [editor]);
+  }, [editorText, editor]);
 
+  useEffect(() => {
+    if (editor && content) {
+      editor.chain().focus().insertContent(content).run();
+    }
+  }, [content, editor]);
 
   return (
-    <div className="editor mt-4">
-      {editor && (
-        <FloatingMenu
-          className="floating-menu"
-          editor={editor}
-          tippyOptions={{ duration: 100 }}
-        >
-          <div
-            onClick={() =>
-              editor.chain().focus().toggleHeading({ level: 1 }).run()
-            }
-            className={
-              editor.isActive("heading", { level: 1 }) ? "is-active" : ""
-            }
-          >
-            <IconContext.Provider value={{ size: "25px" }}>
-              <div>
-                <LuHeading1 />
-              </div>
-            </IconContext.Provider>
-          </div>
-          <div
-            onClick={() =>
-              editor.chain().focus().toggleHeading({ level: 2 }).run()
-            }
-            className={
-              editor.isActive("heading", { level: 2 }) ? "is-active" : ""
-            }
-          >
-            <IconContext.Provider value={{ size: "25px" }}>
-              <div>
-                <LuHeading2 />
-              </div>
-            </IconContext.Provider>
-          </div>
-          <div
-            onClick={() => editor.chain().focus().toggleBulletList().run()}
-            className={editor.isActive("bulletList") ? "is-active" : ""}
-          >
-            <FormatListBulletedIcon />
-          </div>
-        </FloatingMenu>
-      )}
-
-      <div className="editor-menu-options">
-        <div>
-          <div
-            className="lock-button"
-            onClick={() => setIsEditable(!isEditable)}
-          >
-            {isEditable ? <LockOpenIcon /> : <LockIcon />}
-          </div>
-        </div>
-        <div onClick={addImage}>
-          <AddPhotoAlternateIcon />
-        </div>
-        <MenuBar editor={editor} />
-      </div>
-
-      <EditorContent editor={editor} />
+    <div>
+      <MenuBar editor={editor} setImageURL={setImageURL} />
+      <EditorContent
+        className="w-full p-3 max-h-[600px] overflow-auto"
+        editor={editor}
+      />
     </div>
   );
-};
+}
 
-export default EditorComponent;
+export default Editor;

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import EditorComponent from "./Editor";
+import Editor from "./Editor";
 import EditorNavbar from "../components/EditorNavbar";
 import React from "react";
 
@@ -10,7 +10,7 @@ const TiptapEditor = () => {
     <>
       <div className="">
         <EditorNavbar />
-        <EditorComponent />
+        <Editor />
       </div>
     </>
   );
