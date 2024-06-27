@@ -71,7 +71,6 @@ export const googleAuth = async (path) => {
       `http://localhost:5173/signin`,
       `http://localhost:5173/signin`,
     );
-    console.log(res.href);
   } catch (error) {
     console.log(error);
     return error;
@@ -85,7 +84,6 @@ export const githubAuth = async (path) => {
       `http://localhost:5173/signin`,
       `http://localhost:5173/signin`,
     );
-    console.log(res.href);
   } catch (error) {
     console.log(error);
     return error;
