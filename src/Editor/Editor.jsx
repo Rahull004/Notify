@@ -387,7 +387,7 @@ function MenuBar({ setImageURL }) {
                 <button
                   key={item.id}
                   disabled={item.disable}
-                  className={`hover:bg-gray-600 p-1 rounded-lg ${
+                  className={` ${
                     item.disable ? "cursor-not-allowed" : "cursor-pointer"
                   }`}
                 >
@@ -407,7 +407,7 @@ function MenuBar({ setImageURL }) {
             </MenubarMenu>
           </Menubar>
         ) : (
-          <div className="flex items-center h-full gap-1" key={item.id}>
+          <div className="flex items-center h-full gap-5 " key={item.id}>
             <button
               onClick={item.onClick}
               disabled={item.disable}
@@ -472,7 +472,7 @@ function Editor() {
     <div>
       <MenuBar editor={editor} setImageURL={setImageURL} />
       <EditorContent
-        className="w-full p-3 max-h-[600px] overflow-auto"
+        className="w-full max-h-[580px] 2xl:max-h-[720px] pr-2 overflow-auto editor-no-scrollbar"
         editor={editor}
       />
     </div>
