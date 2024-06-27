@@ -1,53 +1,42 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext, useMemo } from "react";
 import { NoteCard } from "../components/NoteCard";
 import { NewNoteCard } from "../components/NewNoteCard";
-import {
-  getCommunityNotes,
-  getCurrentUser,
-  getPersonalNotes,
-  saveUser,
-} from "../appwrite/api";
-import { avatars } from "../appwrite/config";
+import { getCommunityNotes, getPersonalNotes } from "../appwrite/api";
+import { useUserContext } from "../AuthContext";
+import { useNavigate } from "react-router";
 
 export const AllNotes = () => {
   const [showNewNoteCard, setShowNewNoteCard] = useState(false);
   const [activeTab, setActiveTab] = useState("PERSONAL");
-  const [user, setUser] = useState({});
+  const { user, isLoading } = useUserContext();
+  const navigate = useNavigate();
+
   const [communityNotes, setCommunityNotes] = useState([]);
   const [personalNotes, setPersonalNotes] = useState([]);
+
+  const memoizedUser = useMemo(() => user, [user]);
 
   useEffect(() => {
     const getUserNotes = async () => {
       try {
-        const data = await getCurrentUser();
-        const account = data[1];
-        const user = data[3];
-        if (!account) {
-          navigate("/login");
+        if (memoizedUser.id === "" && !isLoading) {
+          navigate("/signin");
           return;
         }
-        if (!user) {
-          const accountId = account.$id;
-          const avatar = avatars.getInitials(account.name);
-          const newUser = await saveUser({
-            accountid: accountId,
-            email: account.email,
-            url: avatar,
-            fullname: account.name,
-          });
-          setUser(newUser);
-        }
-        setUser(user);
-        const communityNotesData = await getCommunityNotes(user.$id);
+
+        const communityNotesData = await getCommunityNotes(memoizedUser?.$id);
         setCommunityNotes(communityNotesData.documents);
-        const personalNotesData = await getPersonalNotes(user.$id);
+        const personalNotesData = await getPersonalNotes(memoizedUser?.$id);
         setPersonalNotes(personalNotesData.documents);
       } catch (error) {
         console.log(error);
       }
     };
-    getUserNotes();
-  }, []);
+
+    if (memoizedUser?.$id) {
+      getUserNotes();
+    }
+  }, [memoizedUser, isLoading, navigate]);
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
@@ -60,6 +49,14 @@ export const AllNotes = () => {
   const handleClosePopup = () => {
     setShowNewNoteCard(false);
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (user.email === "" && !isLoading) {
+    navigate("/signin");
+  }
 
   return (
     <div className="bg-gray200 w-screen h-screen font-rob">
@@ -78,7 +75,7 @@ export const AllNotes = () => {
             />
           </div>
           <button
-            className="bg-blue400 px-4 rounded-3xl py-2 md:py-3  w-24 md:w-28 text-white"
+            className="bg-blue-400 px-4 rounded-3xl py-2 md:py-3 w-24 md:w-28 text-white"
             onClick={handleAddClick}
           >
             + Add
@@ -130,12 +127,14 @@ export const AllNotes = () => {
       </div>
 
       {showNewNoteCard && (
-        <div className="fixed inset-0 bg-black bg-opacity-35 z-50 w-full h-full">
-          <NewNoteCard />
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 w-full h-full">
+          <NewNoteCard
+            onClose={handleClosePopup}
+            showNewNoteCard={showNewNoteCard}
+            user={user}
+          />
         </div>
       )}
     </div>
   );
-}
-
-
+};

@@ -11,6 +11,7 @@ import {
   MenubarTrigger,
 } from "../components/ui/menubar";
 import { TiptapContext } from "../contexts/tiptap_context";
+import { getDraft } from "../appwrite/api.js";
 
 const TableMenu = ({ editor }) => [
   {
@@ -344,6 +345,7 @@ const MenuBarIcon = ({ editor }) => [
 ];
 
 function MenuBar({ setImageURL }) {
+  
   const { editor } = useContext(TiptapContext);
   const fileInputRef = useRef(null);
 
@@ -439,7 +441,7 @@ function MenuBar({ setImageURL }) {
   );
 }
 
-function Editor() {
+function Editor({user,id}) {
   const { editor, content, editorText } = useContext(TiptapContext);
   const [imageURL, setImageURL] = useState(null);
 
@@ -468,6 +470,16 @@ function Editor() {
     }
   }, [content, editor]);
 
+  useEffect(()=> {
+     const fetchDraft = async()=> {
+      const draft = await getDraft(id);
+      if(draft) {
+        editor.chain().focus().insertContent(draft.content).run();
+      }
+      console.log(draft);
+     }
+     fetchDraft();
+  },[])
   return (
     <div>
       <MenuBar editor={editor} setImageURL={setImageURL} />

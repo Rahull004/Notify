@@ -9,6 +9,8 @@ import SignUpCllg from './pages/SignUpCllg';
 import TiptapEditor from './Editor/Tiptap';
 import ChatbotPopup from './components/Chatbot/ChatbotPopup';
 import ProfilePage from './pages/ProfilePage';
+import { ForgetPasswordEmail } from './pages/ForgetPasswordEmail';
+import { ForgetPasswordNewPassword } from './pages/ForgetPasswordNewPassword';
 import Error from './pages/Error/Error';
 
 export default function App() {
@@ -24,6 +26,8 @@ export default function App() {
       <Route path="/signupcllg" element={<SignUpCllg />}/>
       <Route path="/reset-password" element={<ResetPassword />}/>
       <Route path="/profile" element={<ProfilePage />}/>
+      <Route path="/forgetpassword/email" element={<ForgetPasswordEmail />}/>
+      <Route path="/forgetpassword" element={<ForgetPasswordNewPassword />}/>
       <Route path="*" element={<Error />}/>
 
     </Routes>
