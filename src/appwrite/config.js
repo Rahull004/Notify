@@ -7,6 +7,7 @@ export const appwriteConfig = {
   storageId: "",
   userId: "6667698d002ab53e34ac",
   noteId: "666768b700318b9584ea",
+  draftId: "667d95580006420e9b18",
   pdfId:"6667687e0012871126a0",
 };
 

@@ -16,12 +16,10 @@ export const AllNotes = () => {
 
   const memoizedUser = useMemo(() => user, [user]);
 
-  console.log(memoizedUser);
-
   useEffect(() => {
     const getUserNotes = async () => {
       try {
-        if (memoizedUser.id==="" && !isLoading) {
+        if (memoizedUser.id === "" && !isLoading) {
           navigate("/signin");
           return;
         }
@@ -130,7 +128,11 @@ export const AllNotes = () => {
 
       {showNewNoteCard && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 w-full h-full">
-          <NewNoteCard onClose={handleClosePopup} />
+          <NewNoteCard
+            onClose={handleClosePopup}
+            showNewNoteCard={showNewNoteCard}
+            user={user}
+          />
         </div>
       )}
     </div>
