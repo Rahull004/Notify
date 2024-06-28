@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
-import Navbar from "../components/Navbar";
+import ProfileNavbar from "../components/ProfileNavbar";
 import { getCurrentUser, saveUser } from "../appwrite/api";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { MdOutlineDriveFileRenameOutline } from "react-icons/md";
 import { useUserContext } from "../AuthContext";
 import { account } from "../appwrite/config";
+
 
 function ProfilePage() {
   const navigate = useNavigate();
@@ -142,7 +143,7 @@ function ProfilePage() {
   return (
     <div className="flex flex-col min-h-screen overflow-hidden">
       {/*  Site header */}
-      {/* <Navbar /> */}
+      <ProfileNavbar />
 
       {/*  Page content */}
       <main className="flex-grow">
