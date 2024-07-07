@@ -101,16 +101,22 @@ export const AllNotes = () => {
                 >
                   COMMUNITY
                 </button>
+                <button
+                  className={`mx-4 ${activeTab === "DRAFT" ? "text-blue500" : "text-gray900-60"}`}
+                  onClick={() => handleTabClick("DRAFT")}
+                >
+                  DRAFT
+                </button>
               </div>
               {activeTab === "PERSONAL" ? (
                 <div className="flex">
-                  <div className="border-[1px] border-blue400 w-1/2"></div>
-                  <div className="border-[1px] border-black/10 w-1/2"></div>
+                  <div className="border-[1px] border-blue400 w-1/3"></div>
+                  <div className="border-[1px] border-black/10 w-1/3"></div>
                 </div>
               ) : (
                 <div className="flex">
-                  <div className="border-[1px] border-black/10 w-1/2"></div>
-                  <div className="border-[1px] border-blue400 w-1/2"></div>
+                  <div className="border-[1px] border-black/10 w-1/3"></div>
+                  <div className="border-[1px] border-blue400 w-1/3"></div>
                 </div>
               )}
             </div>

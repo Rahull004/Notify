@@ -208,12 +208,12 @@ function ProfilePage() {
                         />
                       </div>
                       <div className="w-full mt-3">
-                        <button
+                        <buttonFlog
                           className="btn text-white bg-blue-600 hover:bg-blue-700 w-full"
                           onClick={handleChangeUsername}
                         >
                           Submit
-                        </button>
+                        </buttonFlog>
                       </div>
                     </div>
                   )}

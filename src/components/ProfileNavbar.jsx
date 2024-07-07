@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { logOut } from '../appwrite/api';
 
 function ProfileNavbar() {
 
@@ -12,6 +13,17 @@ function ProfileNavbar() {
     window.addEventListener('scroll', scrollHandler);
     return () => window.removeEventListener('scroll', scrollHandler);
   }, [top]);  
+
+  const navigate = useNavigate()
+
+  const handleLogOut = async()=> {
+    try {
+      const res = await logOut()
+      window.location.reload()
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <header className={`fixed w-full z-30 md:bg-opacity-90 transition duration-300 ease-in-out ${!top && 'bg-white backdrop-blur-sm shadow-lg'}`}>
@@ -38,9 +50,9 @@ function ProfileNavbar() {
           <nav className="flex flex-grow">
             <ul className="flex flex-grow justify-end flex-wrap items-center">
               <li>
-                <Link to="/" className="btn-sm text-gray200 hover:bg-gray900-87 bg-gray900 ml-3 "> {/*only redirection to homepage happening not actual sign out yet..backend functionality reqd*/}
+                <button onClick={handleLogOut} className="btn-sm text-gray200 hover:bg-gray900-87 bg-gray900 ml-3 "> {/*only redirection to homepage happening not actual sign out yet..backend functionality reqd*/}
                   <span className='p-0.5'>Log Out</span>             
-                </Link>
+                </button>
               </li>
             </ul>
 
