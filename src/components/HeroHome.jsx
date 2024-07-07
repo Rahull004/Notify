@@ -1,6 +1,5 @@
 import React from "react";
 
-import HeroImage from "/hero-image.png";
 import Hero from "/hero.png";
 
 function HeroHome() {

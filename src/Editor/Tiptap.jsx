@@ -5,6 +5,7 @@ import Editor from "./Editor";
 import EditorNavbar from "../components/EditorNavbar";
 import { TiptapProvider } from "../contexts/tiptap_context";
 import { getDraft, updateDraft } from "../appwrite/api";
+import { RingLoader } from "react-spinners";
 
 const TiptapEditor = () => {
   const { user, isLoading } = useUserContext();
@@ -20,7 +21,11 @@ const TiptapEditor = () => {
   }, []);
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return (
+      <div className="flex justify-center items-center w-screen h-screen">
+        <RingLoader color="#0362e9" loading size={120} speedMultiplier={1} />.
+      </div>
+    );
   }
 
   if (!user) {
