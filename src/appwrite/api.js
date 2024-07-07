@@ -231,6 +231,7 @@ export const getCommunityNotes = async (id) => {
   }
 };
 
+
 export const getDraftNotes = async (id) => {
   try {
     const notes = await databases.listDocuments(
@@ -360,6 +361,7 @@ export const getDraft = async (id) => {
       appwriteConfig.draftId,
       id,
     );
+    draft.body = JSON.parse(draft.body);
     return draft;
   } catch (error) {
     console.log(error);
@@ -367,13 +369,15 @@ export const getDraft = async (id) => {
   }
 };
 
-export const updateDraft = async(id,draft)=> {
+export const updateDraft = async(draft,id)=> {
   try {
     const updatedDraft = await databases.updateDocument(
       appwriteConfig.databaseId,
       appwriteConfig.draftId,
       id,
-      draft,
+      {
+        body:JSON.stringify(draft),
+      }
     );
     return updatedDraft;
   } catch (error) {

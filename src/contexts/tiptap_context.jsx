@@ -28,7 +28,7 @@ const TiptapContext = createContext({
   setHtmlContent: () => {},
 });
 
-function TiptapProvider({ children }) {
+function TiptapProvider({ children, onUpdate }) {
   const [content, setContent] = useState("");
   const [htmlContent, setHtmlContent] = useState("");
 
@@ -36,6 +36,9 @@ function TiptapProvider({ children }) {
     const json = editor.getJSON();
     setContent(json);
     setHtmlContent(editor.getHTML());
+    if (onUpdate) {
+      onUpdate({ content: json, htmlContent: editor.getHTML() });
+    }
   }, 500);
 
   const lowlight = createLowlight(common);
