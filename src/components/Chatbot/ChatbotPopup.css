@@ -81,11 +81,11 @@ animation: popupAnimation 0.2s ease-out ;
 }
 
 .chatbot-message.user {
-  text-align: right;
+  text-align: left;
 }
 
 .chatbot-message.bot {
-  text-align: left;
+  text-align: right;
 }
 
 input[type='text'] {
