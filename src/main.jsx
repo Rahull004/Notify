@@ -9,9 +9,7 @@ import { AuthProvider } from "./AuthContext.jsx";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <AuthProvider>
-      <TiptapProvider>
         <App />
-      </TiptapProvider>
     </AuthProvider>
   </BrowserRouter>,
 );

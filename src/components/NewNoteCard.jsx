@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { getCurrentUser, saveDraft, saveNote, saveUser } from "../appwrite/api";
+import { getCurrentUser, getDraft, saveDraft, saveNote, saveUser, updateDraft } from "../appwrite/api";
 import { avatars } from "../appwrite/config";
 
-export const NewNoteCard = ({ onClose,user }) => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [selectedOption, setSelectedOption] = useState("Personal");
+export const NewNoteCard = ({ onClose,user,type,draft }) => {
+  console.log(draft);
+  const [title, setTitle] = useState(draft?.title);
+  const [description, setDescription] = useState(draft?.description);
+  const [isLoading, setisLoading] = useState(false)
+  const [selectedOption, setSelectedOption] = useState(draft?.category || "Personal");
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
   const options = ["Personal", "Community"];
-
   
 
   const handleOptionClick = (option) => {
@@ -33,6 +34,15 @@ export const NewNoteCard = ({ onClose,user }) => {
     }
   };
 
+  const handleUpdateNote =async()=> {
+    try {
+      const updatedDraft = await updateDraft(draft.$id,{description,title,category:selectedOption})
+      return updatedDraft
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <div className="bg-white py-4 px-5 rounded-xl shadow-xl absolute w-3/4 translate-x-[15%] md:translate-x-1/2 md:w-1/2 translate-y-1/2">
       <div className="flex justify-between mt-2 items-center">
@@ -50,6 +60,7 @@ export const NewNoteCard = ({ onClose,user }) => {
           <input
             type="text"
             id="title"
+            value={title}
             onChange={(e) => setTitle(e.target.value)}
             className="w-full rounded-lg p-2 mt-1 bg-gray200 focus:outline-none focus:ring-2 focus:ring-blue-300 text-gray900-60 placeholder-gray900-60 placeholder:text-sm"
             placeholder="Add Title"
@@ -93,6 +104,7 @@ export const NewNoteCard = ({ onClose,user }) => {
         <p className="text-sm text-gray900-60">0/200</p>
       </div>
       <textarea
+      value={description}
         onChange={(e) => setDescription(e.target.value)}
         name="description"
         id="description"
@@ -101,13 +113,23 @@ export const NewNoteCard = ({ onClose,user }) => {
       />
       <div className="flex gap-6 text-sm items-center justify-end mt-4">
         <button onClick={onClose}>Cancel</button>
-        <button
-          onClick={handleNewNote}
-          className="bg-blue400 hover:bg-blue500 rounded-3xl px-4 py-2 text-white"
-        >
-          Add
-        </button>
+        {type === "NEW" ? (
+          <button
+            onClick={handleNewNote}
+            className="bg-blue400 hover:bg-blue500 rounded-3xl px-4 py-2 text-white"
+          >
+            Add
+          </button>
+        ) : (
+          <button
+            onClick={handleUpdateNote}
+            className="bg-blue400 hover:bg-blue500 rounded-3xl px-4 py-2 text-white"
+          >
+            Update
+          </button>
+        )}
       </div>
+      
     </div>
   );
 };

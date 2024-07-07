@@ -1,7 +1,12 @@
-import React, { useState, useEffect, useContext, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { NoteCard } from "../components/NoteCard";
 import { NewNoteCard } from "../components/NewNoteCard";
-import { getCommunityNotes, getPersonalNotes, searchNotes } from "../appwrite/api";
+import {
+  getCommunityNotes,
+  getPersonalNotes,
+  getDraftNotes,
+  searchNotes,
+} from "../appwrite/api";
 import { useUserContext } from "../AuthContext";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
@@ -17,6 +22,7 @@ export const AllNotes = () => {
 
   const [communityNotes, setCommunityNotes] = useState([]);
   const [personalNotes, setPersonalNotes] = useState([]);
+  const [draftNotes, setDraftNotes] = useState([]);
 
   const memoizedUser = useMemo(() => user, [user]);
 
@@ -33,6 +39,8 @@ export const AllNotes = () => {
         setCommunityNotes(communityNotesData.documents);
         const personalNotesData = await getPersonalNotes(memoizedUser?.$id);
         setPersonalNotes(personalNotesData.documents);
+        const draftNotesData = await getDraftNotes(memoizedUser?.$id);
+        setDraftNotes(draftNotesData.documents);
       } catch (error) {
         console.log(error);
       }
@@ -160,28 +168,29 @@ export const AllNotes = () => {
                   DRAFT
                 </button>
               </div>
-              {activeTab === "PERSONAL" ? (
-                <div className="flex">
-                  <div className="border-[1px] border-blue400 w-1/3"></div>
-                  <div className="border-[1px] border-black/10 w-1/3"></div>
-                </div>
-              ) : (
-                <div className="flex">
-                  <div className="border-[1px] border-black/10 w-1/3"></div>
-                  <div className="border-[1px] border-blue400 w-1/3"></div>
-                </div>
-              )}
+              <div className="flex">
+                <div
+                  className={`border-[1px] ${activeTab === "PERSONAL" ? "border-blue400" : "border-black/10"} w-1/3`}
+                ></div>
+                <div
+                  className={`border-[1px] ${activeTab === "COMMUNITY" ? "border-blue400" : "border-black/10"} w-1/3`}
+                ></div>
+                <div
+                  className={`border-[1px] ${activeTab === "DRAFT" ? "border-blue400" : "border-black/10"} w-1/3`}
+                ></div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       <div className="px-12 mt-10 grid grid-cols-2 max-sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
-        {activeTab === "PERSONAL"
-          ? personalNotes.map((note) => <NoteCard key={note.$id} note={note} />)
-          : communityNotes.map((note) => (
-              <NoteCard key={note.$id} note={note} />
-            ))}
+        {activeTab === "PERSONAL" &&
+          personalNotes.map((note) => <NoteCard key={note.$id} note={note} user={user} />)}
+        {activeTab === "COMMUNITY" &&
+          communityNotes.map((note) => <NoteCard key={note.$id} note={note} />)}
+        {activeTab === "DRAFT" &&
+          draftNotes.map((note) => <NoteCard key={note.$id} note={note} />)}
       </div>
 
       {showNewNoteCard && (
@@ -190,6 +199,7 @@ export const AllNotes = () => {
             onClose={handleClosePopup}
             showNewNoteCard={showNewNoteCard}
             user={user}
+            type={"NEW"}
           />
         </div>
       )}

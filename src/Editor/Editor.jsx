@@ -11,7 +11,7 @@ import {
   MenubarTrigger,
 } from "../components/ui/menubar";
 import { TiptapContext } from "../contexts/tiptap_context";
-import { getDraft } from "../appwrite/api.js";
+import { getDraft, updateDraft } from "../appwrite/api.js";
 import { StepContent } from "@mui/material";
 
 const TableMenu = ({ editor }) => [
@@ -445,9 +445,15 @@ function MenuBar({ setImageURL }) {
   );
 }
 
-function Editor({ id }) {
-  const { editor } = useContext(TiptapContext);
+function Editor({ id, user, body }) {
+  const { editor, setContent } = useContext(TiptapContext);
   const [imageURL, setImageURL] = useState(null);
+
+  useEffect(() => {
+    if (editor && body) {
+      editor.commands.setContent(body);
+    }
+  }, [editor, body]);
 
   useEffect(() => {
     if (editor && imageURL) {
@@ -457,16 +463,6 @@ function Editor({ id }) {
     }
   }, [imageURL, editor]);
 
-  useEffect(() => {
-    const fetchDraft = async () => {
-      const draft = await getDraft(id);
-      if (draft) {
-        editor.chain().focus().insertContent(draft.content).run();
-      }
-      console.log(draft);
-    };
-    fetchDraft();
-  }, []);
   return (
     <div>
       <MenuBar editor={editor} setImageURL={setImageURL} />
