@@ -193,13 +193,11 @@ export const AllNotes = () => {
 
       <div className="px-12 mt-10 grid grid-cols-2 max-sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
         {activeTab === "PERSONAL" &&
-          personalNotes.map((note) => (
-            <NoteCard key={note.$id} note={note} user={user} />
-          ))}
+          personalNotes.map((note) => <NoteCard key={note.$id} note={note} user={user} type={"note"}/>)}
         {activeTab === "COMMUNITY" &&
-          communityNotes.map((note) => <NoteCard key={note.$id} note={note} />)}
+          communityNotes.map((note) => <NoteCard key={note.$id} note={note} type={"note"}/>)}
         {activeTab === "DRAFT" &&
-          draftNotes.map((note) => <NoteCard key={note.$id} note={note} />)}
+          draftNotes.map((note) => <NoteCard key={note.$id} note={note} type={"draft"}/>)}
       </div>
 
       {showNewNoteCard && (

@@ -23,6 +23,7 @@ export default function App() {
       <Route path="/signup" element={<SignUp />}/>
       <Route path="/signin" element={<SignIn />}/>
       <Route path="/note/:id" element={<TiptapEditor />} />
+      <Route path="/draft/:id" element={<TiptapEditor />} />
       <Route path="/signupcllg" element={<SignUpCllg />}/>
       <Route path="/reset-password" element={<ResetPassword />}/>
       <Route path="/profile" element={<ProfilePage />}/>

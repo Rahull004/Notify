@@ -204,6 +204,7 @@ export const logOut = async () => {
 
 export const saveNote = async (note) => {
   try {
+    note.body = JSON.stringify(note.body)
     const noteSaved = await databases.createDocument(
       appwriteConfig.databaseId,
       appwriteConfig.noteId,
@@ -365,7 +366,7 @@ export const getNote = async (id) => {
       id
     );
     note.body = JSON.parse(note.body);
-    return note.body;
+    return note;
   } catch (error) {
     console.log(error);
     return error;
@@ -402,7 +403,6 @@ export const updateDraft = async(draft,id)=> {
     return error
   }
 }
-
 export const getNoteFull = async (id) => {
   try {
     const note = await databases.getDocument(
@@ -417,21 +417,18 @@ export const getNoteFull = async (id) => {
     return error;
   }
 };
-export const updateNote = async (id, data) => {
+export const updateNote = async ( note,id) => {
   try {
-    const jsonData = JSON.stringify(data);
-
-    const updatesData = await databases.updateDocument(
+    const updatedNote = await databases.updateDocument(
       appwriteConfig.databaseId,
       appwriteConfig.noteId,
       id,
       {
-        body: jsonData,
-      }
+        body: JSON.stringify(note),
+      },
     );
-    return updatesData;
+    return updatedNote;
   } catch (error) {
-    console.log(error);
     return error;
   }
 };
