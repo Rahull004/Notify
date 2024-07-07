@@ -1,7 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
 // import Transition from '../utils/Transition';
 
-import FeaturesBg from "/features-bg.png";
+import ai from "/ai.jpg";
+import notes1 from "/notes1.jpg";
+import comm from "/comm.png";
 
 function FeatureHome() {
   const [tab, setTab] = useState(1);
@@ -170,14 +172,14 @@ function FeatureHome() {
                 <div
                   className={`relative inline-flex flex-col ${
                     tab != 1 && "hidden"
-                  } `}
+                  }`}
                 >
                   <img
                     className="md:max-w-none mx-auto rounded"
-                    src={FeaturesBg}
-                    width="500"
-                    height="462"
-                    alt="Features bg"
+                    src={notes1}
+                    width="600"
+                    style={{ margin: '120px 0px 0px 50px' }}
+                    alt="Notes bg"
                   />
                 </div>
 
@@ -190,10 +192,10 @@ function FeatureHome() {
                 >
                   <img
                     className="md:max-w-none mx-auto rounded"
-                    src={FeaturesBg}
-                    width="500"
-                    height="462"
-                    alt="Features bg"
+                    src={ai}
+                    width="600"
+                    style={{ margin: '220px 0px 0px 50px' }}
+                    alt="AI bg"
                   />
                 </div>
 
@@ -206,10 +208,10 @@ function FeatureHome() {
                 >
                   <img
                     className="md:max-w-none mx-auto rounded"
-                    src={FeaturesBg}
-                    width="500"
-                    height="462"
-                    alt="Features bg"
+                    src={comm}
+                    width="600"
+                    style={{ margin: '350px 0px 0px 50px', height: '350px'}}
+                    alt="Community bg"
                   />
                 </div>
               </div>
