@@ -109,27 +109,15 @@ export const getSession = async () => {
   }
 };
 
-{/* export const changeUserPassword = async (newPassword) => {
+export const changePassword = async(password,oldPassword)=> {
   try {
-      const response = await account.updatePassword(newPassword);
-      return response;
+    const changedUser = await account.updatePassword(password, oldPassword);
+    return changedUser
   } catch (error) {
-      console.log(error);
-      return error;
+    console.log(error);
+    return error
   }
-};
-
-
-export const changeUserName = async (newUsername) => {
-  try {
-      const response = await account.updateName(newUsername);
-      return response;
-  } catch (error) {
-      console.log(error);
-      return error;
-  }
-};
-*/}
+}
 
 export const passwordEmail = async (email) => {
   try {
@@ -312,6 +300,24 @@ export const pdfUpload = async ({ file, noteId }) => {
     return error;
   }
 };
+
+export const changeUserName = async(id,username)=> {
+  try {
+    const changedUserName = await databases.updateDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.userId,
+      id,
+      {
+        fullname:username,
+      }
+    )
+
+    return changedUserName;
+  } catch (error) {
+    console.log(error);
+    return error
+  }
+}
 
 export const getNote = async (id) => {
   try {

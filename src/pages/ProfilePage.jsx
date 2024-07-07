@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import ProfileNavbar from "../components/ProfileNavbar";
-import { getCurrentUser, saveUser } from "../appwrite/api";
+import { changePassword, changeUserName, getCurrentUser, saveUser } from "../appwrite/api";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { MdOutlineDriveFileRenameOutline } from "react-icons/md";
 import { useUserContext } from "../AuthContext";
@@ -14,6 +14,7 @@ function ProfilePage() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [newUsername, setNewUsername] = useState("");
+  const [oldPassword, setoldPassword] = useState("");
   const [showChangePasswordForm, setShowChangePasswordForm] = useState(false);
   const [showChangeUsernameForm, setShowChangeUsernameForm] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
@@ -53,6 +54,8 @@ function ProfilePage() {
       setConfirmPassword(value);
     } else if (name === "newUsername") {
       setNewUsername(value);
+    } else if(name==="oldPassword") {
+      setoldPassword(value)
     }
   };
 
@@ -72,42 +75,44 @@ function ProfilePage() {
       alert("Passwords do not match");
       return;
     }
+    if(newPassword.length<8) {
+      alert("Password should be of atleast 8 characters")
+      return
+    }
     try {
       setloading(true);
-      const result = await changeUserPassword(newPassword);
-      if (result) {
-        setNewPassword("");
-        setConfirmPassword("");
-        setShowChangePasswordForm(false);
-      } else {
-        alert("Error changing password");
-      }
-      setloading(false);
+      const result = await changePassword(newPassword,oldPassword);
+     if(result) {
+       window.location.reload()
+      return result
+     }
     } catch (error) {
       console.log(error);
       alert("Error while changing password");
       setloading(false);
+    } finally {
+      setloading(false)
     }
   };
 
-  const handleChangeUsername = async (e) => {
-    e.preventDefault();
-    try {
-      setloading(true);
-      const result = await changeUserName(newUsername);
-      if (result) {
-        setNewUsername("");
-        setShowChangeUsernameForm(false);
-      } else {
-        alert("Error changing username");
-      }
-      setloading(false);
-    } catch (error) {
-      console.log(error);
-      alert("Error while changing username");
-      setloading(false);
-    }
-  };
+  // const handleChangeUsername = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     setloading(true);
+  //     const result = await changeUserName(newUsername);
+  //     if (result) {
+  //       setNewUsername("");
+  //       setShowChangeUsernameForm(false);
+  //     } else {
+  //       alert("Error changing username");
+  //     }
+  //     setloading(false);
+  //   } catch (error) {
+  //     console.log(error);
+  //     alert("Error while changing username");
+  //     setloading(false);
+  //   }
+  // };
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -139,6 +144,9 @@ function ProfilePage() {
   if(isLoading) {
     return <div>Loading...</div>
   }
+
+
+
 
   return (
     <div className="flex flex-col min-h-screen overflow-hidden">
@@ -208,12 +216,12 @@ function ProfilePage() {
                         />
                       </div>
                       <div className="w-full mt-3">
-                        <button
+                        <buttonFlog
                           className="btn text-white bg-blue-600 hover:bg-blue-700 w-full"
-                          onClick={handleChangeUsername}
+                          onClick={handleChangePassword}
                         >
                           Submit
-                        </button>
+                        </buttonFlog>
                       </div>
                     </div>
                   )}
@@ -235,7 +243,17 @@ function ProfilePage() {
 
                   {showChangePasswordForm && (
                     <div className="flex flex-wrap -mx-3 mb-3">
-                      <div className="w-full px-3">
+                      <div className="w-full px-3 mt-3">
+                        <input
+                          type="password"
+                          name="oldPassword"
+                          placeholder="Old Password"
+                          value={oldPassword}
+                          onChange={handleChange}
+                          className="form-input w-full"
+                        />
+                      </div>
+                      <div className="w-full px-3 mt-3">
                         <input
                           type="password"
                           name="newPassword"

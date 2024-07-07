@@ -57,7 +57,7 @@ function SignIn() {
    if(user.email !== "" && !isLoading) {
     navigate("/allnotes");
   }
-
+console.log(user);
 
 
   const handleLogin = async (e) => {
