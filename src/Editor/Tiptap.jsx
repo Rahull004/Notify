@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 import Editor from "./Editor";
 import EditorNavbar from "../components/EditorNavbar";
 import { TiptapProvider } from "../contexts/tiptap_context";
-import { getDraft, updateDraft } from "../appwrite/api";
+import { getDraft, getNote, updateDraft, updateNote } from "../appwrite/api";
 
 const TiptapEditor = () => {
   const { user, isLoading } = useUserContext();
@@ -12,14 +12,30 @@ const TiptapEditor = () => {
   const [draft, setDraft] = useState(null);
   const [note, setnote] = useState(null);
 
+    const id = window.location.pathname.split("/")[2];
+    const type = window.location.pathname.split("/")[1];
+
+  console.log(type);
+
   useEffect(() => {
     const fetchDraft = async () => {
       const currDraft = await getDraft(id);
       setnote(currDraft)
       setDraft(currDraft.body);
     };
-    fetchDraft();
+    const fetchNote = async () => {
+      const currNote = await getNote(id);
+      setnote(currNote);
+      setDraft(currNote.body);
+    };
+    if(type==="note") {
+      fetchNote()
+    } else {
+      fetchDraft()
+    }
   }, []);
+
+  console.log(draft);
 
   if (isLoading) {
     return <p>Loading...</p>;
@@ -30,12 +46,17 @@ const TiptapEditor = () => {
     return null;
   }
 
-  const id = window.location.pathname.split("/")[2];
+
 
   const handleBodyChange = async ({ content }) => {
     try {
-      const updatedDraft = await updateDraft(content, id);
-      return updatedDraft;
+      if (type === "note") {
+        const updatedNote = await updateNote(content, id);
+        return updatedNote;
+      } else {
+        const updatedDraft = await updateDraft(content, id);
+        return updatedDraft;
+      }
     } catch (error) {
       console.log(error);
       return null;

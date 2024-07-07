@@ -3,7 +3,7 @@ import { deleteNote } from "../appwrite/api";
 import { Link, useNavigate } from "react-router-dom";
 import { NewNoteCard } from "./NewNoteCard";
 
-export const NoteCard = ({ note ,user}) => {
+export const NoteCard = ({ note ,user,type}) => {
   const navigate = useNavigate();
   const [showNewUpdateCard, setshowNewUpdateCard] = useState(false)
 
@@ -47,7 +47,7 @@ export const NoteCard = ({ note ,user}) => {
           </button>
         </div>
       </div>
-      <Link to={`/note/${note.$id}`} className="block mt-3 pl-1">
+      <Link to={`/${type}/${note.$id}`} className="block mt-3 pl-1">
         <h1 className="text-lg font-semibold mb-2">{note.title}</h1>
         <p className="text-gray-500 text-sm truncate">{note.description}</p>
         <div
