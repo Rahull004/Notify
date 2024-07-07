@@ -1,6 +1,24 @@
 import { ID, Permission, Role, Query } from "appwrite";
 import { account, appwriteConfig, avatars, databases, storage } from "./config";
 
+export const searchNotes = async (query) => {
+  try {
+    // Create search conditions for both title and description
+    const searchConditions = [
+      Query.search('title', query),
+      Query.search('description', query)
+    ];
+
+    // Execute the search
+    const result = await databases.listDocuments(appwriteConfig.databaseId,appwriteConfig.noteId, searchConditions);
+
+    // Return the documents
+    return result.documents;
+  } catch (error) {
+    console.error("Failed to search notes:", error);
+    throw error; // Rethrow or handle as needed
+  }
+};
 
 export const createUserAccount = async (user) => {
   try {

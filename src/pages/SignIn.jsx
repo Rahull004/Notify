@@ -2,17 +2,22 @@ import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import Navbar from "../components/Navbar";
-import { getCurrentUser, googleAuth, saveUser, signInAccount } from "../appwrite/api";
+import {
+  getCurrentUser,
+  googleAuth,
+  saveUser,
+  signInAccount,
+} from "../appwrite/api";
 import { useUserContext } from "../AuthContext";
+import { RingLoader } from "react-spinners";
 
 function SignIn() {
-
   const navigate = useNavigate();
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
   const searchParams = useLocation();
   const [loading, setloading] = useState(false);
-  const {user,isLoading} = useUserContext()
+  const { user, isLoading } = useUserContext();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -54,16 +59,14 @@ function SignIn() {
   //   checkSession();
   // }, []);
 
-   if(user.email !== "" && !isLoading) {
+  if (user.email !== "" && !isLoading) {
     navigate("/allnotes");
   }
-console.log(user);
-
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const user = await signInAccount(email,password);
+      const user = await signInAccount(email, password);
       if (!user) {
         alert("something went wrong");
       }
@@ -75,7 +78,11 @@ console.log(user);
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center h-screen w-screen">
+        <RingLoader color="#0362e9" loading size={120} speedMultiplier={1} />
+      </div>
+    );
   }
 
   return (
@@ -147,21 +154,13 @@ console.log(user);
                       />
                     </div>
                   </div>
-                  <div className="flex flex-wrap -mx-3 mb-4">
-                    <div className="w-full px-3">
-                      <div className="flex justify-between">
-                        <label className="flex items-center">
-                          <input type="checkbox" className="form-checkbox" />
-                          <span className="text-gray900 ml-2">
-                            Keep me signed in
-                          </span>
-                        </label>
-                      </div>
-                    </div>
-                  </div>
+              
                   <div className="flex flex-wrap -mx-3 mt-6">
                     <div className="w-full px-3">
-                      <button className="btn text-white bg-blue600 hover:bg-blue-600 w-full" onClick={handleLogin}>
+                      <button
+                        className="btn text-white bg-blue600 hover:bg-blue-600 w-full"
+                        onClick={handleLogin}
+                      >
                         Sign in
                       </button>
                     </div>
@@ -197,7 +196,10 @@ console.log(user);
                   </div>
                   <div className="flex flex-wrap -mx-3">
                     <div className="w-full px-3">
-                      <button className="btn px-0 text-white bg-red-600 hover:bg-red-700 w-full relative flex items-center" onClick={handleGoogleAuth}>
+                      <button
+                        className="btn px-0 text-white bg-red-600 hover:bg-red-700 w-full relative flex items-center"
+                        onClick={handleGoogleAuth}
+                      >
                         <svg
                           className="w-4 h-4 fill-current text-white opacity-75 flex-shrink-0 mx-4"
                           viewBox="0 0 16 16"

@@ -2,12 +2,17 @@ import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import ProfileNavbar from "../components/ProfileNavbar";
-import { changePassword, changeUserName, getCurrentUser, saveUser } from "../appwrite/api";
+import {
+  changePassword,
+  changeUserName,
+  getCurrentUser,
+  saveUser,
+} from "../appwrite/api";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { MdOutlineDriveFileRenameOutline } from "react-icons/md";
 import { useUserContext } from "../AuthContext";
 import { account } from "../appwrite/config";
-
+import { RingLoader } from "react-spinners";
 
 function ProfilePage() {
   const navigate = useNavigate();
@@ -25,26 +30,23 @@ function ProfilePage() {
 
   const { user, isLoading } = useUserContext();
 
-  useEffect(()=> {
+  useEffect(() => {
     const getAccDetails = async () => {
       try {
         const accountDetails = await account.getSession("current");
-        if(accountDetails.provider === "google") {
+        if (accountDetails.provider === "google") {
           setIsGoogle(true);
         }
       } catch (error) {
         console.log(error);
       }
-    }
+    };
     getAccDetails();
+  }, []);
 
-  },[])
-   
-
-  if(user.email==="" && !isLoading) {
+  if (user.email === "" && !isLoading) {
     navigate("/signin");
   }
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -54,8 +56,8 @@ function ProfilePage() {
       setConfirmPassword(value);
     } else if (name === "newUsername") {
       setNewUsername(value);
-    } else if(name==="oldPassword") {
-      setoldPassword(value)
+    } else if (name === "oldPassword") {
+      setoldPassword(value);
     }
   };
 
@@ -75,44 +77,25 @@ function ProfilePage() {
       alert("Passwords do not match");
       return;
     }
-    if(newPassword.length<8) {
-      alert("Password should be of atleast 8 characters")
-      return
+    if (newPassword.length < 8) {
+      alert("Password should be of atleast 8 characters");
+      return;
     }
     try {
       setloading(true);
-      const result = await changePassword(newPassword,oldPassword);
-     if(result) {
-       window.location.reload()
-      return result
-     }
+      const result = await changePassword(newPassword, oldPassword);
+      if (result) {
+        window.location.reload();
+        return result;
+      }
     } catch (error) {
       console.log(error);
       alert("Error while changing password");
       setloading(false);
     } finally {
-      setloading(false)
+      setloading(false);
     }
   };
-
-  // const handleChangeUsername = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     setloading(true);
-  //     const result = await changeUserName(newUsername);
-  //     if (result) {
-  //       setNewUsername("");
-  //       setShowChangeUsernameForm(false);
-  //     } else {
-  //       alert("Error changing username");
-  //     }
-  //     setloading(false);
-  //   } catch (error) {
-  //     console.log(error);
-  //     alert("Error while changing username");
-  //     setloading(false);
-  //   }
-  // };
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -141,12 +124,13 @@ function ProfilePage() {
     }
   };
 
-  if(isLoading) {
-    return <div>Loading...</div>
+  if (isLoading) {
+    return (
+      <div className="w-screen h-screen flex justify-center items-center">
+        <RingLoader color="#0362e9" loading size={120} speedMultiplier={1} />
+      </div>
+    );
   }
-
-
-
 
   return (
     <div className="flex flex-col min-h-screen overflow-hidden">

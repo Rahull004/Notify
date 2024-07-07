@@ -82,9 +82,10 @@ function Footer() {
             </li>
             <li className="ml-4">
               <Link
-                to="#"
+                to="https://github.com/Rahull004/Notify"
                 className="flex justify-center items-center text-gray-600 hover:text-gray-900 bg-white hover:bg-white-100 rounded-full shadow transition duration-150 ease-in-out"
                 aria-label="Github"
+                target="_blank"
               >
                 <svg
                   className="w-8 h-8 fill-current"
