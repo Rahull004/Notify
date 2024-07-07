@@ -19,6 +19,7 @@ function ProfileNavbar() {
   const handleLogOut = async()=> {
     try {
       const res = await logOut()
+      console.log(res);
       window.location.reload()
     } catch (error) {
       console.log(error);
