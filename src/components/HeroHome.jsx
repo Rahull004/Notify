@@ -1,6 +1,7 @@
 import React from "react";
 
 import HeroImage from "/hero-image.png";
+import Hero from "/hero.png";
 
 function HeroHome() {
   return (
@@ -67,7 +68,7 @@ function HeroHome() {
               <div className="flex flex-col justify-center">
                 <img
                   className="mx-auto"
-                  src={HeroImage}
+                  src={Hero}
                   width="768"
                   height="432"
                   alt="Hero"
@@ -117,26 +118,6 @@ function HeroHome() {
                     </radialGradient>
                     <circle id="hero-ill-d" cx="384" cy="216" r="64" />
                   </defs>
-                  <g fill="none" fillRule="evenodd">
-                    <circle
-                      fillOpacity=".04"
-                      fill="url(#hero-ill-a)"
-                      cx="384"
-                      cy="216"
-                      r="128"
-                    />
-                    <circle
-                      fillOpacity=".16"
-                      fill="url(#hero-ill-b)"
-                      cx="384"
-                      cy="216"
-                      r="96"
-                    />
-                    <g fillRule="nonzero">
-                      <use fill="#000" xlinkHref="#hero-ill-d" />
-                      <use fill="url(#hero-ill-e)" xlinkHref="#hero-ill-d" />
-                    </g>
-                  </g>
                 </svg>
               </div>
             </div>

@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import ai from "/ai.jpeg";
 import notes1 from "/notes1.jpeg";
 import comm from "/comm.jpeg";
+import hero from "/hero.png";
 
 function FeatureHome() {
   const [tab, setTab] = useState(1);
