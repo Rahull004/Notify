@@ -33,7 +33,7 @@ function FeatureHome() {
         <div className="pt-12 md:pt-20">
           {/* Section header */}
           <div className="max-w-3xl mx-auto text-center pb-12 md:pb-16">
-            <h1 className="h2 mb-4">Explore the Notify</h1>
+            <h1 className="h2 mb-4">Explore Notify</h1>
             <p className="text-xl text-gray900-60">
               Take a tour of Notify and unlock a new way to organize your study
               materials. Notify is designed to make capturing and retrieving
@@ -49,7 +49,7 @@ function FeatureHome() {
               data-aos="fade-right"
             >
               <div className="md:pr-4 lg:pr-12 xl:pr-16 mb-8">
-                <h3 className="h3 mb-3">Why we use Notify?</h3>
+                <h3 className="h3 mb-3">Why Notify?</h3>
                 <p className="text-xl text-gray900-60">
                   Optimize your study workflow with Notify's ability to upload
                   notes, PDFs, and links, all accessible in one organized
@@ -178,7 +178,7 @@ function FeatureHome() {
                     className="md:max-w-none mx-auto rounded"
                     src={notes1}
                     width="600"
-                    style={{ margin: '120px 0px 0px 50px' }}
+                    style={{ margin: '160px 0px 0px 50px' }}
                     alt="Notes bg"
                   />
                 </div>
@@ -210,7 +210,7 @@ function FeatureHome() {
                     className="md:max-w-none mx-auto rounded"
                     src={comm}
                     width="600"
-                    style={{ margin: '350px 0px 0px 50px', height: '350px'}}
+                    style={{ margin: '300px 0px 0px 50px', height: '375px'}}
                     alt="Community bg"
                   />
                 </div>
