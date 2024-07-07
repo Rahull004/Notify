@@ -10,10 +10,12 @@ const TiptapEditor = () => {
   const { user, isLoading } = useUserContext();
   const navigate = useNavigate();
   const [draft, setDraft] = useState(null);
+  const [note, setnote] = useState(null);
 
   useEffect(() => {
     const fetchDraft = async () => {
       const currDraft = await getDraft(id);
+      setnote(currDraft)
       setDraft(currDraft.body);
     };
     fetchDraft();
@@ -42,7 +44,7 @@ const TiptapEditor = () => {
 
   return (
     <div>
-      <EditorNavbar />
+      <EditorNavbar note={note}/>
       <TiptapProvider onUpdate={({ content }) => handleBodyChange({ content })}>
         <div className="mt-6 max-w-6xl mx-auto rounded-2xl overflow-hidden">
           <div className="flex h-[650px] 2xl:h-[800px] w-full border-gray900 border-4 rounded-2xl">
