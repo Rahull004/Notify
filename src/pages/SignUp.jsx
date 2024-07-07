@@ -4,7 +4,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { createUserAccount, getCurrentUser, githubAuth, googleAuth, saveUser } from "../appwrite/api";
 import { useUserContext } from "../AuthContext";
-
+import { RingLoader } from "react-spinners";
 function SignUp() {
 
   const navigate = useNavigate();
@@ -25,6 +25,14 @@ function SignUp() {
       setpassword(value);
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center w-screen h-screen">
+        <RingLoader color="#0362e9" loading size={120} speedMultiplier={1} />.
+      </div>
+    );
+  }
 
   const handleSignUp = async (e) => {
     e.preventDefault();

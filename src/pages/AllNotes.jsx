@@ -5,15 +5,19 @@ import {
   getCommunityNotes,
   getPersonalNotes,
   getDraftNotes,
+  searchNotes,
 } from "../appwrite/api";
 import { useUserContext } from "../AuthContext";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
+import { RingLoader } from "react-spinners";
+
 
 export const AllNotes = () => {
   const [showNewNoteCard, setShowNewNoteCard] = useState(false);
   const [activeTab, setActiveTab] = useState("PERSONAL");
   const { user, isLoading } = useUserContext();
+  const [input, setInput] = useState("");
   const navigate = useNavigate();
 
   const [communityNotes, setCommunityNotes] = useState([]);
@@ -21,6 +25,7 @@ export const AllNotes = () => {
   const [draftNotes, setDraftNotes] = useState([]);
 
   const memoizedUser = useMemo(() => user, [user]);
+
 
   useEffect(() => {
     const getUserNotes = async () => {
@@ -59,14 +64,28 @@ export const AllNotes = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center w-screen h-screen">
+        <RingLoader color="#0362e9" loading size={120} speedMultiplier={1} />.
+      </div>
+    );
   }
 
   if (user.email === "" && !isLoading) {
     navigate("/signin");
   }
 
-  console.log(user);
+  const fetchNotes = async (value) => {
+    searchNotes(value)
+        .then(notes => console.log('Search results:', notes))
+        .catch(error => console.error('Search failed:', error));
+  };
+
+  const handleChange = (value) => {
+    setInput(value);
+    fetchNotes(value);
+    
+  };
 
   return (
     <div className="bg-gray200 w-screen h-screen font-rob">
@@ -74,9 +93,11 @@ export const AllNotes = () => {
         <div className="w-full flex items-center gap-4 px-8">
           <div className="relative mx-auto w-full">
             <input
-              className="bg-gray200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue400 placeholder:pl-6"
+              className="bg-gray200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue400 "
               type="text"
               placeholder="Search"
+              style={{ paddingLeft: "2.3rem" }}
+              onChange={(e) => handleChange(e.target.value)}
             />
             <img
               src="../../public/vector.png"
