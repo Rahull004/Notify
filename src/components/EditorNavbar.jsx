@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useUserContext } from "../AuthContext";
+import logo from "/logo.png"
 
 function EditorNavbar() {
-  const {user,isLoading} = useUserContext()
+  const {user,isLoading} = useUserContext();
+
+  const handlePDFs = () => {}
   return (
     <header
       className={`w-full z-30 md:bg-opacity-90 transition duration-300 ease-in-out bg-white backdrop-blur-sm shadow-lg`}
@@ -13,39 +16,13 @@ function EditorNavbar() {
           <div className="flex-shrink-0 mr-4">
             {/* Logo */}
             <Link to="/" className="block" aria-label="Notify">
-              <svg
-                className="w-8 h-8"
-                viewBox="0 0 32 32"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <defs>
-                  <radialGradient
-                    cx="21.152%"
-                    cy="86.063%"
-                    fx="21.152%"
-                    fy="86.063%"
-                    r="79.941%"
-                    id="header-logo"
-                  >
-                    <stop stopColor="#4FD1C5" offset="0%" />
-                    <stop stopColor="#81E6D9" offset="25.871%" />
-                    <stop stopColor="#338CF5" offset="100%" />
-                  </radialGradient>
-                </defs>
-                <rect
-                  width="32"
-                  height="32"
-                  rx="16"
-                  fill="url(#header-logo)"
-                  fillRule="nonzero"
-                />
-              </svg>
+            <img src={logo} className='w-20 h-20 rounded bg-transparent'/>
             </Link>
           </div>
 
           <div className="flex items-center justify-center gap-3 flex-wrap ">
             <div className="flex justify-center items-center ">
-              <button>
+              <button onClick={handlePDFs}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"

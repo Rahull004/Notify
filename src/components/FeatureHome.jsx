@@ -195,7 +195,7 @@ function FeatureHome() {
                     className="animate-popup md:max-w-none mx-auto rounded"
                     src={ai}
                     width="600"
-                    style={{ margin: '200px 0px 0px 50px',height:'450px'}}
+                    style={{ margin: '200px 0px 0px 50px',height:'400px'}}
                     alt="AI bg"
                   />
                 </div>

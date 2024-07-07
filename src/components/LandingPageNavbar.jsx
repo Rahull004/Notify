@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { logOut } from '../appwrite/api';
-import logo from "/logo2.png"
+import { Link } from 'react-router-dom';
+import logo from '/logo.png';
 
-function ProfileNavbar() {
+function Header() {
 
   const [top, setTop] = useState(true);
 
@@ -15,18 +14,6 @@ function ProfileNavbar() {
     return () => window.removeEventListener('scroll', scrollHandler);
   }, [top]);  
 
-  const navigate = useNavigate()
-
-  const handleLogOut = async()=> {
-    try {
-      const res = await logOut()
-      console.log(res);
-      window.location.reload()
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   return (
     <header className={`fixed w-full z-30 md:bg-opacity-90 transition duration-300 ease-in-out ${!top && 'bg-white backdrop-blur-sm shadow-lg'}`}>
       <div className="max-w-6xl mx-auto px-5 sm:px-6">
@@ -35,7 +22,7 @@ function ProfileNavbar() {
           <div className="flex-shrink-0 mr-4">
             {/* Logo */}
             <Link to="/" className="block" aria-label="Notify">
-            <img src={logo} className='w-20 h-24 rounded bg-transparent'/>
+            <img src={logo} className='w-20 h-20 rounded bg-transparent'/>
             </Link>
           </div>
 
@@ -43,9 +30,15 @@ function ProfileNavbar() {
           <nav className="flex flex-grow">
             <ul className="flex flex-grow justify-end flex-wrap items-center">
               <li>
-                <button onClick={handleLogOut} className="btn-sm text-gray200 hover:bg-gray900-87 bg-gray900 ml-3 "> {/*only redirection to homepage happening not actual sign out yet..backend functionality reqd*/}
-                  <span className='p-0.5'>Log Out</span>             
-                </button>
+                <Link to="/signin" className="font-medium text-gray900-60 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out">Sign in</Link>
+              </li>
+              <li>
+                <Link to="/signup" className="btn-sm text-gray200 hover:bg-gray900-87 bg-gray900 ml-3">
+                  <span>Sign up</span>
+                  <svg className="w-3 h-3 fill-current text-gray-300 flex-shrink-0 ml-2 -mr-1" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M11.707 5.293L7 .586 5.586 2l3 3H0v2h8.586l-3 3L7 11.414l4.707-4.707a1 1 0 000-1.414z" fillRule="nonzero" />
+                  </svg>                  
+                </Link>
               </li>
             </ul>
 
@@ -57,4 +50,4 @@ function ProfileNavbar() {
   );
 }
 
-export default ProfileNavbar;
+export default Header;

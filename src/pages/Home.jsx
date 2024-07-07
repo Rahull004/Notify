@@ -1,5 +1,5 @@
 import React from 'react'
-import Navbar from '../components/Navbar'
+import Navbar from '../components/LandingPageNavbar'
 import HeroHome from '../components/HeroHome'
 import FeatureHome from '../components/FeatureHome'
 import FeatureBlocks from '../components/FeatureBlocks'
