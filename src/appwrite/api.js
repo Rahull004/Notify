@@ -325,7 +325,7 @@ export const pdfUpload = async ({ file, noteId }) => {
       ID.unique(),
       {
         fileUrl,
-        note: noteId,
+        drafts: noteId,
       }
     );
 

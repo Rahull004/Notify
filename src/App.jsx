@@ -12,27 +12,29 @@ import ProfilePage from './pages/ProfilePage';
 import { ForgetPasswordEmail } from './pages/ForgetPasswordEmail';
 import { ForgetPasswordNewPassword } from './pages/ForgetPasswordNewPassword';
 import Error from './pages/Error/Error';
+import PdfViewer from './components/PdfViewer';
 
 export default function App() {
   return (
     <div>
-    <Routes>
-      <Route path="/" element={<Home />}/>
-      <Route path="/allnotes" element={<AllNotes />}/>
-      <Route path="/notes/:id" element={<Note />}/>
-      <Route path="/signup" element={<SignUp />}/>
-      <Route path="/signin" element={<SignIn />}/>
-      <Route path="/note/:id" element={<TiptapEditor />} />
-      <Route path="/draft/:id" element={<TiptapEditor />} />
-      <Route path="/signupcllg" element={<SignUpCllg />}/>
-      <Route path="/reset-password" element={<ResetPassword />}/>
-      <Route path="/profile" element={<ProfilePage />}/>
-      <Route path="/forgetpassword/email" element={<ForgetPasswordEmail />}/>
-      <Route path="/forgetpassword" element={<ForgetPasswordNewPassword />}/>
-      <Route path="*" element={<Error />}/>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/allnotes" element={<AllNotes />} />
+        <Route path="/notes/:id" element={<Note />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/note/:id" element={<TiptapEditor />} />
+        <Route path="/draft/:id" element={<TiptapEditor />} />
+        <Route path="/signupcllg" element={<SignUpCllg />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/pdfviewer/:id" element={<PdfViewer />} />
 
-    </Routes>
-    <ChatbotPopup />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/forgetpassword/email" element={<ForgetPasswordEmail />} />
+        <Route path="/forgetpassword" element={<ForgetPasswordNewPassword />} />
+        <Route path="*" element={<Error />} />
+      </Routes>
+      <ChatbotPopup />
     </div>
-  )
+  );
 }

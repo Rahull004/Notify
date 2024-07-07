@@ -3,10 +3,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { useUserContext } from "../AuthContext";
 import logo from "/logo.png"
 import { saveNote } from "../appwrite/api";
+import { PdfCard } from "./PdfCard";
 
 function EditorNavbar({note}) {
   const {user,isLoading} = useUserContext();
   const navigate = useNavigate()
+  const [showPdfCard, setshowPdfCard] = useState(false)
   const handlePost = async()=> {
     try {
       const savedNote = await saveNote({
@@ -26,7 +28,9 @@ function EditorNavbar({note}) {
     }
   }
 
-  const handlePDFs = () => {}
+  const handlePDFs = () => {
+    setshowPdfCard(true)
+  }
   return (
     <header
       className={`w-full z-30 md:bg-opacity-90 transition duration-300 ease-in-out bg-white backdrop-blur-sm shadow-lg`}
@@ -36,7 +40,7 @@ function EditorNavbar({note}) {
           <div className="flex-shrink-0 mr-4">
             {/* Logo */}
             <Link to="/" className="block" aria-label="Notify">
-            <img src={logo} className='w-20 h-20 rounded bg-transparent'/>
+              <img src={logo} className="w-20 h-20 rounded bg-transparent" />
             </Link>
           </div>
 
@@ -85,11 +89,19 @@ function EditorNavbar({note}) {
                 />
               )}
             </Link>
-            <button className="bg-blue400 px-3 rounded-full py-2 md:py-3 w-20 text-white" onClick={handlePost}>
+            <button
+              className="bg-blue400 px-3 rounded-full py-2 md:py-3 w-20 text-white"
+              onClick={handlePost}
+            >
               Post
             </button>
           </div>
         </div>
+        {showPdfCard && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 w-full h-full">
+            <PdfCard note={note}/>
+          </div>
+        )}
       </div>
     </header>
   );
