@@ -16,7 +16,7 @@ export const searchNotes = async (query) => {
     return result.documents;
   } catch (error) {
     console.error("Failed to search notes:", error);
-    throw error; // Rethrow or handle as needed
+    throw error; 
   }
 };
 
