@@ -11,6 +11,7 @@ import {
   MenubarTrigger,
 } from "../components/ui/menubar";
 import { TiptapContext } from "../contexts/tiptap_context";
+import { getDraft } from "../appwrite/api.js";
 
 const TableMenu = ({ editor }) => [
   {
@@ -344,6 +345,7 @@ const MenuBarIcon = ({ editor }) => [
 ];
 
 function MenuBar({ setImageURL }) {
+  
   const { editor } = useContext(TiptapContext);
   const fileInputRef = useRef(null);
 
@@ -387,7 +389,7 @@ function MenuBar({ setImageURL }) {
                 <button
                   key={item.id}
                   disabled={item.disable}
-                  className={`hover:bg-gray-600 p-1 rounded-lg ${
+                  className={` ${
                     item.disable ? "cursor-not-allowed" : "cursor-pointer"
                   }`}
                 >
@@ -407,7 +409,7 @@ function MenuBar({ setImageURL }) {
             </MenubarMenu>
           </Menubar>
         ) : (
-          <div className="flex items-center h-full gap-1" key={item.id}>
+          <div className="flex items-center h-full gap-5 " key={item.id}>
             <button
               onClick={item.onClick}
               disabled={item.disable}
@@ -439,7 +441,7 @@ function MenuBar({ setImageURL }) {
   );
 }
 
-function Editor() {
+function Editor({user,id}) {
   const { editor, content, editorText } = useContext(TiptapContext);
   const [imageURL, setImageURL] = useState(null);
 
@@ -468,11 +470,21 @@ function Editor() {
     }
   }, [content, editor]);
 
+  useEffect(()=> {
+     const fetchDraft = async()=> {
+      const draft = await getDraft(id);
+      if(draft) {
+        editor.chain().focus().insertContent(draft.content).run();
+      }
+      console.log(draft);
+     }
+     fetchDraft();
+  },[])
   return (
     <div>
       <MenuBar editor={editor} setImageURL={setImageURL} />
       <EditorContent
-        className="w-full p-3 max-h-[600px] overflow-auto"
+        className="w-full max-h-[580px] 2xl:max-h-[720px] pr-2 overflow-auto editor-no-scrollbar"
         editor={editor}
       />
     </div>

@@ -71,7 +71,6 @@ export const googleAuth = async (path) => {
       `http://localhost:5173/signin`,
       `http://localhost:5173/signin`,
     );
-    console.log(res.href);
   } catch (error) {
     console.log(error);
     return error;
@@ -85,7 +84,6 @@ export const githubAuth = async (path) => {
       `http://localhost:5173/signin`,
       `http://localhost:5173/signin`,
     );
-    console.log(res.href);
   } catch (error) {
     console.log(error);
     return error;
@@ -213,6 +211,21 @@ export const saveNote = async (note) => {
   }
 };
 
+export const saveDraft = async (note) => {
+  try {
+    const draftSaved = await databases.createDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.draftId,
+      ID.unique(),
+      note,
+    );
+    return draftSaved;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
 export const getCommunityNotes = async (id) => {
   try {
     const notes = await databases.listDocuments(
@@ -300,6 +313,24 @@ export const pdfUpload = async ({ file, noteId }) => {
   }
 };
 
+export const changeUserName = async(id,username)=> {
+  try {
+    const changedUserName = await databases.updateDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.userId,
+      id,
+      {
+        fullname:username,
+      }
+    )
+
+    return changedUserName;
+  } catch (error) {
+    console.log(error);
+    return error
+  }
+}
+
 export const getNote = async (id) => {
   try {
     const note = await databases.getDocument(
@@ -314,6 +345,22 @@ export const getNote = async (id) => {
     return error;
   }
 };
+
+export const getDraft = async (id) => {
+  try {
+    const note = await databases.getDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.draftId,
+      id,
+    );
+    // note.body = JSON.parse(note.body);
+    return note.body;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
 export const getNoteFull = async (id) => {
   try {
     const note = await databases.getDocument(

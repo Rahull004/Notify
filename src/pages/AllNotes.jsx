@@ -16,12 +16,10 @@ export const AllNotes = () => {
 
   const memoizedUser = useMemo(() => user, [user]);
 
-  console.log(memoizedUser);
-
   useEffect(() => {
     const getUserNotes = async () => {
       try {
-        if (memoizedUser.id==="" && !isLoading) {
+        if (memoizedUser.id === "" && !isLoading) {
           navigate("/signin");
           return;
         }
@@ -105,16 +103,22 @@ export const AllNotes = () => {
                 >
                   COMMUNITY
                 </button>
+                <button
+                  className={`mx-4 ${activeTab === "DRAFT" ? "text-blue500" : "text-gray900-60"}`}
+                  onClick={() => handleTabClick("DRAFT")}
+                >
+                  DRAFT
+                </button>
               </div>
               {activeTab === "PERSONAL" ? (
                 <div className="flex">
-                  <div className="border-[1px] border-blue400 w-1/2"></div>
-                  <div className="border-[1px] border-black/10 w-1/2"></div>
+                  <div className="border-[1px] border-blue400 w-1/3"></div>
+                  <div className="border-[1px] border-black/10 w-1/3"></div>
                 </div>
               ) : (
                 <div className="flex">
-                  <div className="border-[1px] border-black/10 w-1/2"></div>
-                  <div className="border-[1px] border-blue400 w-1/2"></div>
+                  <div className="border-[1px] border-black/10 w-1/3"></div>
+                  <div className="border-[1px] border-blue400 w-1/3"></div>
                 </div>
               )}
             </div>
@@ -132,7 +136,11 @@ export const AllNotes = () => {
 
       {showNewNoteCard && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 w-full h-full">
-          <NewNoteCard onClose={handleClosePopup} />
+          <NewNoteCard
+            onClose={handleClosePopup}
+            showNewNoteCard={showNewNoteCard}
+            user={user}
+          />
         </div>
       )}
     </div>

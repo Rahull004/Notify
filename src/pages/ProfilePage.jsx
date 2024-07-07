@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
-import Navbar from "../components/Navbar";
-import { getCurrentUser, saveUser } from "../appwrite/api";
+import ProfileNavbar from "../components/ProfileNavbar";
+import { changeUserName, getCurrentUser, saveUser } from "../appwrite/api";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { MdOutlineDriveFileRenameOutline } from "react-icons/md";
 import { useUserContext } from "../AuthContext";
 import { account } from "../appwrite/config";
+
 
 function ProfilePage() {
   const navigate = useNavigate();
@@ -89,24 +90,24 @@ function ProfilePage() {
     }
   };
 
-  const handleChangeUsername = async (e) => {
-    e.preventDefault();
-    try {
-      setloading(true);
-      const result = await changeUserName(newUsername);
-      if (result) {
-        setNewUsername("");
-        setShowChangeUsernameForm(false);
-      } else {
-        alert("Error changing username");
-      }
-      setloading(false);
-    } catch (error) {
-      console.log(error);
-      alert("Error while changing username");
-      setloading(false);
-    }
-  };
+  // const handleChangeUsername = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     setloading(true);
+  //     const result = await changeUserName(newUsername);
+  //     if (result) {
+  //       setNewUsername("");
+  //       setShowChangeUsernameForm(false);
+  //     } else {
+  //       alert("Error changing username");
+  //     }
+  //     setloading(false);
+  //   } catch (error) {
+  //     console.log(error);
+  //     alert("Error while changing username");
+  //     setloading(false);
+  //   }
+  // };
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -139,10 +140,26 @@ function ProfilePage() {
     return <div>Loading...</div>
   }
 
+
+  const handleChangeUserNameSubmit = async()=> {
+    setloading(true)
+    try {
+      if(newUsername.length>0) {
+         const updatedUser = await changeUserName(user.$id,newUsername)
+         window.location.reload()
+         return updatedUser
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setloading(false)
+    }
+  }
+
   return (
     <div className="flex flex-col min-h-screen overflow-hidden">
       {/*  Site header */}
-      {/* <Navbar /> */}
+      <ProfileNavbar />
 
       {/*  Page content */}
       <main className="flex-grow">
@@ -207,12 +224,12 @@ function ProfilePage() {
                         />
                       </div>
                       <div className="w-full mt-3">
-                        <button
+                        <buttonFlog
                           className="btn text-white bg-blue-600 hover:bg-blue-700 w-full"
-                          onClick={handleChangeUsername}
+                          onClick={handleChangeUserNameSubmit}
                         >
                           Submit
-                        </button>
+                        </buttonFlog>
                       </div>
                     </div>
                   )}

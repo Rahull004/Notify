@@ -11,7 +11,7 @@ export const Home = () => {
   const { user, isLoading } = useUserContext();
   const navigate = useNavigate()
 
-  if (user) {
+  if (user.fullname!=="" && !isLoading) {
     navigate("/allnotes");
   }
   return (
