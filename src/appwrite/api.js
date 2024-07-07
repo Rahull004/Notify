@@ -231,6 +231,25 @@ export const getCommunityNotes = async (id) => {
   }
 };
 
+export const getDraftNotes = async (id) => {
+  try {
+    const notes = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.draftId,
+      [Query.equal("user", id)],
+      100,
+      0,
+      "DESC",
+    );
+    return notes;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+
+
 export const getPersonalNotes = async (id) => {
   try {
     const notes = await databases.listDocuments(
@@ -336,18 +355,31 @@ export const getNote = async (id) => {
 
 export const getDraft = async (id) => {
   try {
-    const note = await databases.getDocument(
+    const draft = await databases.getDocument(
       appwriteConfig.databaseId,
       appwriteConfig.draftId,
       id,
     );
-    // note.body = JSON.parse(note.body);
-    return note.body;
+    return draft;
   } catch (error) {
     console.log(error);
     return error;
   }
 };
+
+export const updateDraft = async(id,draft)=> {
+  try {
+    const updatedDraft = await databases.updateDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.draftId,
+      id,
+      draft,
+    );
+    return updatedDraft;
+  } catch (error) {
+    return error
+  }
+}
 
 export const getNoteFull = async (id) => {
   try {
@@ -476,6 +508,20 @@ export const deleteNote = async (id) => {
     return error;
   }
 }
+
+export const deleteDraft = async (id) => {
+  try {
+    const draft = await databases.deleteDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.draftId,
+      id,
+    );
+    return draft;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
 
 
 export const updateOldPassword = async (oldPassword, newPassword) => {
