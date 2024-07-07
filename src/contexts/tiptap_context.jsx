@@ -18,21 +18,25 @@ import Table from "@tiptap/extension-table";
 import TableRow from "@tiptap/extension-table-row";
 import TableHeader from "@tiptap/extension-table-header";
 import TableCell from "@tiptap/extension-table-cell";
+import { debounce } from "lodash";
 
 const TiptapContext = createContext({
   editor: null,
   content: "",
   setContent: () => {},
-  editorText: "",
-  setEditorText: () => {},
   htmlContent: "",
   setHtmlContent: () => {},
 });
 
 function TiptapProvider({ children }) {
   const [content, setContent] = useState("");
-  const [editorText, setEditorText] = useState("");
   const [htmlContent, setHtmlContent] = useState("");
+
+  const debouncedUpdate = debounce(({ editor }) => {
+    const json = editor.getJSON();
+    setContent(json);
+    setHtmlContent(editor.getHTML());
+  }, 500);
 
   const lowlight = createLowlight(common);
 
@@ -83,6 +87,7 @@ function TiptapProvider({ children }) {
       },
     },
     content,
+    onUpdate: debouncedUpdate,
   });
 
   return (
@@ -91,8 +96,6 @@ function TiptapProvider({ children }) {
         editor,
         content,
         setContent,
-        editorText,
-        setEditorText,
         htmlContent,
         setHtmlContent,
       }}
