@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 // import Transition from '../utils/Transition';
 
-import ai from "/ai.jpg";
-import notes1 from "/notes1.jpg";
-import comm from "/comm.png";
+import ai from "/ai.jpeg";
+import notes1 from "/notes1.jpeg";
+import comm from "/comm.jpeg";
+import hero from "/hero.png";
 
 function FeatureHome() {
   const [tab, setTab] = useState(1);
@@ -61,8 +62,8 @@ function FeatureHome() {
                 <div
                   className={`flex items-center text-lg p-5 rounded border transition duration-300 ease-in-out mb-3 ${
                     tab !== 1
-                      ? "bg-white shadow-md border-gray-200 hover:shadow-lg"
-                      : "bg-gray-200/90 border-transparent"
+                      ? "shadow-none transition-shadow duration-300 cursor-pointer hover:shadow-lg hover:shadow-gray-400"
+                      : "bg-gray-200/90 border-transparent shadow-none transition-shadow duration-300 cursor-pointer hover:shadow-lg hover:shadow-gray-400"
                   }`}
                   onClick={(e) => {
                     e.preventDefault();
@@ -70,7 +71,7 @@ function FeatureHome() {
                   }}
                 >
                   <div>
-                    <div className="font-bold leading-snug tracking-tight mb-1">
+                    <div className="font-bold leading-snug tracking-tight mb-1 ">
                       Notes Management
                     </div>
                     <div className="text-gray900-60">
@@ -92,15 +93,15 @@ function FeatureHome() {
                 <div
                   className={`flex items-center text-lg p-5 rounded border transition duration-300 ease-in-out mb-3 ${
                     tab !== 2
-                      ? "bg-white shadow-md border-gray-200 hover:shadow-lg"
-                      : "bg-gray-200/90 border-transparent"
+                      ? "shadow-none transition-shadow duration-300 cursor-pointer hover:shadow-lg hover:shadow-gray-400g"
+                      : "bg-gray-200/90 border-transparent shadow-none transition-shadow duration-300 cursor-pointer hover:shadow-lg hover:shadow-gray-400"
                   }`}
                   onClick={(e) => {
                     e.preventDefault();
                     setTab(2);
                   }}
                 >
-                  <div>
+                  <div class>
                     <div className="font-bold leading-snug tracking-tight mb-1">
                       Upload PDFs and AI chatbox
                     </div>
@@ -126,8 +127,8 @@ function FeatureHome() {
                 <div
                   className={`flex items-center text-lg p-5 rounded border transition duration-300 ease-in-out mb-3 ${
                     tab !== 3
-                      ? "bg-white shadow-md border-gray-200 hover:shadow-lg"
-                      : "bg-gray-200/90 border-transparent"
+                      ? "shadow-none transition-shadow duration-300 cursor-pointer hover:shadow-lg hover:shadow-gray-400"
+                      : "bg-gray-200/90 border-transparent shadow-none transition-shadow duration-300 cursor-pointer hover:shadow-lg hover:shadow-gray-400"
                   }`}
                   onClick={(e) => {
                     e.preventDefault();
@@ -175,10 +176,10 @@ function FeatureHome() {
                   }`}
                 >
                   <img
-                    className="md:max-w-none mx-auto rounded"
+                    className="md:max-w-none mx-auto rounded animate-popup"
                     src={notes1}
                     width="600"
-                    style={{ margin: '160px 0px 0px 50px' }}
+                    style={{ margin: '160px 0px 0px 50px', height:'400px'}}
                     alt="Notes bg"
                   />
                 </div>
@@ -191,10 +192,10 @@ function FeatureHome() {
                   } `}
                 >
                   <img
-                    className="md:max-w-none mx-auto rounded"
+                    className="animate-popup md:max-w-none mx-auto rounded"
                     src={ai}
                     width="600"
-                    style={{ margin: '220px 0px 0px 50px' }}
+                    style={{ margin: '200px 0px 0px 50px',height:'450px'}}
                     alt="AI bg"
                   />
                 </div>
@@ -207,10 +208,10 @@ function FeatureHome() {
                   } `}
                 >
                   <img
-                    className="md:max-w-none mx-auto rounded"
+                    className="md:max-w-none mx-auto rounded animate-popup"
                     src={comm}
                     width="600"
-                    style={{ margin: '300px 0px 0px 50px', height: '375px'}}
+                    style={{ margin: '290px 0px 0px 50px', height: '375px'}}
                     alt="Community bg"
                   />
                 </div>
