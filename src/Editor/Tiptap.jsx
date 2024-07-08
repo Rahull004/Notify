@@ -5,6 +5,7 @@ import Editor from "./Editor";
 import EditorNavbar from "../components/EditorNavbar";
 import { TiptapProvider } from "../contexts/tiptap_context";
 import { getDraft, getNote, updateDraft, updateNote } from "../appwrite/api";
+import { RingLoader } from "react-spinners";
 
 const TiptapEditor = () => {
   const { user, isLoading } = useUserContext();
@@ -38,7 +39,11 @@ const TiptapEditor = () => {
   console.log(draft);
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return (
+      <div className="flex justify-center items-center w-screen h-screen">
+        <RingLoader color="#0362e9" loading size={120} speedMultiplier={1} />.
+      </div>
+    );
   }
 
   if (!user) {
@@ -68,7 +73,7 @@ const TiptapEditor = () => {
       <EditorNavbar note={note}/>
       <TiptapProvider onUpdate={({ content }) => handleBodyChange({ content })}>
         <div className="mt-6 max-w-6xl mx-auto rounded-2xl overflow-hidden">
-          <div className="flex h-[650px] 2xl:h-[800px] w-full border-gray900 border-4 rounded-2xl">
+          <div className="flex h-[600px] 2xl:h-[800px] w-full border-gray900 border-4 rounded-2xl">
             <Editor id={id} user={user} body={draft} />
           </div>
         </div>

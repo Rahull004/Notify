@@ -1,40 +1,40 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useUserContext } from "../AuthContext";
-import logo from "/logo.png"
+import logo from "/logo.png";
 import { saveNote } from "../appwrite/api";
 import { PdfCard } from "./PdfCard";
 
-function EditorNavbar({note}) {
-  const {user,isLoading} = useUserContext();
-  const navigate = useNavigate()
-  const [showPdfCard, setshowPdfCard] = useState(false)
-  const handlePost = async()=> {
+function EditorNavbar({ note }) {
+  const { user, isLoading } = useUserContext();
+  const navigate = useNavigate();
+  const [showPdfCard, setShowPdfCard] = useState(false);
+
+  const handlePost = async () => {
     try {
       const savedNote = await saveNote({
         title: note.title,
         description: note.description,
         pdfs: note.pdfs,
         category: note.category,
-        user:note.user.$id,
-        body:note.body,
+        user: note.user.$id,
+        body: note.body,
       });
-      if(saveNote) {
-        navigate('/allnotes')
+      if (savedNote) {
+        navigate("/allnotes");
       }
     } catch (error) {
       console.log(error);
-      return error
+      return error;
     }
-  }
+  };
 
   const handlePDFs = () => {
-    setshowPdfCard(true)
-  }
+    setShowPdfCard(true);
+  };
+
   return (
-    <header
-      className={`w-full z-30 md:bg-opacity-90 transition duration-300 ease-in-out bg-white backdrop-blur-sm shadow-lg`}
-    >
+    <header className="w-full z-30 md:bg-opacity-90 transition duration-300 ease-in-out bg-white backdrop-blur-sm shadow-lg">
       <div className="max-w-6xl mx-auto px-5 sm:px-6">
         <div className="flex items-center justify-between h-16 md:h-20">
           <div className="flex-shrink-0 mr-4">
@@ -44,8 +44,8 @@ function EditorNavbar({note}) {
             </Link>
           </div>
 
-          <div className="flex items-center justify-center gap-3 flex-wrap ">
-            <div className="flex justify-center items-center ">
+          <div className="flex items-center justify-center gap-3 flex-wrap">
+            <div className="flex justify-center items-center">
               <button onClick={handlePDFs}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -98,8 +98,8 @@ function EditorNavbar({note}) {
           </div>
         </div>
         {showPdfCard && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 w-full h-full">
-            <PdfCard note={note}/>
+          <div className="fixed inset-0 z-50 h-screen ">
+            <PdfCard note={note} />
           </div>
         )}
       </div>

@@ -131,7 +131,6 @@
     scrollbar-width: none;  /* For Firefox */
   }
 
-
 @layer utilities {
     .step {
       counter-increment: step;

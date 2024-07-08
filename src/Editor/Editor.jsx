@@ -467,7 +467,7 @@ function Editor({ id, user, body }) {
     <div>
       <MenuBar editor={editor} setImageURL={setImageURL} />
       <EditorContent
-        className="w-full max-h-[580px] 2xl:max-h-[720px] pr-2 overflow-auto editor-no-scrollbar"
+        className="w-full max-h-[520px] 2xl:max-h-[720px] pr-2 overflow-auto editor-no-scrollbar"
         editor={editor}
       />
     </div>
