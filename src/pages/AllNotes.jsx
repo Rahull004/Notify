@@ -5,20 +5,18 @@ import {
   getCommunityNotes,
   getPersonalNotes,
   getDraftNotes,
-  searchNotes,
 } from "../appwrite/api";
 import { useUserContext } from "../AuthContext";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import { RingLoader } from "react-spinners";
 
-
 export const AllNotes = () => {
   const [showNewNoteCard, setShowNewNoteCard] = useState(false);
   const [activeTab, setActiveTab] = useState("PERSONAL");
   const { user, isLoading } = useUserContext();
   const [input, setInput] = useState("");
-  const navigate = useNavigate();
+  const navigated = useNavigate();
 
   const [communityNotes, setCommunityNotes] = useState([]);
   const [personalNotes, setPersonalNotes] = useState([]);
@@ -26,30 +24,45 @@ export const AllNotes = () => {
 
   const memoizedUser = useMemo(() => user, [user]);
 
+  
+  const getUserNotes = async () => {
+    try {
+
+      const communityNotesData = await getCommunityNotes(memoizedUser?.$id);
+      const filteredCommunityNotes = communityNotesData.documents.filter(
+        (note) =>
+          note.title.includes(searchQuery) ||
+          note.description.includes(searchQuery),
+      );
+      setCommunityNotes(filteredCommunityNotes);
+
+      // Fetch and filter personal notes
+      const personalNotesData = await getPersonalNotes(memoizedUser?.$id);
+      const filteredPersonalNotes = personalNotesData.documents.filter(
+        (note) =>
+          note.title.includes(searchQuery) ||
+          note.description.includes(searchQuery),
+      );
+      setPersonalNotes(filteredPersonalNotes);
+
+      const draftNotesData = await getDraftNotes(memoizedUser?.$id);
+      setDraftNotes(draftNotesData.documents);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
-    const getUserNotes = async () => {
-      try {
-        if (memoizedUser.id === "" && !isLoading) {
-          navigate("/signin");
-          return;
-        }
 
-        const communityNotesData = await getCommunityNotes(memoizedUser?.$id);
-        setCommunityNotes(communityNotesData.documents);
-        const personalNotesData = await getPersonalNotes(memoizedUser?.$id);
-        setPersonalNotes(personalNotesData.documents);
-        const draftNotesData = await getDraftNotes(memoizedUser?.$id);
-        setDraftNotes(draftNotesData.documents);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+    if (memoizedUser.id === "" && !isLoading) {
+      navigated("/signin");
+      return;
+    }
 
     if (memoizedUser?.$id) {
       getUserNotes();
     }
-  }, [memoizedUser, isLoading, navigate]);
+  }, [memoizedUser, isLoading,navigated]);
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
@@ -72,19 +85,13 @@ export const AllNotes = () => {
   }
 
   if (user.email === "" && !isLoading) {
-    navigate("/signin");
+    navigated("/signin");
   }
-
-  const fetchNotes = async (value) => {
-    searchNotes(value)
-        .then(notes => console.log('Search results:', notes))
-        .catch(error => console.error('Search failed:', error));
-  };
+  
 
   const handleChange = (value) => {
     setInput(value);
-    fetchNotes(value);
-    
+    getUserNotes(value);
   };
 
   return (

@@ -1,4 +1,8 @@
 import React from "react";
+<<<<<<< HEAD
+=======
+
+>>>>>>> 241b07ab3f823aa41877693725e9b8c0855cc3fe
 import Hero from "/hero.png";
 
 function HeroHome() {

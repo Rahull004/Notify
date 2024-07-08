@@ -16,7 +16,7 @@ export const searchNotes = async (query) => {
     return result.documents;
   } catch (error) {
     console.error("Failed to search notes:", error);
-    throw error; // Rethrow or handle as needed
+    throw error; 
   }
 };
 
@@ -204,6 +204,7 @@ export const logOut = async () => {
 
 export const saveNote = async (note) => {
   try {
+    note.body = JSON.stringify(note.body)
     const noteSaved = await databases.createDocument(
       appwriteConfig.databaseId,
       appwriteConfig.noteId,

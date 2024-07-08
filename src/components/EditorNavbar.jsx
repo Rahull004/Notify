@@ -1,10 +1,30 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useUserContext } from "../AuthContext";
 import logo from "/logo.png"
+import { saveNote } from "../appwrite/api";
 
-function EditorNavbar() {
+function EditorNavbar({note}) {
   const {user,isLoading} = useUserContext();
+  const navigate = useNavigate()
+  const handlePost = async()=> {
+    try {
+      const savedNote = await saveNote({
+        title: note.title,
+        description: note.description,
+        pdfs: note.pdfs,
+        category: note.category,
+        user:note.user.$id,
+        body:note.body,
+      });
+      if(saveNote) {
+        navigate('/allnotes')
+      }
+    } catch (error) {
+      console.log(error);
+      return error
+    }
+  }
 
   const handlePDFs = () => {}
   return (
@@ -65,7 +85,7 @@ function EditorNavbar() {
                 />
               )}
             </Link>
-            <button className="bg-blue400 px-3 rounded-full py-2 md:py-3 w-20 text-white">
+            <button className="bg-blue400 px-3 rounded-full py-2 md:py-3 w-20 text-white" onClick={handlePost}>
               Post
             </button>
           </div>
