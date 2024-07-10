@@ -13,30 +13,14 @@ const TiptapEditor = () => {
   const [draft, setDraft] = useState(null);
   const [note, setnote] = useState(null);
 
-    const id = window.location.pathname.split("/")[2];
-    const type = window.location.pathname.split("/")[1];
-
-  console.log(type);
-
   useEffect(() => {
     const fetchDraft = async () => {
       const currDraft = await getDraft(id);
       setnote(currDraft)
       setDraft(currDraft.body);
     };
-    const fetchNote = async () => {
-      const currNote = await getNote(id);
-      setnote(currNote);
-      setDraft(currNote.body);
-    };
-    if(type==="note") {
-      fetchNote()
-    } else {
-      fetchDraft()
-    }
+    fetchDraft();
   }, []);
-
-  console.log(draft);
 
   if (isLoading) {
     return (
@@ -51,17 +35,12 @@ const TiptapEditor = () => {
     return null;
   }
 
-
+  const id = window.location.pathname.split("/")[2];
 
   const handleBodyChange = async ({ content }) => {
     try {
-      if (type === "note") {
-        const updatedNote = await updateNote(content, id);
-        return updatedNote;
-      } else {
-        const updatedDraft = await updateDraft(content, id);
-        return updatedDraft;
-      }
+      const updatedDraft = await updateDraft(content, id);
+      return updatedDraft;
     } catch (error) {
       console.log(error);
       return null;

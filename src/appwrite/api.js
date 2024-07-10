@@ -16,7 +16,7 @@ export const searchNotes = async (query) => {
     return result.documents;
   } catch (error) {
     console.error("Failed to search notes:", error);
-    throw error; // Rethrow or handle as needed
+    throw error; 
   }
 };
 
@@ -366,7 +366,7 @@ export const getNote = async (id) => {
       id
     );
     note.body = JSON.parse(note.body);
-    return note;
+    return note.body;
   } catch (error) {
     console.log(error);
     return error;
@@ -403,6 +403,7 @@ export const updateDraft = async(draft,id)=> {
     return error
   }
 }
+
 export const getNoteFull = async (id) => {
   try {
     const note = await databases.getDocument(
@@ -417,18 +418,21 @@ export const getNoteFull = async (id) => {
     return error;
   }
 };
-export const updateNote = async ( note,id) => {
+export const updateNote = async (id, data) => {
   try {
-    const updatedNote = await databases.updateDocument(
+    const jsonData = JSON.stringify(data);
+
+    const updatesData = await databases.updateDocument(
       appwriteConfig.databaseId,
       appwriteConfig.noteId,
       id,
       {
-        body: JSON.stringify(note),
-      },
+        body: jsonData,
+      }
     );
-    return updatedNote;
+    return updatesData;
   } catch (error) {
+    console.log(error);
     return error;
   }
 };
