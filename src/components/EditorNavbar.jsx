@@ -9,6 +9,7 @@ function EditorNavbar({ note }) {
   const { user, isLoading } = useUserContext();
   const navigate = useNavigate();
   const [showPdfCard, setShowPdfCard] = useState(false);
+  console.log(user);
 
   const handlePost = async () => {
     try {

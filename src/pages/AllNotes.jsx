@@ -26,7 +26,7 @@ export const AllNotes = () => {
 
   const memoizedUser = useMemo(() => user, [user]);
 
-
+  console.log(memoizedUser, "fjsdikfvhd");
   useEffect(() => {
     const getUserNotes = async () => {
       try {
