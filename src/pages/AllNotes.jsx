@@ -5,6 +5,7 @@ import {
   getCommunityNotes,
   getPersonalNotes,
   getDraftNotes,
+  searchNotes,
 } from "../appwrite/api";
 import { useUserContext } from "../AuthContext";
 import { useNavigate } from "react-router";
@@ -15,35 +16,26 @@ export const AllNotes = () => {
   const [showNewNoteCard, setShowNewNoteCard] = useState(false);
   const [activeTab, setActiveTab] = useState("PERSONAL");
   const { user, isLoading } = useUserContext();
-  const [input, setInput] = useState("");
   const navigated = useNavigate();
+
+  const [input, setInput] = useState("");
 
   const [communityNotes, setCommunityNotes] = useState([]);
   const [personalNotes, setPersonalNotes] = useState([]);
   const [draftNotes, setDraftNotes] = useState([]);
 
+
   const memoizedUser = useMemo(() => user, [user]);
 
-  
   const getUserNotes = async () => {
     try {
-
       const communityNotesData = await getCommunityNotes(memoizedUser?.$id);
-      const filteredCommunityNotes = communityNotesData.documents.filter(
-        (note) =>
-          note.title.includes(searchQuery) ||
-          note.description.includes(searchQuery),
-      );
-      setCommunityNotes(filteredCommunityNotes);
 
-      // Fetch and filter personal notes
+      setCommunityNotes(communityNotesData.documents);
+
       const personalNotesData = await getPersonalNotes(memoizedUser?.$id);
-      const filteredPersonalNotes = personalNotesData.documents.filter(
-        (note) =>
-          note.title.includes(searchQuery) ||
-          note.description.includes(searchQuery),
-      );
-      setPersonalNotes(filteredPersonalNotes);
+
+      setPersonalNotes(personalNotesData.documents);
 
       const draftNotesData = await getDraftNotes(memoizedUser?.$id);
       setDraftNotes(draftNotesData.documents);
@@ -51,9 +43,25 @@ export const AllNotes = () => {
       console.log(error);
     }
   };
+  const handleSearch = async (query, category) => {
+
+    try {
+      const results = await searchNotes(query, category);
+    
+      if (category === "PERSONAL") {
+        setPersonalNotes(results);
+      } else if (category === "COMMUNITY") {
+        setCommunityNotes(results);
+      }
+      else{
+        setDraftNotes(results);
+      }
+    } catch (error) {
+      console.error("Error searching notes:", error);
+    }
+  };
 
   useEffect(() => {
-
     if (memoizedUser.id === "" && !isLoading) {
       navigated("/signin");
       return;
@@ -62,7 +70,7 @@ export const AllNotes = () => {
     if (memoizedUser?.$id) {
       getUserNotes();
     }
-  }, [memoizedUser, isLoading,navigated]);
+  }, [memoizedUser, isLoading, navigated]);
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
@@ -87,12 +95,17 @@ export const AllNotes = () => {
   if (user.email === "" && !isLoading) {
     navigated("/signin");
   }
-  
 
-  const handleChange = (value) => {
-    setInput(value);
-    getUserNotes(value);
+  const handleSearchChange = (value) => {
+    setInput(value)
+
+    if (value === "") {
+      getUserNotes();
+      return;
+    }
+    handleSearch(value, activeTab);
   };
+
 
   return (
     <div className="bg-gray200 w-screen h-screen font-rob">
@@ -104,7 +117,7 @@ export const AllNotes = () => {
               type="text"
               placeholder="Search"
               style={{ paddingLeft: "2.3rem" }}
-              onChange={(e) => handleChange(e.target.value)}
+              onChange={(e) => handleSearchChange(e.target.value)}
             />
             <img
               src="../../public/vector.png"
@@ -193,7 +206,9 @@ export const AllNotes = () => {
 
       <div className="px-12 mt-10 grid grid-cols-2 max-sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
         {activeTab === "PERSONAL" &&
-          personalNotes.map((note) => <NoteCard key={note.$id} note={note} user={user} />)}
+          personalNotes.map((note) => (
+            <NoteCard key={note.$id} note={note} user={user} />
+          ))}
         {activeTab === "COMMUNITY" &&
           communityNotes.map((note) => <NoteCard key={note.$id} note={note} />)}
         {activeTab === "DRAFT" &&

@@ -1,24 +1,5 @@
-import { ID, Permission, Role, Query } from "appwrite";
+import { ID, Query } from "appwrite";
 import { account, appwriteConfig, avatars, databases, storage } from "./config";
-
-export const searchNotes = async (query) => {
-  try {
-    // Create search conditions for both title and description
-    const searchConditions = [
-      Query.search('title', query),
-      Query.search('description', query)
-    ];
-
-    // Execute the search
-    const result = await databases.listDocuments(appwriteConfig.databaseId,appwriteConfig.noteId, searchConditions);
-
-    // Return the documents
-    return result.documents;
-  } catch (error) {
-    console.error("Failed to search notes:", error);
-    throw error; 
-  }
-};
 
 export const createUserAccount = async (user) => {
   try {
@@ -45,7 +26,7 @@ export const createUserAccount = async (user) => {
       fullname: newAccount.name,
     });
 
-    if(!newUser){
+    if (!newUser) {
       alert("error while saving user");
       return
     }
@@ -127,7 +108,7 @@ export const getSession = async () => {
   }
 };
 
-export const changePassword = async(password,oldPassword)=> {
+export const changePassword = async (password, oldPassword) => {
   try {
     const changedUser = await account.updatePassword(password, oldPassword);
     return changedUser
@@ -287,6 +268,54 @@ export const getPersonalNotes = async (id) => {
   }
 };
 
+export const searchNotes = async (query, category) => {
+  try {
+    // Initialize search conditions for title and description separately
+    let titleConditions = [
+      Query.search('title', query)
+    ];
+
+    let descriptionConditions = [
+      Query.search('description', query)
+    ];
+
+    if (category) {
+      titleConditions.push(Query.equal('category', category));
+      descriptionConditions.push(Query.equal('category', category));
+    }
+
+    // Execute the search for title
+    const titleResult = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.noteId,
+      titleConditions,
+    );
+
+    // Execute the search for description
+    const descriptionResult = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.noteId,
+      descriptionConditions,
+    );
+
+    // Combine results, avoiding duplicates
+    const combinedResults = [...titleResult.documents, ...descriptionResult.documents];
+
+    // Remove duplicates (if any)
+    const uniqueResults = combinedResults.filter((value, index, self) =>
+      index === self.findIndex((t) => (
+        t.$id === value.$id
+      ))
+    );
+
+    return uniqueResults;
+
+  } catch (error) {
+    console.error("Failed to search notes:", error);
+    throw error;
+  }
+};
+
 export const pdfUpload = async ({ file, noteId }) => {
   try {
     const upload = await storage.createFile(
@@ -298,7 +327,7 @@ export const pdfUpload = async ({ file, noteId }) => {
       throw new Error("error while uploading file");
     }
 
-    
+
 
     const fileData = await storage.getFileView(
       appwriteConfig.storageId,
@@ -340,14 +369,14 @@ export const pdfUpload = async ({ file, noteId }) => {
   }
 };
 
-export const changeUserName = async(id,username)=> {
+export const changeUserName = async (id, username) => {
   try {
     const changedUserName = await databases.updateDocument(
       appwriteConfig.databaseId,
       appwriteConfig.userId,
       id,
       {
-        fullname:username,
+        fullname: username,
       }
     )
 
@@ -388,14 +417,14 @@ export const getDraft = async (id) => {
   }
 };
 
-export const updateDraft = async(draft,id)=> {
+export const updateDraft = async (draft, id) => {
   try {
     const updatedDraft = await databases.updateDocument(
       appwriteConfig.databaseId,
       appwriteConfig.draftId,
       id,
       {
-        body:JSON.stringify(draft),
+        body: JSON.stringify(draft),
       }
     );
     return updatedDraft;
@@ -486,7 +515,7 @@ export const getPdfByNoteId = async (id) => {
     return error;
   }
 
-  
+
 };
 
 
@@ -549,7 +578,7 @@ export const deleteDraft = async (id) => {
 
 export const updateOldPassword = async (oldPassword, newPassword) => {
   try {
-   const promise = account.updatePassword(newPassword, oldPassword);
+    const promise = account.updatePassword(newPassword, oldPassword);
 
     promise.catch((error) => {
       alert("error while changing password");
@@ -568,10 +597,10 @@ export const updateOldPassword = async (oldPassword, newPassword) => {
   }
 }
 
-export const createEmail = async()=> {
+export const createEmail = async () => {
   try {
     const promise = account.createMagicURLSession(ID.unique(), 'htc38199@gmail.com',
-  `https://scribble-k76k.vercel.app/home`);
+      `https://scribble-k76k.vercel.app/home`);
     console.log(promise);
   } catch (error) {
     console.log(error);

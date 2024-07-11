@@ -101,7 +101,6 @@ export const NewNoteCard = ({ onClose,user,type,draft }) => {
           <p className="text-sm text-gray900-60 font-semibold">Description</p>
           <span className="text-sm text-gray900-60 ml-1">(Optional)</span>
         </div>
-        <p className="text-sm text-gray900-60">0/200</p>
       </div>
       <textarea
       value={description}
