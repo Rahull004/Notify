@@ -39,6 +39,7 @@ export const AllNotes = () => {
 
       const draftNotesData = await getDraftNotes(memoizedUser?.$id);
       setDraftNotes(draftNotesData.documents);
+      
     } catch (error) {
       console.log(error);
     }

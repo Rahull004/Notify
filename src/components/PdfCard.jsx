@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import { pdfUpload } from "../appwrite/api";
 import { Link } from "react-router-dom";
+import Upload from "/cloud.png";
 
 export const PdfCard = ({ note }) => {
   console.log(note);
@@ -35,13 +36,48 @@ export const PdfCard = ({ note }) => {
       }
     }
   };
+    // Step 1: Define state for dragging
+    const [isDragging, setIsDragging] = useState(false);
+
+    // Step 2: Handle Drag Events
+    const handleDragOver = (e) => {
+      e.preventDefault(); // Necessary to allow for a drop
+    };
+  
+    const handleDragEnter = (e) => {
+      e.preventDefault();
+      setIsDragging(true); // Update state to indicate dragging
+    };
+  
+    const handleDragLeave = (e) => {
+      e.preventDefault();
+      setIsDragging(false); // Update state to indicate no longer dragging
+    };
+  
+    const handleDrop = (e) => {
+      e.preventDefault();
+      setIsDragging(false); // Reset dragging state
+      const files = e.dataTransfer.files;
+      if (files.length) {
+        // Assuming handleFileChange can process multiple files
+        // If not, you'll need to adjust this to handle your specific logic
+        handleFileChange({ target: { files } });
+      }
+    };
+
+    const handleClick = () => {
+      document.getElementById('pdf-upload').click();
+    };
+
+    
 
   return (
+    <div className="flex">
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 h-screen">
-      <div className="bg-white py-4 px-5 rounded-xl shadow-xl w-3/4 md:w-1/2 h-3/4 overflow-hidden">
-        <div className="mb-4 mt-2">
-          <label className="bg-blue400 px-3 rounded-full py-2 md:py-3 w-20 text-white cursor-pointer">
-            Upload
+      <div className="bg-white py-4 px-5 rounded-xl shadow-xl w-3/4 md:w-3/4 h-5/6 overflow-hidden px-16 pt-10">
+        <div className="mb-4 mt-2 pb-6 text-xl font-semibold">
+          <label>
+            Upload Files
             <input
               id="pdf-upload"
               type="file"
@@ -50,7 +86,34 @@ export const PdfCard = ({ note }) => {
             />
           </label>
         </div>
-        <div className="grid gap-4 grid-cols-2 md:grid-cols-4 lg:grid-cols-8">
+        <div className="text-center w-7/12 border-dashed border-2 border-orange-300	0 p-10 bg-amber-100	rounded-xl h-5/6 flex flex-col items-center justify-center"
+        onDragOver={handleDragOver}
+        onDragEnter={handleDragEnter}
+        onDragLeave={handleDragLeave}
+        onClick={handleClick}
+        onDrop={handleDrop}>
+          <img src={Upload} alt="upload" className="w-20 h-20 mx-auto " />
+          <br />
+          <label className="text-lg font-semibold">
+          Drag & Drop your files here
+          <br />
+          or
+          <br />
+            Browse to upload files
+            <input
+              id="pdf-upload"
+              type="file"
+              className="hidden"
+              onChange={handleFileChange}
+            />
+            </label>
+            <br />
+            <br />
+            <div className="h-fit items-center text-sm justify-end">Only PDF files of max size of 5MB</div>
+          
+      </div>
+            
+      <div className="w-3/4 overflow-auto">
           {pdfs.map((pdf, index) => (
             <Link 
             to={`/pdfviewer/${pdf.$id}`}
@@ -62,7 +125,14 @@ export const PdfCard = ({ note }) => {
             </Link>
           ))}
         </div>
+        <div className="relative"> 
+        <button className="absolute bottom-0 right-0 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+          Close
+        </button> 
       </div>
+      </div>
+    </div>
+    
     </div>
   );
 };
