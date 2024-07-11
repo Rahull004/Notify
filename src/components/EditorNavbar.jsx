@@ -100,7 +100,7 @@ function EditorNavbar({ note }) {
         </div>
         {showPdfCard && (
           <div className="fixed inset-0 z-50 h-screen ">
-            <PdfCard note={note} />
+            <PdfCard note={note} setShowPdfCard={setShowPdfCard}/>
           </div>
         )}
       </div>

@@ -5,6 +5,7 @@ import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 import { useParams } from "react-router-dom";
 import { getPdfById } from "../appwrite/api";
+import { RingLoader } from "react-spinners";
 
 const PdfViewer = () => {
   const [pdfUrl, setPdfUrl] = useState(null);
@@ -31,7 +32,9 @@ const PdfViewer = () => {
       {pdfUrl ? (
         <Viewer fileUrl={pdfUrl} plugins={[defaultLayoutPluginInstance]} />
       ) : (
-        <div>Loading PDF...</div>
+        <div className="flex justify-center items-center h-screen w-screen">
+          <RingLoader color="#0362e9" loading size={120} speedMultiplier={1} />
+        </div>
       )}
     </Worker>
   );

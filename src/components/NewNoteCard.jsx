@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { getCurrentUser, getDraft, saveDraft, saveNote, saveUser, updateDraft } from "../appwrite/api";
-import { avatars } from "../appwrite/config";
 
 export const NewNoteCard = ({ onClose,user,type,draft }) => {
   console.log(draft);
   const [title, setTitle] = useState(draft?.title);
   const [description, setDescription] = useState(draft?.description);
-  const [isLoading, setisLoading] = useState(false)
   const [selectedOption, setSelectedOption] = useState(draft?.category || "Personal");
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
