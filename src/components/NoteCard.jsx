@@ -1,15 +1,19 @@
 import React,{useState} from "react";
-import { deleteNote } from "../appwrite/api";
+import { deleteDraft, deleteNote } from "../appwrite/api";
 import { Link, useNavigate } from "react-router-dom";
 import { NewNoteCard } from "./NewNoteCard";
 
-export const NoteCard = ({ note ,user}) => {
+export const NoteCard = ({ note ,user,type}) => {
   const navigate = useNavigate();
   const [showNewUpdateCard, setshowNewUpdateCard] = useState(false)
 
   const handleDelete = async (id) => {
     try {
-      await deleteNote(id);
+      if(type==="DRAFT") {
+        const deletedDraft = await deleteDraft(id);
+      } else {
+        const deletedNote = await deleteNote(id);
+      }
       window.location.reload();
     } catch (error) {
       console.log(error);

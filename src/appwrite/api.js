@@ -549,6 +549,7 @@ export const getPdfById = async (id) => {
 
 export const deleteNote = async (id) => {
   try {
+    console.log(id);
     const note = await databases.deleteDocument(
       appwriteConfig.databaseId,
       appwriteConfig.noteId,
