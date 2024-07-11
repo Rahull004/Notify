@@ -29,28 +29,20 @@ export const AllNotes = () => {
     try {
 
       const communityNotesData = await getCommunityNotes(memoizedUser?.$id);
-      const filteredCommunityNotes = communityNotesData.documents.filter(
-        (note) =>
-          note.title.includes(searchQuery) ||
-          note.description.includes(searchQuery),
-      );
-      setCommunityNotes(filteredCommunityNotes);
+    
+      setCommunityNotes(communityNotesData.documents);
 
-      // Fetch and filter personal notes
       const personalNotesData = await getPersonalNotes(memoizedUser?.$id);
-      const filteredPersonalNotes = personalNotesData.documents.filter(
-        (note) =>
-          note.title.includes(searchQuery) ||
-          note.description.includes(searchQuery),
-      );
-      setPersonalNotes(filteredPersonalNotes);
+   
+      setPersonalNotes(personalNotesData.documents);
 
       const draftNotesData = await getDraftNotes(memoizedUser?.$id);
       setDraftNotes(draftNotesData.documents);
+      
     } catch (error) {
       console.log(error);
-    }
-  };
+    }
+  };
 
   useEffect(() => {
 
