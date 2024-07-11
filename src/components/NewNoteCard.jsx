@@ -1,9 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { getCurrentUser, getDraft, saveDraft, saveNote, saveUser, updateDraft } from "../appwrite/api";
+import {
+  getCurrentUser,
+  getDraft,
+  saveDraft,
+  saveNote,
+  saveUser,
+  updateDraft,
+  updateDraftDetails,
+  updateNoteDetails,
+} from "../appwrite/api";
 
 export const NewNoteCard = ({ onClose,user,type,draft }) => {
-  console.log(draft);
+  console.log(type);
   const [title, setTitle] = useState(draft?.title);
   const [description, setDescription] = useState(draft?.description);
   const [selectedOption, setSelectedOption] = useState(draft?.category || "Personal");
@@ -34,8 +43,13 @@ export const NewNoteCard = ({ onClose,user,type,draft }) => {
 
   const handleUpdateNote =async()=> {
     try {
-      const updatedDraft = await updateDraft(draft.$id,{description,title,category:selectedOption})
-      return updatedDraft
+        const updatedDraft = await updateDraftDetails(draft.$id, {
+          description,
+          title,
+          category: selectedOption,
+        });
+        window.location.reload();
+        
     } catch (error) {
       console.log(error);
     }

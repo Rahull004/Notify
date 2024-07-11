@@ -433,6 +433,42 @@ export const updateDraft = async (draft, id) => {
   }
 }
 
+export const updateNoteDetails= async (id,note) => {
+  try {
+    const updatedDraft = await databases.updateDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.noteId,
+      id,
+      {
+        description: note.description,
+        title: note.title,
+        category: note.category,
+      },
+    );
+    return updatedDraft;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const updateDraftDetails = async (id, draft) => {
+  try {
+    const updatedDraft = await databases.updateDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.draftId,
+      id,
+      {
+        description: draft.description,
+        title: draft.title,
+        category: draft.category,
+      },
+    );
+    return updatedDraft;
+  } catch (error) {
+    return error;
+  }
+};
+
 export const getNoteFull = async (id) => {
   try {
     const note = await databases.getDocument(
@@ -561,6 +597,8 @@ export const deleteNote = async (id) => {
     return error;
   }
 }
+
+
 
 export const deleteDraft = async (id) => {
   try {
