@@ -1,7 +1,7 @@
 import { Client, Account, Databases, Avatars, Storage } from "appwrite";
 
 export const appwriteConfig = {
-  url: import.metal.env.VITE_END_POINT,
+  url: import.meta.env.VITE_END_POINT,
   projectId: import.meta.env.VITE_PROJECT_ID,
   databaseId: import.meta.env.VITE_DATABASE_KEY,
   storageId: import.meta.env.VITE_STORAGE_KEY,
