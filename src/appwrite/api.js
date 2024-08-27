@@ -10,8 +10,6 @@ export const createUserAccount = async (user) => {
       user.name
     );
 
-    console.log(newAccount.$id);
-
     if (!newAccount) {
       alert("error while creating new account");
       return
