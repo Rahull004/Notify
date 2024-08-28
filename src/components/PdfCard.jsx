@@ -28,15 +28,17 @@ export const PdfCard = ({ note, setShowPdfCard }) => {
 
         const upload = await pdfUpload({ file, noteId });
         if (upload) {
+          const fileName =
+            file.name || upload.fileUrl.split("/").pop().split("?")[0];
           const updatedPdfs = [
             ...pdfs,
             {
               ...upload,
-              fileName: file.name, // Add file name to uploaded PDF info
+              fileName, // Add extracted file name
             },
           ];
           setPdfs(updatedPdfs);
-          console.log("Updated PDFs array:", updatedPdfs);
+          console.log(fileName);
         }
         console.log("Upload result:", upload);
       } else {
@@ -45,27 +47,25 @@ export const PdfCard = ({ note, setShowPdfCard }) => {
     }
   };
 
-  // Step 1: Define state for dragging
   const [isDragging, setIsDragging] = useState(false);
 
-  // Step 2: Handle Drag Events
   const handleDragOver = (e) => {
-    e.preventDefault(); // Necessary to allow for a drop
+    e.preventDefault();
   };
 
   const handleDragEnter = (e) => {
     e.preventDefault();
-    setIsDragging(true); // Update state to indicate dragging
+    setIsDragging(true);
   };
 
   const handleDragLeave = (e) => {
     e.preventDefault();
-    setIsDragging(false); // Update state to indicate no longer dragging
+    setIsDragging(false);
   };
 
   const handleDrop = (e) => {
     e.preventDefault();
-    setIsDragging(false); // Reset dragging state
+    setIsDragging(false);
     const files = e.dataTransfer.files;
     if (files.length) {
       handleFileChange({ target: { files } });
@@ -76,19 +76,23 @@ export const PdfCard = ({ note, setShowPdfCard }) => {
     document.getElementById("pdf-upload").click();
   };
 
+  const handleDelete = (id) => {
+    const updatedPdfs = pdfs.filter((pdf) => pdf.$id !== id);
+    setPdfs(updatedPdfs);
+  };
+
   return (
     <div className="flex items-center justify-center fixed inset-0 bg-black bg-opacity-50 z-50 h-screen">
-      <div className="bg-white rounded-xl shadow-xl w-3/4 md:w-3/4 h-5/6 overflow-hidden flex p-14">
-        {/* Upload Area */}
+      <div className="relative bg-white rounded-xl shadow-xl w-3/4 md:w-3/4 h-5/6 overflow-hidden flex p-14">
         <div
-          className="text-center border-dashed border-2 border-orange-300 bg-amber-100 rounded-xl w-3/5 flex flex-col items-center justify-center"
+          className="text-center border-dashed border-2 border-blue-700 bg-blue-50 rounded-xl w-3/5 flex flex-col items-center justify-center"
           onDragOver={handleDragOver}
           onDragEnter={handleDragEnter}
           onDragLeave={handleDragLeave}
           onClick={handleClick}
           onDrop={handleDrop}
         >
-          <img src={Upload} alt="upload" className="w-15 h-15 mx-auto" />
+          <img src={Upload} alt="upload" className="w-24 h-24" />
           <br />
           <label className="text-lg font-semibold">
             Drag & Drop your files here
@@ -110,27 +114,41 @@ export const PdfCard = ({ note, setShowPdfCard }) => {
           </div>
         </div>
 
-        {/* PDF Grid */}
         <div className="w-2/3 h-full overflow-auto px-10">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {pdfs.map((pdf) => (
-              <Link
-                to={`/pdfviewer/${pdf.$id}`}
+              <div
                 key={pdf.$id}
-                onClick={() => handlePdfClick(pdf.$id)}
-                className="cursor-pointer rounded-lg p-3 bg-red-600 flex items-center justify-center"
+                className="relative cursor-pointer flex flex-col items-center mb-4"
               >
-                <p className="text-lg text-white truncate">{pdf.fileName}</p>
-              </Link>
+                <img
+                  className="w-12 h-16"
+                  src="https://img.icons8.com/external-vectorslab-flat-vectorslab/36/external-pdf-file-format-files-and-folders-vectorslab-flat-vectorslab.png"
+                  alt="pdf-file"
+                  onClick={() => handlePdfClick(pdf.$id)}
+                />
+                <p className="text-center text-sm mt-2 break-words">
+                  {pdf.fileName}
+                </p>
+                <button
+                  onClick={() => handleDelete(pdf.$id)}
+                  className="absolute top-0 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded "
+                >
+                  X
+                </button>
+              </div>
             ))}
           </div>
         </div>
-      </div>
 
-      <div className="absolute bottom-0 right-0 bg-red-500 hover:bg-red-700 text-white font-bold py-3 px-5 rounded">
-        <button onClick={() => setShowPdfCard(false)}>
-          Close
-        </button>
+        <div>
+          <button
+            onClick={() => setShowPdfCard(false)}
+            className="absolute bottom-4 right-4 bg-red-500 hover:bg-red-700 text-white font-bold py-3 px-5 rounded"
+          >
+            Close
+          </button>
+        </div>
       </div>
     </div>
   );

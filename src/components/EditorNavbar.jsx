@@ -47,8 +47,9 @@ function EditorNavbar({ note }) {
 
           <div className="flex items-center justify-center gap-3 flex-wrap">
             <div className="flex justify-center items-center">
-              <button onClick={handlePDFs}>    
-                  <img width="34" height="40" src="https://img.icons8.com/external-vectorslab-flat-vectorslab/36/external-pdf-file-format-files-and-folders-vectorslab-flat-vectorslab.png" alt="pdf-file"/>
+              <button onClick={handlePDFs}>  
+                  <img width="34" height="40" src="https://img.icons8.com/external-fauzidea-flat-fauzidea/100/external-pdf-file-file-extension-fauzidea-flat-fauzidea.png" alt="pdf-file"/>  
+                  
               </button>
   
             </div>
