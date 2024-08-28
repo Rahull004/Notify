@@ -10,6 +10,8 @@ export const createUserAccount = async (user) => {
       user.name
     );
 
+    console.log(newAccount.$id);
+
     if (!newAccount) {
       alert("error while creating new account");
       return
@@ -65,8 +67,8 @@ export const googleAuth = async (path) => {
   try {
     const res = await account.createOAuth2Session(
       "google",
-      `https://min-project-bcs.vercel.app/signin`,
-      `https://min-project-bcs.vercel.app/signin`,
+      `http://localhost:5173/signin`,
+      `http://localhost:5173/signin`,
     );
   } catch (error) {
     console.log(error);
@@ -78,8 +80,8 @@ export const githubAuth = async (path) => {
   try {
     const res = await account.createOAuth2Session(
       "github",
-      `https://min-project-bcs.vercel.app/signin`,
-      `https://min-project-bcs.vercel.app/signin`,
+      `http://localhost:5173/signin`,
+      `http://localhost:5173/signin`,
     );
   } catch (error) {
     console.log(error);
@@ -120,7 +122,7 @@ export const passwordEmail = async (email) => {
   try {
     const response = await account.createRecovery(
       email,
-      "https://min-project-bcs.vercel.app/forgetpassword",
+      "http://localhost:5173/forgetpassword",
     );
     return response;
   } catch (error) {
