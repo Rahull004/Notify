@@ -4,12 +4,12 @@ import { useUserContext } from "../AuthContext";
 import logo from "/logo.png";
 import { saveNote } from "../appwrite/api";
 import { PdfCard } from "./PdfCard";
+import { FileText, User } from "lucide-react";
 
 function EditorNavbar({ note }) {
-  const { user, isLoading } = useUserContext();
+  const { user } = useUserContext();
   const navigate = useNavigate();
   const [showPdfCard, setShowPdfCard] = useState(false);
-  console.log(user);
 
   const handlePost = async () => {
     try {
@@ -25,8 +25,7 @@ function EditorNavbar({ note }) {
         navigate("/allnotes");
       }
     } catch (error) {
-      console.log(error);
-      return error;
+      console.error("Error saving note:", error);
     }
   };
 
@@ -35,68 +34,61 @@ function EditorNavbar({ note }) {
   };
 
   return (
-    <header className="w-full z-30 md:bg-opacity-90 transition duration-300 ease-in-out bg-white backdrop-blur-sm shadow-lg">
-      <div className="max-w-6xl mx-auto px-5 sm:px-6">
+    <header className="w-full z-30 bg-white shadow-md">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16 md:h-20">
-          <div className="flex-shrink-0 mr-4">
-            {/* Logo */}
-            <Link to="/" className="block" aria-label="Notify">
-              <img src={logo} className="w-20 h-20 rounded bg-transparent" />
+          <div className="flex items-center">
+            <Link to="/" className="flex-shrink-0" aria-label="Home">
+              <img
+                src={logo}
+                className="w-12 h-12 md:w-16 md:h-16 rounded"
+                alt="Logo"
+              />
             </Link>
           </div>
 
-          <div className="flex items-center justify-center gap-3 flex-wrap">
-            <div className="flex justify-center items-center">
-              <button onClick={handlePDFs}>  
-                  <img width="34" height="40" src="https://img.icons8.com/external-fauzidea-flat-fauzidea/100/external-pdf-file-file-extension-fauzidea-flat-fauzidea.png" alt="pdf-file"/>  
-                  
-              </button>
-  
-            </div>
+          <div className="flex items-center space-x-4">
+            <button
+              onClick={handlePDFs}
+              className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200"
+              aria-label="PDF Options"
+            >
+              <FileText className="w-6 h-6 text-gray-600" />
+            </button>
 
-            <Link className="w-10 h-10" to={"/profile"}>
-              {user.avatar === "" ? (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  data-name="Layer 1"
-                  viewBox="0 0 512 512"
-                  id="profile"
-                >
-                  <g data-name="<Group>">
-                    <path
-                      fill="#ed664c"
-                      d="M389.25 403.71v24.83a218.018 218.018 0 0 1-266.5 0V403.71a133.25 133.25 0 0 1 266.5 0zM304.09 124.82a67.514 67.514 0 1 1-47.64-19.67A67.064 67.064 0 0 1 304.09 124.82z"
-                    ></path>
-                    <path
-                      fill="#fdc75b"
-                      d="M256,38c120.4,0,218,97.6,218,218a217.579,217.579,0,0,1-84.75,172.54V403.71a133.25,133.25,0,0,0-266.5,0v24.83A217.579,217.579,0,0,1,38,256C38,135.6,135.6,38,256,38Zm67.76,134.46a67.158,67.158,0,1,0-19.67,47.63A67.064,67.064,0,0,0,323.76,172.46Z"
-                    ></path>
-                    <path d="M256,28A228.09,228.09,0,0,0,52.1,358.141a230.034,230.034,0,0,0,64.528,78.309,228.02,228.02,0,0,0,278.735,0A230.007,230.007,0,0,0,459.9,358.141,228.045,228.045,0,0,0,256,28ZM132.75,423.557V403.71a123.25,123.25,0,0,1,246.5,0v19.847a208.024,208.024,0,0,1-246.5,0Zm266.5-16.749v-3.1c0-78.988-64.262-143.25-143.25-143.25A143.257,143.257,0,0,0,112.75,403.71v3.1A206.439,206.439,0,0,1,48,256C48,141.309,141.309,48,256,48s208,93.309,208,208A206.444,206.444,0,0,1,399.25,406.808Z"></path>
-                    <path d="M256.45,95.15a77.158,77.158,0,1,0,54.713,22.6A76.787,76.787,0,0,0,256.45,95.15Zm40.566,117.872a57.513,57.513,0,1,1,16.745-40.562A56.931,56.931,0,0,1,297.016,213.022Z"></path>
-                  </g>
-                </svg>
-              ) : (
+            <Link
+              to="/profile"
+              className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200"
+              aria-label="User Profile"
+            >
+              {user.avatar ? (
                 <img
                   src={user.url}
-                  alt="user"
-                  className="w-10 h-10 rounded-full"
+                  alt="User Avatar"
+                  className="w-8 h-8 rounded-full"
                 />
+              ) : (
+                <User className="w-6 h-6 text-gray-600" />
               )}
             </Link>
+
             <button
-              className="bg-blue400 px-3 rounded-full py-2 md:py-3 w-20 text-white"
+              className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-full transition-colors duration-200"
               onClick={handlePost}
             >
               Post
             </button>
           </div>
         </div>
-        {showPdfCard && (
-          <div className="fixed inset-0 z-50 h-screen ">
-            <PdfCard note={note} setShowPdfCard={setShowPdfCard}/>
-          </div>
-        )}
       </div>
+
+      {showPdfCard && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg p-6 max-w-xl w-full mx-4">
+            <PdfCard note={note} setShowPdfCard={setShowPdfCard} />
+          </div>
+        </div>
+      )}
     </header>
   );
 }
