@@ -3,15 +3,18 @@ import { useNavigate } from "react-router";
 import { pdfUpload } from "../appwrite/api";
 import { Link } from "react-router-dom";
 import Upload from "/cloud.png";
+import { Progress } from "@/components/ui/progress";
 
 export const PdfCard = ({ note, setShowPdfCard }) => {
   const [pdfs, setPdfs] = useState(note.pdfs || []);
   const navigate = useNavigate();
   const [file, setFile] = useState(null);
+  const [loading, setLoading] = useState(false); // State for loading
+  const [progress, setProgress] = useState(0); // State for progress
 
   useEffect(() => {
     console.log("Initial PDFs:", pdfs);
-  }, []);
+  }, [pdfs]);
 
   const handlePdfClick = (id) => {
     navigate(`/pdfviewer/${id}`);
@@ -24,23 +27,52 @@ export const PdfCard = ({ note, setShowPdfCard }) => {
     if (file) {
       if (file.type === "application/pdf" && file.size <= 5 * 1024 * 1024) {
         setFile(file);
+        setLoading(true); // Start loading
+        setProgress(0); // Reset progress
         console.log("File name:", file.name);
 
-        const upload = await pdfUpload({ file, noteId });
-        if (upload) {
-          const fileName =
-            file.name || upload.fileUrl.split("/").pop().split("?")[0];
-          const updatedPdfs = [
-            ...pdfs,
-            {
-              ...upload,
-              fileName, // Add extracted file name
+        // Simulated progress increment
+        const incrementProgress = () => {
+          setProgress((prev) => {
+            const nextValue = prev + Math.floor(Math.random() * 10) + 5;
+            return nextValue >= 95 ? 95 : nextValue; // Cap progress at 95% before upload completes
+          });
+        };
+
+        const interval = setInterval(incrementProgress, 300);
+
+        try {
+          const upload = await pdfUpload({
+            file,
+            noteId,
+            onProgress: (progressEvent) => {
+              // You can still use this to set progress directly if needed
             },
-          ];
-          setPdfs(updatedPdfs);
-          console.log(fileName);
+          });
+
+          if (upload) {
+            const fileName =
+              file.name || upload.fileUrl.split("/").pop().split("?")[0];
+            const updatedPdfs = [
+              ...pdfs,
+              {
+                ...upload,
+                fileName, // Add extracted file name
+              },
+            ];
+            setPdfs(updatedPdfs);
+            console.log(fileName);
+          }
+          console.log("Upload result:", upload);
+        } catch (error) {
+          console.error("Upload error:", error);
+        } finally {
+          clearInterval(interval); // Clear the interval after upload is complete
+          setProgress(100); // Ensure progress bar reaches 100%
+          setTimeout(() => {
+            setLoading(false); // End loading after a short delay to allow user to see 100% completion
+          }, 500);
         }
-        console.log("Upload result:", upload);
       } else {
         alert("Please select a PDF file of size less than or equal to 5MB.");
       }
@@ -92,26 +124,35 @@ export const PdfCard = ({ note, setShowPdfCard }) => {
           onClick={handleClick}
           onDrop={handleDrop}
         >
-          <img src={Upload} alt="upload" className="w-24 h-24" />
-          <br />
-          <label className="text-lg font-semibold">
-            Drag & Drop your files here
-            <br />
-            or
-            <br />
-            Browse to upload files
-            <input
-              id="pdf-upload"
-              type="file"
-              className="hidden"
-              onChange={handleFileChange}
-            />
-          </label>
-          <br />
-          <br />
-          <div className="h-fit items-center text-sm justify-end">
-            Only PDF files of max size of 5MB
-          </div>
+          {loading ? (
+            <div className="w-3/5 flex flex-col items-center justify-center">
+              <Progress value={progress} className="w-full h-2" />
+              <p className="text-md font-semibold mt-4">{progress}% Uploaded</p>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center">
+              <img src={Upload} alt="upload" className="w-24 h-24" />
+              <br />
+              <label className="text-lg font-semibold">
+                Drag & Drop your files here
+                <br />
+                or
+                <br />
+                Browse to upload files
+                <input
+                  id="pdf-upload"
+                  type="file"
+                  className="hidden"
+                  onChange={handleFileChange}
+                />
+              </label>
+              <br />
+              <br />
+              <div className="h-fit items-center text-sm justify-end">
+                Only PDF files of max size of 5MB
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="w-2/3 h-full overflow-auto px-10">
@@ -132,7 +173,7 @@ export const PdfCard = ({ note, setShowPdfCard }) => {
                 </p>
                 <button
                   onClick={() => handleDelete(pdf.$id)}
-                  className="absolute top-0 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded "
+                  className="absolute top-0 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded"
                 >
                   X
                 </button>
