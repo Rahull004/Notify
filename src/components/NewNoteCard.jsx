@@ -11,16 +11,17 @@ import {
   updateNoteDetails,
 } from "../appwrite/api";
 
-export const NewNoteCard = ({ onClose,user,type,draft }) => {
+export const NewNoteCard = ({ onClose, user, type, draft, noteType }) => {
   console.log(type);
   const [title, setTitle] = useState(draft?.title);
   const [description, setDescription] = useState(draft?.description);
-  const [selectedOption, setSelectedOption] = useState(draft?.category || "Personal");
+  const [selectedOption, setSelectedOption] = useState(
+    draft?.category || "Personal",
+  );
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
   const options = ["Personal", "Community"];
-  
 
   const handleOptionClick = (option) => {
     setSelectedOption(option);
@@ -41,19 +42,26 @@ export const NewNoteCard = ({ onClose,user,type,draft }) => {
     }
   };
 
-  const handleUpdateNote =async()=> {
+  const handleUpdateNote = async () => {
     try {
+      if (type === "DRAFT") {
         const updatedDraft = await updateDraftDetails(draft.$id, {
-          description,
-          title,
+          title: title,
           category: selectedOption,
+          description: description,
         });
-        window.location.reload();
-        
+      } else {
+        const updatedNote = await updateNoteDetails(draft.$id, {
+          title: title,
+          category: selectedOption,
+          description: description,
+        });
+      }
+      window.location.reload();
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   return (
     <div className="bg-white py-4 px-5 rounded-xl shadow-xl absolute w-3/4 translate-x-[15%] md:translate-x-1/2 md:w-1/2 translate-y-1/2">
@@ -115,7 +123,7 @@ export const NewNoteCard = ({ onClose,user,type,draft }) => {
         </div>
       </div>
       <textarea
-      value={description}
+        value={description}
         onChange={(e) => setDescription(e.target.value)}
         name="description"
         id="description"
@@ -140,7 +148,6 @@ export const NewNoteCard = ({ onClose,user,type,draft }) => {
           </button>
         )}
       </div>
-      
     </div>
   );
 };

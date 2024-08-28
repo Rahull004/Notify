@@ -6,7 +6,7 @@ import { NewNoteCard } from "./NewNoteCard";
 export const NoteCard = ({ note ,user,type}) => {
   const navigate = useNavigate();
   const [showNewUpdateCard, setshowNewUpdateCard] = useState(false)
-  console.log(note,user,"fdasfds");
+  
   
 
   const handleDelete = async (id) => {
@@ -76,6 +76,7 @@ export const NoteCard = ({ note ,user,type}) => {
       {showNewUpdateCard && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 w-full h-full">
           <NewNoteCard
+            noteType={type}
             onClose={handleClosePopup}
             showNewNoteCard={showNewUpdateCard}
             user={user}
