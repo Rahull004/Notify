@@ -1,27 +1,12 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
-  darkMode: ["class"],
-  content: [
-    './pages/**/*.{js,jsx}',
-    './components/**/*.{js,jsx}',
-    './app/**/*.{js,jsx}',
-    './src/**/*.{js,jsx}',
-  ],
-  prefix: "",
+export default {
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    container: {
-      center: true,
-      padding: "2rem",
-      screens: {
-        "2xl": "1400px",
-      },
-    },
     extend: {
+      fontFamily: {
+        rob: ["Roboto", "sans-serif"],
+      },
       colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
@@ -51,27 +36,55 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-      },
-      borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        gray900: {
+          DEFAULT: "#212121",
+          87: "rgba(33, 33, 33, 0.87)",
+          60: "rgba(33, 33, 33, 0.60)",
+          36: "rgba(33, 33, 33, 0.36)",
+        },
+        gray200: "#EEEEEE",
+        black: {
+          DEFAULT: "#000000",
+          32: "rgba(0, 0, 0, 0.32)",
+          24: "rgba(0, 0, 0, 0.24)",
+          12: "rgba(0, 0, 0, 0.12)",
+        },
+        white: {
+          DEFAULT: "#FFFFFF",
+          24: "rgba(255, 255, 255, 0.24)",
+        },
+        blue400: "#42A5F5",
+        blue500: "#2196F3",
+        blue600: "#1E88E5",
+        orange900: "#E65100",
+        orange200: "#FFCC80",
+        green900: "#1B5E20",
+        green200: "#A5D6A7",
+        deepPurple900: "#4527A0",
+        deepPurple200: "#2196F3",
+        red400: "#EF5350",
+        red500: "#F44336",
       },
       keyframes: {
         "accordion-down": {
-          from: { height: "0" },
+          from: { height: 0 },
           to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
           from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: "0" },
+          to: { height: 0 },
+        },
+        popup: {
+          from: { transform: "scale(0.8)", opacity: "0" },
+          to: { transform: "scale(1)", opacity: "1" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        popup: "popup 0.1s ease-out",
       },
     },
   },
   plugins: [require("tailwindcss-animate")],
-}
+};
