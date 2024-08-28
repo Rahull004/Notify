@@ -8,6 +8,7 @@ import { FileText, User } from "lucide-react";
 
 function EditorNavbar({ note }) {
   const { user } = useUserContext();
+  
   const navigate = useNavigate();
   const [showPdfCard, setShowPdfCard] = useState(false);
 
@@ -72,12 +73,14 @@ function EditorNavbar({ note }) {
               )}
             </Link>
 
-            <button
-              className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-full transition-colors duration-200"
-              onClick={handlePost}
-            >
-              Post
-            </button>
+            {note?.user?.$id === user?.$id && (
+              <button
+                className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-full transition-colors duration-200"
+                onClick={handlePost}
+              >
+                Post
+              </button>
+            )}
           </div>
         </div>
       </div>
