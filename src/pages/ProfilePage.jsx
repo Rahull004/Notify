@@ -71,6 +71,24 @@ function ProfilePage() {
     setShowChangeUsernameForm((prev) => !prev);
   };
 
+  const handleChangeUsername = async (e) => {
+    e.preventDefault();
+    try {
+      setloading(true);
+      const result = await changeUserName(user.$id,newUsername);
+      if (result) {
+        window.location.reload();
+        return result;
+      }
+    } catch (error) {
+      console.log(error);
+      alert("Error while changing username");
+      setloading(false);
+    } finally {
+      setloading(false);
+    }
+  }
+
   const handleChangePassword = async (e) => {
     e.preventDefault();
     if (newPassword !== confirmPassword) {
@@ -111,7 +129,7 @@ function ProfilePage() {
 
   const handleSubmitImage = async () => {
     try {
-      setLoading(true);
+      setloading(true);
       await saveProfilePicture(profileImage);
       alert("Profile picture updated successfully");
       setProfileImage(null);
@@ -120,7 +138,7 @@ function ProfilePage() {
       console.error("Error updating profile picture:", error);
       alert("Error while updating profile picture");
     } finally {
-      setLoading(false);
+      setloading(false);
     }
   };
 
@@ -159,12 +177,12 @@ function ProfilePage() {
                       className="rounded-full w-[30vh] h-[30vh]"
                     />
                   )}
-                  <input
+                  {/* <input
                     type="file"
                     accept="image/*"
                     className="hidden"
                     onChange={handleImageUpload}
-                  />
+                  /> */}
                 </label>
                 <br />
                 <h1 className="h1">{user.fullname}</h1>
@@ -199,10 +217,10 @@ function ProfilePage() {
                           className="w-full"
                         />
                       </div>
-                      <div className="w-full mt-3">
+                      <div className="w-full mt-3 hover:cursor-pointer">
                         <buttonFlog
                           className="btn text-white bg-blue-600 hover:bg-blue-700 w-full"
-                          onClick={handleChangePassword}
+                          onClick={handleChangeUsername}
                         >
                           Submit
                         </buttonFlog>
