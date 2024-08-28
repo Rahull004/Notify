@@ -168,7 +168,7 @@ export const PdfCard = ({ note, setShowPdfCard }) => {
                   alt="pdf-file"
                   onClick={() => handlePdfClick(pdf.$id)}
                 />
-                <p className="text-center text-sm mt-2 break-words">
+                <p className="text-center text-sm mt-2 truncate max-w-full">
                   {pdf.fileName}
                 </p>
                 <button
