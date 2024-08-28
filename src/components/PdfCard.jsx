@@ -14,7 +14,7 @@ export const PdfCard = ({ note, setShowPdfCard }) => {
   const [loading, setLoading] = useState(false); // State for loading
   const [progress, setProgress] = useState(0); // State for progress
 
-  console.log(note?.pdfs);
+  const type = window.location.pathname.split("/")[1];
   
 
   const handlePdfClick = (id) => {
@@ -114,7 +114,7 @@ export const PdfCard = ({ note, setShowPdfCard }) => {
   return (
     <div className="flex items-center justify-center fixed inset-0 bg-black bg-opacity-50 z-50 h-screen">
       <div className="relative bg-white rounded-xl shadow-xl w-3/4 md:w-3/4 h-5/6 overflow-hidden flex p-14">
-        {note?.user?.$id === user?.$id && (
+        {note?.user?.$id === user?.$id && type === "draft" && (
           <div
             className="text-center border-dashed border-2 border-blue-700 bg-blue-50 rounded-xl w-3/5 flex flex-col items-center justify-center"
             onDragOver={handleDragOver}
@@ -173,12 +173,14 @@ export const PdfCard = ({ note, setShowPdfCard }) => {
                 <p className="text-center text-sm mt-2 truncate max-w-full">
                   {pdf.fileName}
                 </p>
-                <button
-                  onClick={() => handleDelete(pdf.$id)}
-                  className="absolute top-0 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded"
-                >
-                  X
-                </button>
+                {note?.user?.$id === user?.$id && type === "draft" && (
+                  <button
+                    onClick={() => handleDelete(pdf.$id)}
+                    className="absolute top-0 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded"
+                  >
+                    X
+                  </button>
+                )}
               </div>
             ))}
           </div>
