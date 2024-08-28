@@ -6,6 +6,8 @@ import { NewNoteCard } from "./NewNoteCard";
 export const NoteCard = ({ note ,user,type}) => {
   const navigate = useNavigate();
   const [showNewUpdateCard, setshowNewUpdateCard] = useState(false)
+  console.log(note,user,"fdasfds");
+  
 
   const handleDelete = async (id) => {
     try {
@@ -42,14 +44,16 @@ export const NoteCard = ({ note ,user,type}) => {
         >
           {note.category.toUpperCase()}
         </h1>
-        <div className="flex gap-8">
-          <button onClick={handleEditClick}>
-            <img src="../../public/Edit.png" alt="" className="w-4 h-4" />
-          </button>
-          <button onClick={() => handleDelete(note.$id)}>
-            <img src="../../public/Delete.png" alt="" className="w-5 h-5" />
-          </button>
-        </div>
+        {user.$id === note.user.$id && (
+          <div className="flex gap-8">
+            <button onClick={handleEditClick}>
+              <img src="../../public/Edit.png" alt="" className="w-4 h-4" />
+            </button>
+            <button onClick={() => handleDelete(note.$id)}>
+              <img src="../../public/Delete.png" alt="" className="w-5 h-5" />
+            </button>
+          </div>
+        )}
       </div>
       <Link to={`/note/${note.$id}`} className="block mt-3 pl-1">
         <h1 className="text-lg font-semibold mb-2">{note.title}</h1>
