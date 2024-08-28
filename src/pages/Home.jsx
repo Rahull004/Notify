@@ -12,9 +12,9 @@ export const Home = () => {
   const { user, isLoading } = useUserContext();
   const navigate = useNavigate()
 
-  if (user.fullname!=="" && !isLoading) {
-    navigate("/allnotes");
-  }
+  // if (user.fullname!=="" && !isLoading) {
+  //   navigate("/allnotes");
+  // }
 
   if (isLoading) {
     return (
@@ -28,7 +28,7 @@ export const Home = () => {
     <div className="flex flex-col min-h-screen overflow-hidden">
 
       {/* Site header */}
-      <Navbar />
+      <Navbar user={user}/>
       {/*  Page content */}
       <main className="flex-grow">
         {/* Page sections */}
