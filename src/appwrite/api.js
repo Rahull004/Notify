@@ -214,12 +214,12 @@ export const saveDraft = async (note) => {
   }
 };
 
-export const getCommunityNotes = async (id) => {
+export const getCommunityNotes = async () => {
   try {
     const notes = await databases.listDocuments(
       appwriteConfig.databaseId,
       appwriteConfig.noteId,
-      [Query.equal("user", id), Query.equal("category", "Community")],
+      [Query.equal("category", "Community")],
       100,
       0,
       "DESC",

@@ -29,7 +29,7 @@ export const AllNotes = () => {
 
   const getUserNotes = async () => {
     try {
-      const communityNotesData = await getCommunityNotes(memoizedUser?.$id);
+      const communityNotesData = await getCommunityNotes();
 
       setCommunityNotes(communityNotesData.documents);
 
