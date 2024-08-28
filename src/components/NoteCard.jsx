@@ -55,24 +55,41 @@ export const NoteCard = ({ note ,user,type}) => {
           </div>
         )}
       </div>
-      <Link to={`/note/${note.$id}`} className="block mt-3 pl-1">
-        <h1 className="text-lg font-semibold mb-2">{note.title}</h1>
-        <p className="text-gray-500 text-sm truncate">{note.description}</p>
-        <div
-          className={`mt-4 flex ${
-            note.category === "Personal" ? "justify-end" : "justify-between"
-          }`}
-        >
-          {note.category === "Community" && (
-            <p className="text-sm text-green900 text-end py-2">
-              {note.user.fullname}
-            </p>
-          )}
-          <p className="text-sm text-gray-500/70 text-end py-2">
-            {note.$createdAt.substring(0, 10)}
+      {type === "DRAFT" ? (
+        <Link to={`/draft/${note.$id}`} className="block mt-3 pl-1">
+          <h1 className="text-lg font-semibold mb-2">{note.title}</h1>
+          <p className="text-gray-500 text-sm line-clamp-2">
+            {note.description}
           </p>
-        </div>
-      </Link>
+          <div
+            className={`mt-4 flex ${note.category === "Personal" ? "justify-end" : "justify-between"}`}
+          >
+            {note.category === "Community" && (
+              <p className="text-sm text-green-900">{note.user.fullname}</p>
+            )}
+            <p className="text-sm text-gray-500/70">
+              {new Date(note.$createdAt).toLocaleDateString()}
+            </p>
+          </div>
+        </Link>
+      ) : (
+        <Link to={`/note/${note.$id}`} className="block mt-3 pl-1">
+          <h1 className="text-lg font-semibold mb-2">{note.title}</h1>
+          <p className="text-gray-500 text-sm line-clamp-2">
+            {note.description}
+          </p>
+          <div
+            className={`mt-4 flex ${note.category === "Personal" ? "justify-end" : "justify-between"}`}
+          >
+            {note.category === "Community" && (
+              <p className="text-sm text-green-900">{note.user.fullname}</p>
+            )}
+            <p className="text-sm text-gray-500/70">
+              {new Date(note.$createdAt).toLocaleDateString()}
+            </p>
+          </div>
+        </Link>
+      )}
       {showNewUpdateCard && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 w-full h-full">
           <NewNoteCard

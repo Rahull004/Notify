@@ -395,7 +395,7 @@ export const getNote = async (id) => {
       id
     );
     note.body = JSON.parse(note.body);
-    return note.body;
+    return note;
   } catch (error) {
     console.log(error);
     return error;

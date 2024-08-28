@@ -12,12 +12,18 @@ const TiptapEditor = () => {
   const navigate = useNavigate();
   const [draft, setDraft] = useState(null);
   const [note, setnote] = useState(null);
+  const id = window.location.pathname.split("/")[2];
+  const type = window.location.pathname.split("/")[1];
 
   useEffect(() => {
     const fetchDraft = async () => {
-      const currDraft = await getDraft(id);
-      setnote(currDraft)
-      setDraft(currDraft.body);
+      if(type==="note"){
+        const note = await getNote(id);
+        setnote(note);
+      } else {
+        const draft = await getDraft(id);
+        setDraft(draft);
+      }
     };
     fetchDraft();
   }, []);
@@ -35,8 +41,6 @@ const TiptapEditor = () => {
     return null;
   }
 
-  const id = window.location.pathname.split("/")[2];
-
   const handleBodyChange = async ({ content }) => {
     try {
       const updatedDraft = await updateDraft(content, id);
@@ -49,11 +53,19 @@ const TiptapEditor = () => {
 
   return (
     <div>
-      <EditorNavbar note={note}/>
+      {type === "note" ? (
+        <EditorNavbar note={note} />
+      ) : (
+        <EditorNavbar note={draft} />
+      )}
       <TiptapProvider onUpdate={({ content }) => handleBodyChange({ content })}>
         <div className="mt-6 max-w-6xl mx-auto rounded-2xl overflow-hidden">
           <div className="flex h-[600px] 2xl:h-[800px] w-full border-gray900 border-4 rounded-2xl">
-            <Editor id={id} user={user} body={draft} />
+            {type === "note" ? (
+              <Editor content={note?.body} id={id} user={user} note={note} />
+            ) : (
+              <Editor content={draft?.body} id={id} user={user} note={draft} />
+            )}
           </div>
         </div>
       </TiptapProvider>
