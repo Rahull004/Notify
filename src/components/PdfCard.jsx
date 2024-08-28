@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { pdfUpload } from "../appwrite/api";
+import { deletePdfById, pdfUpload } from "../appwrite/api";
 import { Link } from "react-router-dom";
 import Upload from "/cloud.png";
 import { Progress } from "@/components/ui/progress";
@@ -14,9 +14,8 @@ export const PdfCard = ({ note, setShowPdfCard }) => {
   const [loading, setLoading] = useState(false); // State for loading
   const [progress, setProgress] = useState(0); // State for progress
 
-  useEffect(() => {
-    console.log("Initial PDFs:", pdfs);
-  }, [pdfs]);
+  console.log(note?.pdfs);
+  
 
   const handlePdfClick = (id) => {
     navigate(`/pdfviewer/${id}`);
@@ -44,13 +43,9 @@ export const PdfCard = ({ note, setShowPdfCard }) => {
         const interval = setInterval(incrementProgress, 300);
 
         try {
-          const upload = await pdfUpload({
-            file,
-            noteId,
-            onProgress: (progressEvent) => {
-              // You can still use this to set progress directly if needed
-            },
-          });
+          const upload = await pdfUpload({ file, noteId: note?.$id });
+          console.log("Upload response:", upload);
+          
 
           if (upload) {
             const fileName =
@@ -110,7 +105,8 @@ export const PdfCard = ({ note, setShowPdfCard }) => {
     document.getElementById("pdf-upload").click();
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async(id) => {
+    await deletePdfById(id)
     const updatedPdfs = pdfs.filter((pdf) => pdf.$id !== id);
     setPdfs(updatedPdfs);
   };

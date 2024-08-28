@@ -317,6 +317,8 @@ export const searchNotes = async (query, category) => {
 };
 
 export const pdfUpload = async ({ file, noteId }) => {
+  console.log(file, noteId);
+  
   try {
     const upload = await storage.createFile(
       appwriteConfig.storageId,
@@ -361,6 +363,8 @@ export const pdfUpload = async ({ file, noteId }) => {
     if (!createPdf) {
       throw new Error("error while creating pdf");
     }
+
+
 
     return createPdf;
   } catch (error) {
