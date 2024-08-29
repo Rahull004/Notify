@@ -41,9 +41,11 @@ const TiptapEditor = () => {
     return null;
   }
 
-  const handleBodyChange = async ({ content }) => {
+  const handleBodyChange = async (body) => {
     try {
-      const updatedDraft = await updateDraft(content, id);
+      console.log(body.content);
+      
+      const updatedDraft = await updateDraft(body.content, id);
       return updatedDraft;
     } catch (error) {
       console.log(error);
@@ -58,13 +60,13 @@ const TiptapEditor = () => {
       ) : (
         <EditorNavbar note={draft} type={type} />
       )}
-      <TiptapProvider onUpdate={({ content }) => handleBodyChange({ content })}>
+      <TiptapProvider onUpdate={(body) => handleBodyChange(body)}>
         <div className="mt-6 max-w-6xl mx-auto rounded-2xl overflow-hidden">
           <div className="flex h-[600px] 2xl:h-[800px] w-full border-gray900 border-4 rounded-2xl">
             {type === "note" ? (
-              <Editor content={note?.body} id={id} user={user} note={note} type={type} />
+              <Editor body={note?.body} id={id} user={user} note={note} type={type} />
             ) : (
-              <Editor content={draft?.body} id={id} user={user} note={draft} type={type} />
+              <Editor body={draft?.body} id={id} user={user} note={draft} type={type} />
             )}
           </div>
         </div>
