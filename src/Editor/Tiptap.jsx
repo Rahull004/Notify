@@ -43,8 +43,6 @@ const TiptapEditor = () => {
 
   const handleBodyChange = async (body) => {
     try {
-      console.log(body.content);
-      
       const updatedDraft = await updateDraft(body.content, id);
       return updatedDraft;
     } catch (error) {

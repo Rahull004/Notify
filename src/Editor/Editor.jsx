@@ -473,7 +473,7 @@ function Editor({ id, user, body,note, type }) {
     if (editor) {
       editor.setEditable(!isViewMode); // Set editor to read-only mode based on isViewMode
     }
-  }, []);
+  }, [isViewMode, editor]);
   return (
     <div>
       {/* Toggle button to switch between view and edit mode */}
