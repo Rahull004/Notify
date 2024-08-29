@@ -62,9 +62,9 @@ const TiptapEditor = () => {
         <div className="mt-6 max-w-6xl mx-auto rounded-2xl overflow-hidden">
           <div className="flex h-[600px] 2xl:h-[800px] w-full border-gray900 border-4 rounded-2xl">
             {type === "note" ? (
-              <Editor content={note?.body} id={id} user={user} note={note} />
+              <Editor content={note?.body} id={id} user={user} note={note} type={type} />
             ) : (
-              <Editor content={draft?.body} id={id} user={user} note={draft} />
+              <Editor content={draft?.body} id={id} user={user} note={draft} type={type} />
             )}
           </div>
         </div>

@@ -40,7 +40,7 @@ function EditorNavbar({ note, type }) {
     const body = encodeURIComponent(
       `Hello,\n\nI have some questions about your notes:`,
     );
-    const mailtoLink = `mailto:${user.email}?subject=${subject}&body=${body}`;
+    const mailtoLink = `mailto:${note?.user?.email}?subject=${subject}&body=${body}`;
     window.location.href = mailtoLink;
   };
 
