@@ -4,6 +4,17 @@ import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 
 function SignUp() {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "name") {
+      setname(value);
+    } else if (name === "email") {
+      setemail(value);
+    } else if (name === "password") {
+      setpassword(value);
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-screen overflow-hidden">
       {/*  Site header */}
@@ -34,6 +45,7 @@ function SignUp() {
                         Roll No. <span className="text-red-600">*</span>
                       </label>
                       <input
+                        onchange={handleChange}
                         id="rollNo"
                         type="string"
                         className="form-input w-full text-gray-800"
@@ -52,8 +64,9 @@ function SignUp() {
                         Phone No. <span className="text-red-600">*</span>
                       </label>
                       <input
+                        onchange={handleChange}
                         id="phoneNo"
-                        type="number"
+                        type="tel"
                         className="form-input w-full text-gray-800"
                         placeholder="Enter your phone no."
                         required
@@ -69,10 +82,11 @@ function SignUp() {
                         Hostel Name <span className="text-red-600">*</span>
                       </label>
                       <input
+                        onchange={handleChange}
                         id="name"
                         type="text"
                         className="form-input w-full text-gray-800"
-                        placeholder="Enter your hostel name"
+                        placeholder="Bh1, Bh2, etc"
                         required
                       />
                     </div>
@@ -86,8 +100,9 @@ function SignUp() {
                         Room No. <span className="text-red-600">*</span>
                       </label>
                       <input
+                        onchange={handleChange}
                         id="roomNo"
-                        type="number"
+                        type="tel"
                         className="form-input w-full text-gray-800"
                         placeholder="Enter your room no."
                         required
@@ -97,7 +112,7 @@ function SignUp() {
                   <div className="flex flex-wrap -mx-3 mt-6">
                     <div className="w-full px-3">
                       <button className="btn text-white bg-blue600 hover:bg-blue-600 w-full">
-                        Sign up
+                        Complete Onboarding
                       </button>
                     </div>
                   </div>
