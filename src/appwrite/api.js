@@ -439,7 +439,7 @@ export const updateDraft = async (draft, id) => {
 
 export const updateNoteDetails= async (id,note) => {
   try {
-    const updatedDraft = await databases.updateDocument(
+    const updatedNote = await databases.updateDocument(
       appwriteConfig.databaseId,
       appwriteConfig.noteId,
       id,
@@ -449,7 +449,7 @@ export const updateNoteDetails= async (id,note) => {
         category: note.category,
       },
     );
-    return updatedDraft;
+    return updatedNote;
   } catch (error) {
     return error;
   }
@@ -457,6 +457,7 @@ export const updateNoteDetails= async (id,note) => {
 
 export const updateDraftDetails = async (id, draft) => {
   try {
+    console.log(id,"vgjnvigvngu");
     const updatedDraft = await databases.updateDocument(
       appwriteConfig.databaseId,
       appwriteConfig.draftId,

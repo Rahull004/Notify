@@ -36,7 +36,7 @@ export const NewNoteCard = ({ onClose, user, type, draft, noteType }) => {
         category: selectedOption,
         description: description,
       });
-      navigate(`/note/${note.$id}`);
+      navigate(`/draft/${note.$id}`);
     } catch (error) {
       console.log(error);
     }
@@ -44,7 +44,7 @@ export const NewNoteCard = ({ onClose, user, type, draft, noteType }) => {
 
   const handleUpdateNote = async () => {
     try {
-      if (type === "DRAFT") {
+      if (noteType === "DRAFT") {      
         const updatedDraft = await updateDraftDetails(draft.$id, {
           title: title,
           category: selectedOption,
@@ -57,7 +57,7 @@ export const NewNoteCard = ({ onClose, user, type, draft, noteType }) => {
           description: description,
         });
       }
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
       console.log(error);
     }
