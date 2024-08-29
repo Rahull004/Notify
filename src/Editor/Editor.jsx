@@ -448,6 +448,7 @@ function MenuBar({ setImageURL }) {
 function Editor({ id, user, body }) {
   const { editor, setContent } = useContext(TiptapContext);
   const [imageURL, setImageURL] = useState(null);
+  const [isViewMode, setIsViewMode] = useState(true);
 
   useEffect(() => {
     if (editor && body) {
@@ -463,13 +464,33 @@ function Editor({ id, user, body }) {
     }
   }, [imageURL, editor]);
 
+  useEffect(() => {
+    if (editor) {
+      editor.setEditable(!isViewMode); // Set editor to read-only mode based on isViewMode
+    }
+  }, [editor, isViewMode]);
   return (
     <div>
-      <MenuBar editor={editor} setImageURL={setImageURL} />
-      <EditorContent
-        className="w-full max-h-[520px] 2xl:max-h-[720px] pr-2 overflow-auto editor-no-scrollbar"
-        editor={editor}
-      />
+      {/* Toggle button to switch between view and edit mode */}
+      <button onClick={() => setIsViewMode(!isViewMode)}>
+        {isViewMode ? "Edit" : "View"}
+      </button>
+
+      {/* Conditionally render the editor content based on the mode */}
+      {isViewMode ? (
+        <EditorContent
+          className="w-full max-h-[520px] 2xl:max-h-[720px] pr-2 overflow-auto editor-no-scrollbar"
+          editor={editor}
+        />
+      ) : (
+        <>
+          <MenuBar editor={editor} setImageURL={setImageURL} />
+          <EditorContent
+            className="w-full max-h-[520px] 2xl:max-h-[720px] pr-2 overflow-auto editor-no-scrollbar"
+            editor={editor}
+          />
+        </>
+      )}
     </div>
   );
 }
