@@ -15,7 +15,7 @@ export const PdfCard = ({ note, setShowPdfCard }) => {
   const [progress, setProgress] = useState(0); // State for progress
 
   const type = window.location.pathname.split("/")[1];
-  
+
 
   const handlePdfClick = (id) => {
     navigate(`/pdfviewer/${id}`);
@@ -45,7 +45,7 @@ export const PdfCard = ({ note, setShowPdfCard }) => {
         try {
           const upload = await pdfUpload({ file, noteId: note?.$id });
           console.log("Upload response:", upload);
-          
+
 
           if (upload) {
             const fileName =
@@ -105,7 +105,7 @@ export const PdfCard = ({ note, setShowPdfCard }) => {
     document.getElementById("pdf-upload").click();
   };
 
-  const handleDelete = async(id) => {
+  const handleDelete = async (id) => {
     await deletePdfById(id)
     const updatedPdfs = pdfs.filter((pdf) => pdf.$id !== id);
     setPdfs(updatedPdfs);
@@ -113,10 +113,10 @@ export const PdfCard = ({ note, setShowPdfCard }) => {
 
   return (
     <div className="flex items-center justify-center fixed inset-0 bg-black bg-opacity-50 z-50 h-screen">
-      <div className="relative bg-white rounded-xl shadow-xl w-3/4 md:w-3/4 h-5/6 overflow-hidden flex p-14">
+      <div className="relative bg-white rounded-xl shadow-xl w-3/4 md:w-3/4 h-5/6 overflow-hidden flex flex-col md:flex-row p-14">
         {note?.user?.$id === user?.$id && type === "draft" && (
           <div
-            className="text-center border-dashed border-2 border-blue-700 bg-blue-50 rounded-xl w-3/5 flex flex-col items-center justify-center"
+            className="text-center border-dashed border-2 border-blue-700 bg-blue-50 rounded-xl w-full md:w-3/5 h-1/2 md:h-full flex flex-col items-center justify-center"
             onDragOver={handleDragOver}
             onDragEnter={handleDragEnter}
             onDragLeave={handleDragLeave}
@@ -134,6 +134,7 @@ export const PdfCard = ({ note, setShowPdfCard }) => {
               <div className="flex flex-col items-center">
                 <img src={Upload} alt="upload" className="w-24 h-24" />
                 <br />
+                <div className="hidden sm:inline"> 
                 <label className="text-lg font-semibold">
                   Drag & Drop your files here
                   <br />
@@ -147,17 +148,19 @@ export const PdfCard = ({ note, setShowPdfCard }) => {
                     onChange={handleFileChange}
                   />
                 </label>
+                
                 <br />
                 <br />
                 <div className="h-fit items-center text-sm justify-end">
                   Only PDF files of max size of 5MB
+                </div>
                 </div>
               </div>
             )}
           </div>
         )}
 
-        <div className="w-2/3 h-full overflow-auto px-10">
+        <div className="w-full md:w-2/3 h-1/2 md:h-full overflow-auto px-4 sm:px-10 sm:py-10">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {pdfs.map((pdf) => (
               <div
