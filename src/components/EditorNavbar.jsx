@@ -8,9 +8,8 @@ import { FileText, User } from "lucide-react";
 
 function EditorNavbar({ note }) {
   const { user } = useUserContext();
-  console.log(note,user,"dhnfvdifvgjh");
-  
-  
+  console.log(note, user, "dhnfvdifvgjh");
+
   const navigate = useNavigate();
   const [showPdfCard, setShowPdfCard] = useState(false);
 
@@ -36,6 +35,15 @@ function EditorNavbar({ note }) {
     setShowPdfCard(true);
   };
 
+  const handleContact = () => {
+    const subject = encodeURIComponent("Inquiry about your notes");
+    const body = encodeURIComponent(
+      `Hello,\n\nI have some questions about your notes:`,
+    );
+    const mailtoLink = `mailto:${user.email}?subject=${subject}&body=${body}`;
+    window.location.href = mailtoLink;
+  };
+
   return (
     <header className="w-full z-30 bg-white shadow-md">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
@@ -51,6 +59,12 @@ function EditorNavbar({ note }) {
           </div>
 
           <div className="flex items-center space-x-4">
+            <button
+              onClick={handleContact}
+              className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-full transition-colors duration-200"
+            >
+              Contact
+            </button>
             <button
               onClick={handlePDFs}
               className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200"
