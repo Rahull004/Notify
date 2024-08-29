@@ -77,8 +77,8 @@ export const AllNotes = () => {
   }
 
   const filterNotes = (notes) => {
-    return notes.filter(note => 
-      (note.title && note.title.includes(input)) || 
+    return notes.filter(note =>
+      (note.title && note.title.includes(input)) ||
       (note.content && note.content.includes(input))
     );
   };
@@ -106,7 +106,7 @@ export const AllNotes = () => {
             className="bg-blue-500 px-4 rounded-3xl py-2 md:py-3 w-24 md:w-28 text-white"
             onClick={handleAddClick}
           >
-            + Add
+            <span className="hidden md:inline">+ </span>Add
           </button>
           <Link className="w-20 h-10 m-2" to={"/profile"}>
             {user.avatar === "" ? (
@@ -142,10 +142,10 @@ export const AllNotes = () => {
 
       <div>
         <div className="flex justify-between mt-6 px-12 flex-col items-start gap-8">
-          <h1 className="text-2xl font-semibold text-gray900">Your notes</h1>
+        <h1 className="text-2xl font-semibold text-gray900 w-full text-center sm:text-left">Your notes</h1>
           <div className="flex">
             <div>
-              <div>
+              <div className="flex justify-center flex-wrap ">
                 <button
                   className={`mr-4 ${activeTab === "PERSONAL" ? "text-blue500" : "text-gray900-60"}`}
                   onClick={() => handleTabClick("PERSONAL")}
