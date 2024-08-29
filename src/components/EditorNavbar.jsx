@@ -6,7 +6,7 @@ import { saveNote } from "../appwrite/api";
 import { PdfCard } from "./PdfCard";
 import { FileText, User } from "lucide-react";
 
-function EditorNavbar({ note }) {
+function EditorNavbar({ note, type }) {
   const { user } = useUserContext();
   console.log(note, user, "dhnfvdifvgjh");
 
@@ -59,12 +59,14 @@ function EditorNavbar({ note }) {
           </div>
 
           <div className="flex items-center space-x-4">
-            <button
-              onClick={handleContact}
-              className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-full transition-colors duration-200"
-            >
-              Contact
-            </button>
+            {note?.user?.$id !== user?.$id && type !== "draft" && (
+              <button
+                onClick={handleContact}
+                className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-full transition-colors duration-200"
+              >
+                Contact
+              </button>
+            )}
             <button
               onClick={handlePDFs}
               className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200"
@@ -89,7 +91,7 @@ function EditorNavbar({ note }) {
               )}
             </Link>
 
-            {note?.user?.$id === user?.$id && (
+            {note?.user?.$id === user?.$id && type !== "note" && (
               <button
                 className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-full transition-colors duration-200"
                 onClick={handlePost}

@@ -54,9 +54,9 @@ const TiptapEditor = () => {
   return (
     <div>
       {type === "note" ? (
-        <EditorNavbar note={note} />
+        <EditorNavbar note={note} type={type} />
       ) : (
-        <EditorNavbar note={draft} />
+        <EditorNavbar note={draft} type={type} />
       )}
       <TiptapProvider onUpdate={({ content }) => handleBodyChange({ content })}>
         <div className="mt-6 max-w-6xl mx-auto rounded-2xl overflow-hidden">

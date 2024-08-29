@@ -49,7 +49,7 @@ function SignUp() {
 
     } catch (error) {
       console.log(error);
-      alert("error while creating new account");
+      // alert("error while creating new account");
       return error;
     }
   };
