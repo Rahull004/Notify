@@ -44,7 +44,7 @@ function SignUp() {
           alert("Account cannot be created");
         } else {
           console.log(newUser);
-          navigate("/signupcllg");
+          navigate("/signin");
         }
       }
     } catch (error) {
@@ -80,6 +80,7 @@ function SignUp() {
                         onChange={handleChange}
                         id="rollNo"
                         name="rollNo"
+                        value={user?.rollno || ""}
                         type="text"
                         className="form-input w-full text-gray-800"
                         placeholder="Enter your roll no."
@@ -99,7 +100,8 @@ function SignUp() {
                         onChange={handleChange}
                         id="phoneNo"
                         name="phoneNo"
-                        type="tel"
+                        value={user?.phone || ""}
+                        type="text"
                         className="form-input w-full text-gray-800"
                         placeholder="Enter your phone no."
                         required
@@ -119,6 +121,7 @@ function SignUp() {
                         id="hostelName"
                         name="hostelName"
                         type="text"
+                        value={user?.hostelname || ""}
                         className="form-input w-full text-gray-800"
                         placeholder="Bh1, Bh2, etc"
                         required
@@ -137,6 +140,7 @@ function SignUp() {
                         onChange={handleChange}
                         id="roomNo"
                         name="roomNo"
+                        value={user?.roomno || ""}
                         type="text"
                         className="form-input w-full text-gray-800"
                         placeholder="Enter your room no."
