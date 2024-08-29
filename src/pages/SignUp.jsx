@@ -41,12 +41,11 @@ function SignUp() {
       const user = await createUserAccount({name,email,password})
       if(!user){
         alert("Account cannot be created")
+        navigate("/signupcllg");
       }
 
       setloading(false)
       console.log(user);
-
-      navigate("/signupcllg");
 
     } catch (error) {
       console.log(error);

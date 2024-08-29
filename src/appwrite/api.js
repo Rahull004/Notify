@@ -172,6 +172,26 @@ export const getCurrentUser = async () => {
   }
 };
 
+export const updateUser = async(id,data) => {
+  try {
+    const updatedUser = await databases.updateDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.userId,
+      id,
+      {
+        rollno: data.rollNo,
+        phone: data.phoneNo,
+        hostelname: data.hostelName,
+        roomno: data.roomNo,
+      }
+    );
+    return updatedUser;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+}
+
 export const logOut = async () => {
   try {
     const response = await account.deleteSession("current");
