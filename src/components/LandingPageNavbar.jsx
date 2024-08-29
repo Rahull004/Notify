@@ -27,9 +27,9 @@ function Header({ user }) {
           <div className="flex-shrink-0">
             <Link to="/" className="block" aria-label="Home">
               <img
-                src="/logo.png"
+                src="/favicon.png"
                 alt="Logo"
-                className="w-12 h-12 md:w-16 md:h-16 rounded"
+                className="w-12 h-12 max-md:w-9 max-md:h-9 rounded"
               />
             </Link>
           </div>
