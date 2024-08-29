@@ -67,7 +67,7 @@ export const googleAuth = async (path) => {
   try {
     const res = await account.createOAuth2Session(
       "google",
-      `http://localhost:5173/signin`,
+      `http://localhost:5173/signupcllg`,
       `http://localhost:5173/signin`,
     );
   } catch (error) {
@@ -80,7 +80,7 @@ export const githubAuth = async (path) => {
   try {
     const res = await account.createOAuth2Session(
       "github",
-      `http://localhost:5173/signin`,
+      `http://localhost:5173/signupcllg`,
       `http://localhost:5173/signin`,
     );
   } catch (error) {

@@ -46,7 +46,7 @@ function SignUp() {
       setloading(false)
       console.log(user);
 
-      // navigate("/login");
+      navigate("/signupcllg");
 
     } catch (error) {
       console.log(error);
@@ -92,9 +92,9 @@ function SignUp() {
   //   checkSession();
   // }, []);
 
-  if (user.email !== "" && !isLoading) {
-    navigate("/allnotes");
-  }
+  // if (user.email !== "" && !isLoading) {
+  //   navigate("/allnotes");
+  // }
 
   return (
     <div className="flex flex-col min-h-screen overflow-hidden">
