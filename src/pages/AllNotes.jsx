@@ -5,18 +5,18 @@ import {
   getCommunityNotes,
   getPersonalNotes,
   getDraftNotes,
-  searchNotes,
 } from "../appwrite/api";
 import { useUserContext } from "../AuthContext";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import { RingLoader } from "react-spinners";
+import { Search } from "lucide-react";
 
 export const AllNotes = () => {
   const [showNewNoteCard, setShowNewNoteCard] = useState(false);
   const [activeTab, setActiveTab] = useState("PERSONAL");
   const { user, isLoading } = useUserContext();
-  const navigated = useNavigate();
+  const navigate = useNavigate();
 
   const [input, setInput] = useState("");
 
@@ -24,54 +24,33 @@ export const AllNotes = () => {
   const [personalNotes, setPersonalNotes] = useState([]);
   const [draftNotes, setDraftNotes] = useState([]);
 
-
   const memoizedUser = useMemo(() => user, [user]);
 
   const getUserNotes = async () => {
     try {
       const communityNotesData = await getCommunityNotes(memoizedUser?.$id);
-
       setCommunityNotes(communityNotesData.documents);
 
       const personalNotesData = await getPersonalNotes(memoizedUser?.$id);
-
       setPersonalNotes(personalNotesData.documents);
 
       const draftNotesData = await getDraftNotes(memoizedUser?.$id);
       setDraftNotes(draftNotesData.documents);
-      
     } catch (error) {
-      console.log(error);
-    }
-  };
-  const handleSearch = async (query, category) => {
-
-    try {
-      const results = await searchNotes(query, category);
-    
-      if (category === "PERSONAL") {
-        setPersonalNotes(results);
-      } else if (category === "COMMUNITY") {
-        setCommunityNotes(results);
-      }
-      else{
-        setDraftNotes(results);
-      }
-    } catch (error) {
-      console.error("Error searching notes:", error);
+      console.error(error);
     }
   };
 
   useEffect(() => {
     if (memoizedUser.id === "" && !isLoading) {
-      navigated("/signin");
+      navigate("/signin");
       return;
     }
 
     if (memoizedUser?.$id) {
       getUserNotes();
     }
-  }, [memoizedUser, isLoading, navigated]);
+  }, [memoizedUser, isLoading, navigate]);
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
@@ -94,19 +73,19 @@ export const AllNotes = () => {
   }
 
   if (user.email === "" && !isLoading) {
-    navigated("/signin");
+    navigate("/signin");
   }
 
-  const handleSearchChange = (value) => {
-    setInput(value)
-
-    if (value === "") {
-      getUserNotes();
-      return;
-    }
-    handleSearch(value, activeTab);
+  const filterNotes = (notes) => {
+    return notes.filter(note => 
+      (note.title && note.title.includes(input)) || 
+      (note.content && note.content.includes(input))
+    );
   };
 
+  const filteredPersonalNotes = filterNotes(personalNotes);
+  const filteredCommunityNotes = filterNotes(communityNotes);
+  const filteredDraftNotes = filterNotes(draftNotes);
 
   return (
     <div className="bg-gray200 w-screen h-screen font-rob">
@@ -118,13 +97,10 @@ export const AllNotes = () => {
               type="text"
               placeholder="Search"
               style={{ paddingLeft: "2.3rem" }}
-              onChange={(e) => handleSearchChange(e.target.value)}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
             />
-            <img
-              src="../../public/vector.png"
-              alt=""
-              className="absolute left-2 top-1/2 transform -translate-y-1/2 w-5 h-5"
-            />
+            <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 w-5 h-5" />
           </div>
           <button
             className="bg-blue-500 px-4 rounded-3xl py-2 md:py-3 w-24 md:w-28 text-white"
@@ -147,10 +123,10 @@ export const AllNotes = () => {
                   ></path>
                   <path
                     fill="#fdc75b"
-                    d="M256,38c120.4,0,218,97.6,218,218a217.579,217.579,0,0,1-84.75,172.54V403.71a133.25,133.25,0,0,0-266.5,0v24.83A217.579,217.579,0,0,1,38,256C38,135.6,135.6,38,256,38Zm67.76,134.46a67.158,67.158,0,1,0-19.67,47.63A67.064,67.064,0,0,0,323.76,172.46Z"
+                    d="M256,38c120.4,0,218,97.6,218,218a217.579,217.579,0,0 1-84.75,172.54V403.71a133.25,133.25,0,0 0-266.5,0v24.83A217.579,217.579,0,0 1,38,256C38,135.6,135.6,38,256,38Zm67.76,134.46a67.158,67.158,0,1 0-19.67,47.63A67.064,67.064,0,0 0,323.76,172.46Z"
                   ></path>
-                  <path d="M256,28A228.09,228.09,0,0,0,52.1,358.141a230.034,230.034,0,0,0,64.528,78.309,228.02,228.02,0,0,0,278.735,0A230.007,230.007,0,0,0,459.9,358.141,228.045,228.045,0,0,0,256,28ZM132.75,423.557V403.71a123.25,123.25,0,0,1,246.5,0v19.847a208.024,208.024,0,0,1-246.5,0Zm266.5-16.749v-3.1c0-78.988-64.262-143.25-143.25-143.25A143.257,143.257,0,0,0,112.75,403.71v3.1A206.439,206.439,0,0,1,48,256C48,141.309,141.309,48,256,48s208,93.309,208,208A206.444,206.444,0,0,1,399.25,406.808Z"></path>
-                  <path d="M256.45,95.15a77.158,77.158,0,1,0,54.713,22.6A76.787,76.787,0,0,0,256.45,95.15Zm40.566,117.872a57.513,57.513,0,1,1,16.745-40.562A56.931,56.931,0,0,1,297.016,213.022Z"></path>
+                  <path d="M256,28A228.09,228.09,0,0 0,52.1,358.141a230.034,230.034,0,0 0,64.528,78.309,228.02,228.02,0,0 0,278.735,0A230.007,230.007,0,0 0,459.9,358.141,228.045,228.045,0,0 0,256,28ZM132.75,423.557V403.71a123.25,123.25,0,0 1,246.5,0v19.847a208.024,208.024,0,0 1-246.5,0Zm266.5-16.749v-3.1c0-78.988-64.262-143.25-143.25-143.25A143.257,143.257,0,0 0,112.75,403.71v3.1A206.439,206.439,0,0 1,48,256C48,141.309,141.309,48,256,48s208,93.309,208,208A206.444,206.444,0,0 1,399.25,406.808Z"></path>
+                  <path d="M256.45,95.15a77.158,77.158,0,1 0,54.713,22.6A76.787,76.787,0,0 0,256.45,95.15Zm40.566,117.872a57.513,57.513,0,1 1,16.745-40.562A56.931,56.931,0,0 1,297.016,213.022Z"></path>
                 </g>
               </svg>
             ) : (
@@ -207,7 +183,7 @@ export const AllNotes = () => {
 
       <div className="px-12 mt-10 grid grid-cols-2 max-sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
         {activeTab === "PERSONAL" &&
-          personalNotes.map((note) => (
+          filteredPersonalNotes.map((note) => (
             <NoteCard
               key={note.$id}
               note={note}
@@ -216,7 +192,7 @@ export const AllNotes = () => {
             />
           ))}
         {activeTab === "COMMUNITY" &&
-          communityNotes.map((note) => (
+          filteredCommunityNotes.map((note) => (
             <NoteCard
               key={note.$id}
               note={note}
@@ -225,7 +201,7 @@ export const AllNotes = () => {
             />
           ))}
         {activeTab === "DRAFT" &&
-          draftNotes.map((note) => (
+          filteredDraftNotes.map((note) => (
             <NoteCard key={note.$id} note={note} user={user} type={"DRAFT"} />
           ))}
       </div>

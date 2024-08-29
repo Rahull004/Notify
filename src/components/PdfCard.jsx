@@ -162,10 +162,10 @@ export const PdfCard = ({ note, setShowPdfCard }) => {
             {pdfs.map((pdf) => (
               <div
                 key={pdf.$id}
-                className="relative cursor-pointer flex flex-col items-center mb-4"
+                className="relative cursor-pointer flex flex-col items-center mb-4 mt-2"
               >
                 <img
-                  className="w-12 h-16"
+                  className="w-10 h-14 mt-2"
                   src="https://img.icons8.com/external-vectorslab-flat-vectorslab/36/external-pdf-file-format-files-and-folders-vectorslab-flat-vectorslab.png"
                   alt="pdf-file"
                   onClick={() => handlePdfClick(pdf.$id)}
