@@ -17,6 +17,7 @@ import { RingLoader } from "react-spinners";
 
 function ProfilePage() {
   const navigate = useNavigate();
+  const { user, isLoading } = useUserContext();
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [newUsername, setNewUsername] = useState("");
@@ -24,7 +25,7 @@ function ProfilePage() {
   const [showChangePasswordForm, setShowChangePasswordForm] = useState(false);
   const [showChangeUsernameForm, setShowChangeUsernameForm] = useState(false);
   const [showChangeCollegeDetailsForm, setShowChangeCollegeDetailsForm] =
-    useState(false);
+  useState(false);
   const [newRollNo, setNewRollNo] = useState("");
   const [newPhoneNo, setNewPhoneNo] = useState("");
   const [newHostel, setNewHostel] = useState("");
@@ -32,9 +33,6 @@ function ProfilePage() {
   const searchParams = useLocation();
   const [loading, setloading] = useState(false);
   const [isGoogle, setIsGoogle] = useState(false);
-
-  const { user, isLoading } = useUserContext();
-  console.log(user);
   
 
   useEffect(() => {
@@ -138,15 +136,17 @@ function ProfilePage() {
   const handleChangeCollegeDetails = (e)=> {
     e.preventDefault();
     const newDetails = {
-      rollNo: newRollNo,
-      phoneNo: newPhoneNo,
-      hostelName: newHostel,
-      roomNo: newRoomNo,
+      rollNo: newRollNo || user?.rollno,
+      phoneNo: newPhoneNo || user?.phone,
+      hostelName: newHostel || user?.hostelname,
+      roomNo: newRoomNo || user?.roomno,
     };
     try {
       const result = updateUser(user?.$id, newDetails);
+      console.log(result);
+      
       if (result) {
-        window.location.reload();
+        // window.location.reload();
         return result;
       }
     } catch (error) {
