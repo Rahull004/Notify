@@ -475,27 +475,11 @@ function Editor({ id, user, body,note, type }) {
     }
   }, [isViewMode, editor]);
   return (
-    <div>
-      {/* Toggle button to switch between view and edit mode */}
-      {/* Conditionally render the editor content based on the mode
-      {isViewMode ? (
-        <EditorContent
-          className="w-full max-h-[520px] 2xl:max-h-[720px] pr-2 overflow-auto editor-no-scrollbar"
-          editor={editor}
-        />
-      ) : (
-        <>
-          <MenuBar editor={editor} setImageURL={setImageURL} />
-          <EditorContent
-            className="w-full max-h-[520px] 2xl:max-h-[720px] pr-2 overflow-auto editor-no-scrollbar"
-            editor={editor}
-          />
-        </>
-      )} */}
+    <div className="overflow-auto scrollbar-thin lg:overflow-hidden  w-full ">
       {user?.$id === note?.user?.$id && type==="draft" && (
-        <>
+        <div className="w-fit">
           <MenuBar editor={editor} setImageURL={setImageURL} />
-        </>
+        </div>
       )}
       <EditorContent
         className="w-full max-h-[520px] 2xl:max-h-[720px] pr-2
