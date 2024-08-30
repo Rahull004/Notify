@@ -67,8 +67,8 @@ export const googleAuth = async (path) => {
   try {
     const res = await account.createOAuth2Session(
       "google",
-      `http://localhost:5173/signupcllg`,
-      `http://localhost:5173/signin`,
+      `https://notify-bay-phi.vercel.app/signupcllg`,
+      `https://notify-bay-phi.vercel.app/signin`,
     );
   } catch (error) {
     console.log(error);
@@ -122,7 +122,7 @@ export const passwordEmail = async (email) => {
   try {
     const response = await account.createRecovery(
       email,
-      "http://localhost:5173/forgetpassword",
+      "https://notify-bay-phi.vercel.app/forgetpassword",
     );
     return response;
   } catch (error) {
