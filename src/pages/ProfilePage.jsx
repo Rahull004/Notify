@@ -138,15 +138,15 @@ function ProfilePage() {
   const handleChangeCollegeDetails = (e)=> {
     e.preventDefault();
     const newDetails = {
-      newRollNo,
-      newPhoneNo,
-      newHostel,
-      newRoomNo,
+      rollNo: newRollNo,
+      phoneNo: newPhoneNo,
+      hostelName: newHostel,
+      roomNo: newRoomNo,
     };
     try {
       const result = updateUser(user?.$id, newDetails);
       if (result) {
-        window.location.reload();
+        // window.location.reload();
         return result;
       }
     } catch (error) {

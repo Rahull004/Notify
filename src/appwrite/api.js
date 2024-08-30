@@ -174,6 +174,7 @@ export const getCurrentUser = async () => {
 
 export const updateUser = async(id,data) => {
   try {
+    console.log(data)
     const updatedUser = await databases.updateDocument(
       appwriteConfig.databaseId,
       appwriteConfig.userId,
