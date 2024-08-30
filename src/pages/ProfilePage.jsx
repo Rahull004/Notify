@@ -146,7 +146,7 @@ function ProfilePage() {
     try {
       const result = updateUser(user?.$id, newDetails);
       if (result) {
-        // window.location.reload();
+        window.location.reload();
         return result;
       }
     } catch (error) {
