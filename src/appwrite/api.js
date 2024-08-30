@@ -204,9 +204,7 @@ export const logOut = async () => {
 
 
 export const saveNote = async (note) => {
-  try {
-    console.log(note,"api nuvibvuie");
-    
+  try {    
     note.body = JSON.stringify(note.body)
     const noteSaved = await databases.createDocument(
       appwriteConfig.databaseId,

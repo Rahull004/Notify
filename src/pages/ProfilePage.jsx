@@ -7,6 +7,7 @@ import {
   changeUserName,
   getCurrentUser,
   saveUser,
+  updateUser,
 } from "../appwrite/api";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { MdOutlineDriveFileRenameOutline } from "react-icons/md";
@@ -33,6 +34,8 @@ function ProfilePage() {
   const [isGoogle, setIsGoogle] = useState(false);
 
   const { user, isLoading } = useUserContext();
+  console.log(user);
+  
 
   useEffect(() => {
     const getAccDetails = async () => {
@@ -62,6 +65,14 @@ function ProfilePage() {
       setNewUsername(value);
     } else if (name === "oldPassword") {
       setoldPassword(value);
+    } else if(name === "newRollNo"){
+      setNewRollNo(value);
+    } else if(name === "newPhoneNo"){
+      setNewPhoneNo(value);
+    } else if(name === "newHostel"){
+      setNewHostel(value);
+    } else if(name === "newRoomNo"){
+      setNewRoomNo(value);
     }
   };
 
@@ -124,6 +135,25 @@ function ProfilePage() {
     }
   };
 
+  const handleChangeCollegeDetails = (e)=> {
+    e.preventDefault();
+    const newDetails = {
+      newRollNo,
+      newPhoneNo,
+      newHostel,
+      newRoomNo,
+    };
+    try {
+      const result = updateUser(user?.$id, newDetails);
+      if (result) {
+        // window.location.reload();
+        return result;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   if (isLoading) {
     return (
       <div className="w-screen h-screen flex justify-center items-center">
@@ -173,19 +203,19 @@ function ProfilePage() {
                     <div className="bg-gray-100 p-4 rounded-lg shadow-inner">
                       <p className="text-md text-gray-800 mb-2">
                         <span className="font-semibold">Roll No:</span>{" "}
-                        {user.roolno}
+                        {user?.rollno}
                       </p>
                       <p className="text-md text-gray-800 mb-2">
                         <span className="font-semibold">Phone No:</span>{" "}
-                        {user.phoneNo}
+                        {user?.phone}
                       </p>
                       <p className="text-md text-gray-800 mb-2">
                         <span className="font-semibold">Hostel Name:</span>{" "}
-                        {user.hostel}
+                        {user?.hostelname}
                       </p>
                       <p className="text-md text-gray-800">
                         <span className="font-semibold">Room No:</span>{" "}
-                        {user.roomNo}
+                        {user?.roomno}
                       </p>
                     </div>
                   </div>
@@ -309,7 +339,7 @@ function ProfilePage() {
                           name="newRollNo"
                           placeholder="New Roll No"
                           value={newRollNo}
-                          // onChange={handleChange}
+                          onChange={handleChange}
                           className="w-full p-2 border border-gray-300 rounded-lg"
                         />
                       </div>
@@ -319,7 +349,7 @@ function ProfilePage() {
                           name="newPhoneNo"
                           placeholder="New Phone No"
                           value={newPhoneNo}
-                          // onChange={handleChange}
+                          onChange={handleChange}
                           className="w-full p-2 border border-gray-300 rounded-lg"
                         />
                       </div>
@@ -329,7 +359,7 @@ function ProfilePage() {
                           name="newHostel"
                           placeholder="New Hostel"
                           value={newHostel}
-                          // onChange={handleChange}
+                          onChange={handleChange}
                           className="w-full p-2 border border-gray-300 rounded-lg"
                         />
                       </div>
@@ -339,14 +369,14 @@ function ProfilePage() {
                           name="newRoomNo"
                           placeholder="New Room No"
                           value={newRoomNo}
-                          // onChange={handleChange}
+                          onChange={handleChange}
                           className="w-full p-2 border border-gray-300 rounded-lg"
                         />
                       </div>
                       <div className="w-full mt-3 hover:cursor-pointer">
                         <button
                           className="btn text-white bg-blue-600 hover:bg-blue-700 w-full"
-                          // onClick={handleChangeCollegeDetails}
+                          onClick={handleChangeCollegeDetails}
                         >
                           Submit
                         </button>
