@@ -47,10 +47,10 @@ export const NoteCard = ({ note ,user,type}) => {
         {user.$id === note.user.$id && (
           <div className="flex gap-8">
             <button onClick={handleEditClick}>
-              <img src="../../public/Edit.png" alt="" className="w-4 h-4" />
+              <img src="./Edit.png" alt="" className="w-4 h-4" />
             </button>
             <button onClick={() => handleDelete(note.$id)}>
-              <img src="../../public/Delete.png" alt="" className="w-5 h-5" />
+              <img src="./Delete.png" alt="" className="w-5 h-5" />
             </button>
           </div>
         )}
