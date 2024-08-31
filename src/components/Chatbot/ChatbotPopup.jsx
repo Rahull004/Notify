@@ -1,4 +1,3 @@
-/* This code snippet is a React component called `ChatbotPopup`. Here's a breakdown of what it does: */
 import React, { useState } from "react";
 import ChatbotWindow from "./ChatbotWindow";
 import "./ChatbotPopup.css"; // Add necessary styles

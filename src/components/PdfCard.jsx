@@ -11,8 +11,8 @@ export const PdfCard = ({ note, setShowPdfCard }) => {
   const [pdfs, setPdfs] = useState(note.pdfs || []);
   const navigate = useNavigate();
   const [file, setFile] = useState(null);
-  const [loading, setLoading] = useState(false); // State for loading
-  const [progress, setProgress] = useState(0); // State for progress
+  const [loading, setLoading] = useState(false); 
+  const [progress, setProgress] = useState(0); 
 
   const type = window.location.pathname.split("/")[1];
 
@@ -28,15 +28,15 @@ export const PdfCard = ({ note, setShowPdfCard }) => {
     if (file) {
       if (file.type === "application/pdf" && file.size <= 5 * 1024 * 1024) {
         setFile(file);
-        setLoading(true); // Start loading
-        setProgress(0); // Reset progress
+        setLoading(true);
+        setProgress(0); 
         console.log("File name:", file.name);
 
-        // Simulated progress increment
+        
         const incrementProgress = () => {
           setProgress((prev) => {
             const nextValue = prev + Math.floor(Math.random() * 10) + 5;
-            return nextValue >= 95 ? 95 : nextValue; // Cap progress at 95% before upload completes
+            return nextValue >= 95 ? 95 : nextValue; 
           });
         };
 
@@ -54,7 +54,7 @@ export const PdfCard = ({ note, setShowPdfCard }) => {
               ...pdfs,
               {
                 ...upload,
-                fileName, // Add extracted file name
+                fileName, 
               },
             ];
             setPdfs(updatedPdfs);
@@ -64,10 +64,10 @@ export const PdfCard = ({ note, setShowPdfCard }) => {
         } catch (error) {
           console.error("Upload error:", error);
         } finally {
-          clearInterval(interval); // Clear the interval after upload is complete
-          setProgress(100); // Ensure progress bar reaches 100%
+          clearInterval(interval); 
+          setProgress(100); 
           setTimeout(() => {
-            setLoading(false); // End loading after a short delay to allow user to see 100% completion
+            setLoading(false);n
           }, 500);
         }
       } else {
