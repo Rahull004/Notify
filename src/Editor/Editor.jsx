@@ -373,9 +373,10 @@ function MenuBar({ setImageURL }) {
   };
 
   return (
-    <div className="flex items-center justify-center gap-2 bg-gray900 p-2 text-white w-full">
+    <div className="flex items-center gap-2 px-4 py-2 bg-white border-b border-gray-100">
       <input
         type="color"
+        className="w-8 h-8 rounded-md cursor-pointer border border-gray-200"
         onInput={(event) =>
           editor.chain().focus().setColor(event.target.value).run()
         }
@@ -387,11 +388,8 @@ function MenuBar({ setImageURL }) {
             <MenubarMenu>
               <MenubarTrigger className="mr-1 p-0 ">
                 <button
-                  key={item.id}
-                  disabled={item.disable}
-                  className={` ${
-                    item.disable ? "cursor-not-allowed" : "cursor-pointer"
-                  }`}
+                  className={`p-2 rounded-md hover:bg-blue-50 ${item.isActive ? 'bg-blue-100 text-blue-600' : 'text-gray-600'
+                    }`}
                 >
                   <item.icon />
                 </button>
@@ -417,11 +415,10 @@ function MenuBar({ setImageURL }) {
             <button
               onClick={item.onClick}
               disabled={item.disable}
-              className={`${
-                item.disable
-                  ? "cursor-not-allowed p-1"
-                  : "cursor-pointer hover:bg-gray-600 hover:rounded-lg p-1"
-              } ${item.isActive ? item.isActive : ""}`}
+              className={`${item.disable
+                ? "cursor-not-allowed p-1"
+                : "cursor-pointer hover:bg-gray-600 hover:rounded-lg p-1"
+                } ${item.isActive ? item.isActive : ""}`}
             >
               <item.icon />
             </button>
@@ -445,7 +442,7 @@ function MenuBar({ setImageURL }) {
   );
 }
 
-function Editor({ id, user, body,note, type }) {
+function Editor({ id, user, body, note, type }) {
   const { editor, setContent } = useContext(TiptapContext);
   const [imageURL, setImageURL] = useState(null);
   const [isViewMode, setIsViewMode] = useState(true);
@@ -465,7 +462,7 @@ function Editor({ id, user, body,note, type }) {
   }, [imageURL, editor]);
 
   useEffect(() => {
-    if(type==="note"){
+    if (type === "note") {
       setIsViewMode(true);
     } else {
       setIsViewMode(false);
@@ -475,15 +472,15 @@ function Editor({ id, user, body,note, type }) {
     }
   }, [isViewMode, editor]);
   return (
-    <div className="overflow-auto scrollbar-thin lg:overflow-hidden  w-full ">
-      {user?.$id === note?.user?.$id && type==="draft" && (
-        <div className="w-fit">
+    <div className="flex flex-col h-full bg-white rounded-lg shadow-sm">
+      {user?.$id === note?.user?.$id && type === "draft" && (
+        <div className="border-b border-gray-100">
           <MenuBar editor={editor} setImageURL={setImageURL} />
         </div>
       )}
       <EditorContent
-        className="w-full max-h-[520px] 2xl:max-h-[720px] pr-2
-      overflow-auto editor-no-scrollbar"
+        className={`flex-1 p-6 prose prose-sm sm:prose-base max-w-none overflow-y-auto
+          focus:outline-none editor-content min-h-[400px]`}
         editor={editor}
       />
     </div>

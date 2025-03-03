@@ -17,7 +17,7 @@ const TiptapEditor = () => {
 
   useEffect(() => {
     const fetchDraft = async () => {
-      if(type==="note"){
+      if (type === "note") {
         const note = await getNote(id);
         setnote(note);
       } else {
@@ -52,22 +52,33 @@ const TiptapEditor = () => {
   };
 
   return (
-    <div>
+    <div className="flex flex-col min-h-screen bg-gray-50">
       {type === "note" ? (
         <EditorNavbar note={note} type={type} />
       ) : (
         <EditorNavbar note={draft} type={type} />
       )}
+
       <TiptapProvider onUpdate={(body) => handleBodyChange(body)}>
-        <div className="mt-6 max-w-6xl mx-auto rounded-2xl overflow-hidden">
-          <div className="flex h-[600px] 2xl:h-[800px] w-full border-gray900 border-4 rounded-2xl">
-            {type === "note" ? (
-              <Editor body={note?.body} id={id} user={user} note={note} type={type} />
-            ) : (
-              <Editor body={draft?.body} id={id} user={user} note={draft} type={type} />
-            )}
+        <main className="flex-1 px-4 sm:px-6 lg:px-8 py-8">
+          <div className="max-w-7xl mx-auto">
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+              {isLoading ? (
+                <div className="flex items-center justify-center h-96">
+                  <RingLoader color="#3b82f6" size={80} />
+                </div>
+              ) : (
+                <>
+                  {type === "note" ? (
+                    <Editor body={note?.body} id={id} user={user} note={note} type={type} />
+                  ) : (
+                    <Editor body={draft?.body} id={id} user={user} note={draft} type={type} />
+                  )}
+                </>
+              )}
+            </div>
           </div>
-        </div>
+        </main>
       </TiptapProvider>
     </div>
   );
