@@ -1,221 +1,85 @@
-import React, { useState, useRef, useEffect } from "react";
-// import Transition from '../utils/Transition';
-
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import ai from "/ai.jpeg";
 import notes1 from "/notes1.jpeg";
 import comm from "/comm.jpeg";
-import hero from "/hero.png";
+
+const tabContentVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.3, ease: "easeInOut" }
+  },
+  exit: {
+    opacity: 0,
+    y: -20,
+    transition: { duration: 0.2, ease: "easeInOut" }
+  }
+};
 
 function FeatureHome() {
   const [tab, setTab] = useState(1);
-
-  const tabs = useRef(null);
-
-  const heightFix = () => {
-    if (tabs.current.children[tab]) {
-      tabs.current.style.height =
-        tabs.current.children[tab - 1].offsetHeight + "px";
-    }
-  };
-
-  useEffect(() => {
-    heightFix();
-  }, [tab]);
+  const images = [notes1, ai, comm];
 
   return (
     <section className="relative">
-      <div
-        className="absolute inset-0 bg-gray-100 pointer-events-none mb-16"
-        aria-hidden="true"
-      ></div>
-      <div className="absolute left-0 right-0 m-auto w-px p-px h-20 bg-gray-200 transform -translate-y-1/2"></div>
-
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6">
         <div className="pt-12 md:pt-20">
-          {/* Section header */}
           <div className="max-w-3xl mx-auto text-center pb-12 md:pb-16">
-            <h1 className="h2 mb-4">Explore Notify</h1>
-            <p className="text-xl text-gray900-60">
-              Take a tour of Notify and unlock a new way to organize your study
-              materials. Notify is designed to make capturing and retrieving
-              your study notes easier than ever.
-            </p>
+            <motion.h2
+              className="h2 mb-4"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true, amount: 0.5 }}
+            >
+              Explore Notify
+            </motion.h2>
           </div>
 
-          {/* Section content */}
           <div className="md:grid md:grid-cols-12 md:gap-6">
-            {/* Content */}
-            <div
-              className="max-w-xl md:max-w-none md:w-full mx-auto md:col-span-7 lg:col-span-6 md:mt-6"
-              data-aos="fade-right"
-            >
-              <div className="md:pr-4 lg:pr-12 xl:pr-16 mb-8">
-                <h3 className="h3 mb-3">Why Notify?</h3>
-                <p className="text-xl text-gray900-60">
-                  Optimize your study workflow with Notify's ability to upload
-                  notes, PDFs, and links, all accessible in one organized
-                  platform.
-                </p>
-              </div>
+            <div className="max-w-xl md:max-w-none md:w-full mx-auto md:col-span-7 lg:col-span-6 md:mt-6">
               {/* Tabs buttons */}
               <div className="mb-8 md:mb-0">
-                <div
-                  className={`flex items-center text-lg p-5 rounded border transition duration-300 ease-in-out mb-3 ${
-                    tab !== 1
-                      ? "shadow-none transition-shadow duration-300 cursor-pointer hover:shadow-lg hover:shadow-gray-400"
-                      : "bg-gray-200/90 border-transparent shadow-none transition-shadow duration-300 cursor-pointer hover:shadow-lg hover:shadow-gray-400"
-                  }`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setTab(1);
-                  }}
-                >
-                  <div>
-                    <div className="font-bold leading-snug tracking-tight mb-1 ">
-                      Notes Management
-                    </div>
-                    <div className="text-gray900-60">
-                      Streamline your note-taking process effortlessly with our
-                      intuitive tools, ensuring all your thoughts are captured
-                      and organized efficiently.
-                    </div>
-                  </div>
-                  <div className="flex justify-center items-center w-8 h-8 bg-white rounded-full shadow flex-shrink-0 ml-3">
-                    <svg
-                      className="w-3 h-3 fill-current"
-                      viewBox="0 0 12 12"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path d="M11.953 4.29a.5.5 0 00-.454-.292H6.14L6.984.62A.5.5 0 006.12.173l-6 7a.5.5 0 00.379.825h5.359l-.844 3.38a.5.5 0 00.864.445l6-7a.5.5 0 00.075-.534z" />
-                    </svg>
-                  </div>
-                </div>
-                <div
-                  className={`flex items-center text-lg p-5 rounded border transition duration-300 ease-in-out mb-3 ${
-                    tab !== 2
-                      ? "shadow-none transition-shadow duration-300 cursor-pointer hover:shadow-lg hover:shadow-gray-400g"
-                      : "bg-gray-200/90 border-transparent shadow-none transition-shadow duration-300 cursor-pointer hover:shadow-lg hover:shadow-gray-400"
-                  }`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setTab(2);
-                  }}
-                >
-                  <div class>
-                    <div className="font-bold leading-snug tracking-tight mb-1">
-                      Upload PDFs and AI chatbox
-                    </div>
-                    <div className="text-gray900-60">
-                      Upload your PDFs and Links seamlessly and utilize our
-                      AI-powered chatbox for instant and correct answers to all
-                      your queries.
-                    </div>
-                  </div>
-                  <div className="flex justify-center items-center w-8 h-8 bg-white rounded-full shadow flex-shrink-0 ml-3">
-                    <svg
-                      className="w-3 h-3 fill-current"
-                      viewBox="0 0 12 12"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M11.854.146a.5.5 0 00-.525-.116l-11 4a.5.5 0 00-.015.934l4.8 1.921 1.921 4.8A.5.5 0 007.5 12h.008a.5.5 0 00.462-.329l4-11a.5.5 0 00-.116-.525z"
-                        fillRule="nonzero"
-                      />
-                    </svg>
-                  </div>
-                </div>
-                <div
-                  className={`flex items-center text-lg p-5 rounded border transition duration-300 ease-in-out mb-3 ${
-                    tab !== 3
-                      ? "shadow-none transition-shadow duration-300 cursor-pointer hover:shadow-lg hover:shadow-gray-400"
-                      : "bg-gray-200/90 border-transparent shadow-none transition-shadow duration-300 cursor-pointer hover:shadow-lg hover:shadow-gray-400"
-                  }`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setTab(3);
-                  }}
-                >
-                  <div>
-                    <div className="font-bold leading-snug tracking-tight mb-1">
-                      Personal and Community Notes
-                    </div>
-                    <div className="text-gray900-60">
-                      Capture personal insights and collaborate on community
-                      notes seamlessly within one intuitive platform to upgrade
-                      yourself.
-                    </div>
-                  </div>
-                  <div className="flex justify-center items-center w-8 h-8 bg-white rounded-full shadow flex-shrink-0 ml-3">
-                    <svg
-                      className="w-3 h-3 fill-current"
-                      viewBox="0 0 12 12"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M11.334 8.06a.5.5 0 00-.421-.237 6.023 6.023 0 01-5.905-6c0-.41.042-.82.125-1.221a.5.5 0 00-.614-.586 6 6 0 106.832 8.529.5.5 0 00-.017-.485z"
-                        fill="#191919"
-                        fillRule="nonzero"
-                      />
-                    </svg>
-                  </div>
-                </div>
+                {[1, 2, 3].map((tabIndex) => (
+                  <motion.div
+                    key={tabIndex}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className={`flex items-center text-lg p-5 rounded border transition duration-300 ease-in-out mb-3 cursor-pointer ${tab !== tabIndex
+                      ? "bg-white shadow-md hover:shadow-lg"
+                      : "bg-gray-100 border-transparent"
+                      }`}
+                    onClick={() => setTab(tabIndex)}
+                  >
+                    {/* Tab content */}
+                  </motion.div>
+                ))}
               </div>
             </div>
 
-            {/* Tabs items */}
-            <div
-              className="max-w-xl md:max-w-none md:w-full mx-auto md:col-span-5 lg:col-span-6 mb-8 md:mb-0 md:order-1"
-              data-aos="zoom-y-out"
-              ref={tabs}
-            >
-              <div className="relative flex flex-col text-center lg:text-right">
-                {/* Item 1 */}
-                <div
-                  className={`relative inline-flex flex-col ${
-                    tab != 1 && "hidden"
-                  }`}
+            <div className="max-w-xl md:max-w-none md:w-full mx-auto md:col-span-5 lg:col-span-6 mb-8 md:mb-0 md:order-1">
+              <AnimatePresence mode='wait'>
+                <motion.div
+                  key={tab}
+                  variants={tabContentVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  className="relative flex flex-col text-center lg:text-right"
                 >
                   <img
-                    className="md:max-w-none mx-auto rounded animate-popup"
-                    src={notes1}
-                    width="600"
-                    style={{ margin: '160px 0px 0px 50px', height:'400px'}}
-                    alt="Notes bg"
+                    className="rounded-xl shadow-xl"
+                    src={images[tab - 1]}
+                    alt="Feature"
+                    style={{
+                      margin: '160px 0px 0px 50px',
+                      height: '400px',
+                      objectFit: 'cover'
+                    }}
                   />
-                </div>
-
-                {/* Item 2 */}
-
-                <div
-                  className={`relative inline-flex flex-col ${
-                    tab != 2 && "hidden"
-                  } `}
-                >
-                  <img
-                    className="animate-popup md:max-w-none mx-auto rounded"
-                    src={ai}
-                    width="600"
-                    style={{ margin: '200px 0px 0px 50px',height:'400px'}}
-                    alt="AI bg"
-                  />
-                </div>
-
-                {/* Item 3 */}
-
-                <div
-                  className={`relative inline-flex flex-col ${
-                    tab != 3 && "hidden"
-                  } `}
-                >
-                  <img
-                    className="md:max-w-none mx-auto rounded animate-popup"
-                    src={comm}
-                    width="600"
-                    style={{ margin: '290px 0px 0px 50px', height: '375px'}}
-                    alt="Community bg"
-                  />
-                </div>
-              </div>
+                </motion.div>
+              </AnimatePresence>
             </div>
           </div>
         </div>

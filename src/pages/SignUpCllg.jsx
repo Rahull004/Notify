@@ -1,177 +1,134 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
-import Navbar from "../components/Navbar";
+import { motion } from "framer-motion";
 import { useUserContext } from "@/AuthContext";
 import { updateUser } from "@/appwrite/api";
+import Navbar from "../components/Navbar";
+import { RingLoader } from "react-spinners";
+
+const formVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut" }
+  }
+};
+
+const inputVariants = {
+  focus: { scale: 1.02 },
+  hover: { scale: 1.02 }
+};
 
 function SignUp() {
   const { user } = useUserContext();
   const navigate = useNavigate();
-  const [rollNo, setRollNo] = useState("");
-  const [phoneNo, setPhoneNo] = useState("");
-  const [hostelName, setHostelName] = useState(user?.hostelname || "");
-  const [roomNo, setRoomNo] = useState(user?.roomno || "");
-  console.log(user);
-  
+  const [formData, setFormData] = useState({
+    rollNo: user?.rollno || "",
+    phoneNo: user?.phone || "",
+    hostelName: user?.hostelname || "",
+    roomNo: user?.roomno || ""
+  });
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === "rollNo") {
-      setRollNo(value);
-    } else if (name === "hostelName") {
-      setHostelName(value);
-    } else if (name === "phoneNo") {
-      setPhoneNo(value);
-    } else if (name === "roomNo") {
-      setRoomNo(value);
-    }
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
-      if (!user) {
-        alert("Account cannot be created");
-      } else {
-        const newUser = await updateUser(user.$id, {
-          rollNo,
-          phoneNo,
-          hostelName,
-          roomNo,
-        });
-        if (!newUser) {
-          alert("Account cannot be created");
-        } else {
-          console.log(newUser);
-          navigate("/signin");
-        }
-      }
+      const newUser = await updateUser(user.$id, formData);
+      if (newUser) navigate("/signin");
     } catch (error) {
-      console.log(error);
-      alert("Error while creating new account");
+      console.error(error);
+      alert("Error updating details");
     }
+    setLoading(false);
   };
 
   return (
-    <div className="flex flex-col min-h-screen overflow-hidden">
+    <div className="flex flex-col min-h-screen overflow-hidden font-sans">
       <Navbar />
       <main className="flex-grow">
-        <section className="bg-gradient-to-b from-gray-100 to-white">
+        <motion.section
+          className="bg-gradient-to-b from-gray-100 to-white"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
           <div className="max-w-6xl mx-auto px-4 sm:px-6">
             <div className="pt-32 pb-12 md:pt-40 md:pb-20">
-              <div className="max-w-3xl mx-auto text-center pb-12 md:pb-20">
-                <h1 className="h1">
-                  Thank You for choosing Notify! <br />
-                  Please provide some more of your basic details..
+              <motion.div
+                className="max-w-3xl mx-auto text-center pb-12 md:pb-20"
+                variants={formVariants}
+                initial="hidden"
+                animate="visible"
+              >
+                <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
+                  Complete Your Profile
                 </h1>
-              </div>
-              <div className="max-w-sm mx-auto">
-                <form onSubmit={handleSubmit}>
-                  <div className="flex flex-wrap -mx-3 mb-4">
-                    <div className="w-full px-3">
-                      <label
-                        className="block text-gray-800 text-sm font-medium mb-1"
-                        htmlFor="rollNo"
-                      >
-                        Roll No. <span className="text-red-600">*</span>
-                      </label>
-                      <input
-                        onChange={handleChange}
-                        id="rollNo"
-                        name="rollNo"
-                        value={user?.rollno || ""}
-                        type="text"
-                        className="form-input w-full text-gray-800"
-                        placeholder="Enter your roll no."
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="flex flex-wrap -mx-3 mb-4">
-                    <div className="w-full px-3">
-                      <label
-                        className="block text-gray-800 text-sm font-medium mb-1"
-                        htmlFor="phoneNo"
-                      >
-                        Phone No. <span className="text-red-600">*</span>
-                      </label>
-                      <input
-                        onChange={handleChange}
-                        id="phoneNo"
-                        name="phoneNo"
-                        value={user?.phone || ""}
-                        type="text"
-                        className="form-input w-full text-gray-800"
-                        placeholder="Enter your phone no."
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="flex flex-wrap -mx-3 mb-4">
-                    <div className="w-full px-3">
-                      <label
-                        className="block text-gray-800 text-sm font-medium mb-1"
-                        htmlFor="hostelName"
-                      >
-                        Hostel Name <span className="text-red-600">*</span>
-                      </label>
-                      <input
-                        onChange={handleChange}
-                        id="hostelName"
-                        name="hostelName"
-                        type="text"
-                        value={user?.hostelname || ""}
-                        className="form-input w-full text-gray-800"
-                        placeholder="Bh1, Bh2, etc"
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="flex flex-wrap -mx-3 mb-4">
-                    <div className="w-full px-3">
-                      <label
-                        className="block text-gray-800 text-sm font-medium mb-1"
-                        htmlFor="roomNo"
-                      >
-                        Room No. <span className="text-red-600">*</span>
-                      </label>
-                      <input
-                        onChange={handleChange}
-                        id="roomNo"
-                        name="roomNo"
-                        value={user?.roomno || ""}
-                        type="text"
-                        className="form-input w-full text-gray-800"
-                        placeholder="Enter your room no."
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="flex flex-wrap -mx-3 mt-6">
-                    <div className="w-full px-3">
-                      <button
-                        type="submit"
-                        className="btn text-white bg-blue-600 hover:bg-blue-700 w-full"
-                      >
-                        Complete Onboarding
-                      </button>
-                    </div>
-                  </div>
-                </form>
-                <div className="text-gray-600 text-center mt-6">
-                  Already using Notify?{" "}
-                  <Link
-                    to="/signin"
-                    className="text-blue-600 hover:underline transition duration-150 ease-in-out"
+                <p className="text-lg text-gray-600">
+                  Help us personalize your Notify experience
+                </p>
+              </motion.div>
+
+              <motion.form
+                onSubmit={handleSubmit}
+                className="max-w-sm mx-auto space-y-6"
+                variants={formVariants}
+              >
+                {Object.entries(formData).map(([key, value]) => (
+                  <motion.div
+                    key={key}
+                    variants={inputVariants}
+                    whileHover="hover"
+                    whileFocus="focus"
                   >
-                    Sign in
-                  </Link>
-                </div>
-              </div>
+                    <label className="block text-gray-700 text-sm font-medium mb-2 capitalize">
+                      {key.replace(/([A-Z])/g, ' $1')}
+                    </label>
+                    <input
+                      name={key}
+                      value={value}
+                      onChange={handleChange}
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 transition-all"
+                      required
+                    />
+                  </motion.div>
+                ))}
+
+                <motion.button
+                  type="submit"
+                  className="w-full py-3 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <RingLoader color="#fff" size={24} />
+                  ) : (
+                    "Complete Setup"
+                  )}
+                </motion.button>
+              </motion.form>
+
+              <motion.div
+                className="text-center mt-8 text-gray-600"
+                variants={formVariants}
+              >
+                Already have an account?{" "}
+                <Link
+                  to="/signin"
+                  className="text-blue-600 hover:underline"
+                >
+                  Sign In
+                </Link>
+              </motion.div>
             </div>
           </div>
-        </section>
+        </motion.section>
       </main>
     </div>
   );

@@ -1,221 +1,169 @@
 import React, { useState, useEffect, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { NoteCard } from "../components/NoteCard";
 import { NewNoteCard } from "../components/NewNoteCard";
-import {
-  getCommunityNotes,
-  getPersonalNotes,
-  getDraftNotes,
-} from "../appwrite/api";
+import { getCommunityNotes, getPersonalNotes, getDraftNotes } from "../appwrite/api";
 import { useUserContext } from "../AuthContext";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import { RingLoader } from "react-spinners";
 import { Search } from "lucide-react";
 
+const tabVariants = {
+  hidden: { opacity: 0, x: -20 },
+  visible: { opacity: 1, x: 0 }
+};
+
+const noteVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 }
+};
+
 export const AllNotes = () => {
   const [showNewNoteCard, setShowNewNoteCard] = useState(false);
   const [activeTab, setActiveTab] = useState("PERSONAL");
   const { user, isLoading } = useUserContext();
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [notes, setNotes] = useState({ personal: [], community: [], draft: [] });
 
-  const [input, setInput] = useState("");
+  const filterNotes = (notes) =>
+    notes.filter(note =>
+      [note.title, note.content].some(field =>
+        field?.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    );
 
-  const [communityNotes, setCommunityNotes] = useState([]);
-  const [personalNotes, setPersonalNotes] = useState([]);
-  const [draftNotes, setDraftNotes] = useState([]);
-
-  const memoizedUser = useMemo(() => user, [user]);
-
-  const getUserNotes = async () => {
-    try {
-      const communityNotesData = await getCommunityNotes(memoizedUser?.$id);
-      setCommunityNotes(communityNotesData.documents);
-
-      const personalNotesData = await getPersonalNotes(memoizedUser?.$id);
-      setPersonalNotes(personalNotesData.documents);
-
-      const draftNotesData = await getDraftNotes(memoizedUser?.$id);
-      setDraftNotes(draftNotesData.documents);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const filteredNotes = useMemo(() => ({
+    personal: filterNotes(notes.personal),
+    community: filterNotes(notes.community),
+    draft: filterNotes(notes.draft)
+  }), [notes, searchQuery]);
 
   useEffect(() => {
-    if (memoizedUser.id === "" && !isLoading) {
-      navigate("/signin");
-      return;
-    }
+    const fetchNotes = async () => {
+      const [community, personal, draft] = await Promise.all([
+        getCommunityNotes(user?.$id),
+        getPersonalNotes(user?.$id),
+        getDraftNotes(user?.$id)
+      ]);
+      setNotes({
+        personal: personal.documents,
+        community: community.documents,
+        draft: draft.documents
+      });
+    };
+    if (user?.$id) fetchNotes();
+  }, [user]);
 
-    if (memoizedUser?.$id) {
-      getUserNotes();
-    }
-  }, [memoizedUser, isLoading, navigate]);
 
-  const handleTabClick = (tab) => {
-    setActiveTab(tab);
-  };
-
-  const handleAddClick = () => {
-    setShowNewNoteCard(true);
-  };
-
-  const handleClosePopup = () => {
-    setShowNewNoteCard(false);
-  };
-
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center w-screen h-screen">
-        <RingLoader color="#0362e9" loading size={120} speedMultiplier={1} />.
-      </div>
-    );
-  }
-
-  if (user.email === "" && !isLoading) {
-    navigate("/signin");
-  }
-
-  const filterNotes = (notes) => {
-    return notes.filter(note =>
-      (note.title && note.title.includes(input)) ||
-      (note.content && note.content.includes(input))
-    );
-  };
-
-  const filteredPersonalNotes = filterNotes(personalNotes);
-  const filteredCommunityNotes = filterNotes(communityNotes);
-  const filteredDraftNotes = filterNotes(draftNotes);
+  if (isLoading) return (
+    <div className="flex justify-center items-center w-screen h-screen">
+      <RingLoader color="#0362e9" size={120} />
+    </div>
+  );
 
   return (
-    <div className="bg-gray200 w-screen h-screen font-rob">
-      <div className="bg-white flex p-4 items-center shadow-lg">
-        <div className="w-full flex items-center gap-4 px-8">
-          <div className="relative mx-auto w-full">
-            <input
-              className="bg-gray200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue400 "
-              type="text"
-              placeholder="Search"
-              style={{ paddingLeft: "2.3rem" }}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-            />
-            <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 w-5 h-5" />
-          </div>
-          <button
-            className="bg-blue-500 px-4 rounded-3xl py-2 md:py-3 w-24 md:w-28 text-white"
-            onClick={handleAddClick}
+    <motion.div
+      className="min-h-screen bg-gray-50"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+    >
+      <nav className="bg-white shadow-sm p-4">
+        <div className="max-w-7xl mx-auto flex items-center gap-4">
+          <motion.div
+            className="flex-1 relative"
+            whileFocus={{ scale: 1.02 }}
           >
-            <span className="hidden md:inline">+ </span>Add
-          </button>
-          <Link className="w-20 h-10 m-2" to={"/profile"}>
-            {user.avatar === "" ? (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                data-name="Layer 1"
-                viewBox="0 0 512 512"
-                id="profile"
-              >
-                <g data-name="<Group>">
-                  <path
-                    fill="#ed664c"
-                    d="M389.25 403.71v24.83a218.018 218.018 0 0 1-266.5 0V403.71a133.25 133.25 0 0 1 266.5 0zM304.09 124.82a67.514 67.514 0 1 1-47.64-19.67A67.064 67.064 0 0 1 304.09 124.82z"
-                  ></path>
-                  <path
-                    fill="#fdc75b"
-                    d="M256,38c120.4,0,218,97.6,218,218a217.579,217.579,0,0 1-84.75,172.54V403.71a133.25,133.25,0,0 0-266.5,0v24.83A217.579,217.579,0,0 1,38,256C38,135.6,135.6,38,256,38Zm67.76,134.46a67.158,67.158,0,1 0-19.67,47.63A67.064,67.064,0,0 0,323.76,172.46Z"
-                  ></path>
-                  <path d="M256,28A228.09,228.09,0,0 0,52.1,358.141a230.034,230.034,0,0 0,64.528,78.309,228.02,228.02,0,0 0,278.735,0A230.007,230.007,0,0 0,459.9,358.141,228.045,228.045,0,0 0,256,28ZM132.75,423.557V403.71a123.25,123.25,0,0 1,246.5,0v19.847a208.024,208.024,0,0 1-246.5,0Zm266.5-16.749v-3.1c0-78.988-64.262-143.25-143.25-143.25A143.257,143.257,0,0 0,112.75,403.71v3.1A206.439,206.439,0,0 1,48,256C48,141.309,141.309,48,256,48s208,93.309,208,208A206.444,206.444,0,0 1,399.25,406.808Z"></path>
-                  <path d="M256.45,95.15a77.158,77.158,0,1 0,54.713,22.6A76.787,76.787,0,0 0,256.45,95.15Zm40.566,117.872a57.513,57.513,0,1 1,16.745-40.562A56.931,56.931,0,0 1,297.016,213.022Z"></path>
-                </g>
-              </svg>
-            ) : (
-              <img
-                src={user.url}
-                alt="user"
-                className="w-10 h-10 rounded-full"
-              />
-            )}
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <input
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search notes..."
+              className="w-full pl-10 pr-4 py-2 bg-gray-100 rounded-lg focus:ring-2 focus:ring-blue-500"
+            />
+          </motion.div>
+
+          <motion.button
+            onClick={() => setShowNewNoteCard(true)}
+            className="px-6 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            + Add
+          </motion.button>
+
+          <Link to="/profile" className="shrink-0">
+            <motion.img
+              src={user?.url || "/default-avatar.png"}
+              alt="Profile"
+              className="w-10 h-10 rounded-full border-2 border-white shadow"
+              whileHover={{ scale: 1.1 }}
+            />
           </Link>
         </div>
+      </nav>
+
+      <div className="max-w-7xl mx-auto p-6">
+        <motion.div
+          className="flex gap-6 mb-8 border-b border-gray-200"
+          variants={tabVariants}
+        >
+          {["PERSONAL", "COMMUNITY", "DRAFT"].map((tab) => (
+            <motion.button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`pb-2 px-4 relative ${activeTab === tab ? "text-blue-500" : "text-gray-500"}`}
+              variants={tabVariants}
+            >
+              {tab}
+              {activeTab === tab && (
+                <motion.div
+                  className="absolute bottom-0 left-0 w-full h-1 bg-blue-500"
+                  layoutId="underline"
+                />
+              )}
+            </motion.button>
+          ))}
+        </motion.div>
+
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          layout
+        >
+          <AnimatePresence>
+            {filteredNotes[activeTab.toLowerCase()].map(note => (
+              <motion.div
+                key={note.$id}
+                variants={noteVariants}
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                layout
+              >
+                <NoteCard note={note} user={user} type={activeTab} />
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
       </div>
 
-      <div>
-        <div className="flex justify-between mt-6 px-12 flex-col items-start gap-8">
-        <h1 className="text-2xl font-semibold text-gray900 w-full text-center sm:text-left">Your notes</h1>
-          <div className="flex">
-            <div>
-              <div className="flex justify-center flex-wrap ">
-                <button
-                  className={`mr-4 ${activeTab === "PERSONAL" ? "text-blue500" : "text-gray900-60"}`}
-                  onClick={() => handleTabClick("PERSONAL")}
-                >
-                  PERSONAL
-                </button>
-                <button
-                  className={`mx-4 ${activeTab === "COMMUNITY" ? "text-blue500" : "text-gray900-60"}`}
-                  onClick={() => handleTabClick("COMMUNITY")}
-                >
-                  COMMUNITY
-                </button>
-                <button
-                  className={`mx-4 ${activeTab === "DRAFT" ? "text-blue500" : "text-gray900-60"}`}
-                  onClick={() => handleTabClick("DRAFT")}
-                >
-                  DRAFT
-                </button>
-              </div>
-              <div className="flex">
-                <div
-                  className={`border-[1px] ${activeTab === "PERSONAL" ? "border-blue400" : "border-black/10"} w-1/3`}
-                ></div>
-                <div
-                  className={`border-[1px] ${activeTab === "COMMUNITY" ? "border-blue400" : "border-black/10"} w-1/3`}
-                ></div>
-                <div
-                  className={`border-[1px] ${activeTab === "DRAFT" ? "border-blue400" : "border-black/10"} w-1/3`}
-                ></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="px-12 mt-10 grid grid-cols-2 max-sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
-        {activeTab === "PERSONAL" &&
-          filteredPersonalNotes.map((note) => (
-            <NoteCard
-              key={note.$id}
-              note={note}
+      <AnimatePresence>
+        {showNewNoteCard && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 flex items-center justify-center p-4"
+          >
+            <NewNoteCard
+              onClose={() => setShowNewNoteCard(false)}
+              type="NEW"
               user={user}
-              type={"PERSONAL"}
             />
-          ))}
-        {activeTab === "COMMUNITY" &&
-          filteredCommunityNotes.map((note) => (
-            <NoteCard
-              key={note.$id}
-              note={note}
-              user={user}
-              type={"COMMUNITY"}
-            />
-          ))}
-        {activeTab === "DRAFT" &&
-          filteredDraftNotes.map((note) => (
-            <NoteCard key={note.$id} note={note} user={user} type={"DRAFT"} />
-          ))}
-      </div>
-
-      {showNewNoteCard && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 w-full h-full">
-          <NewNoteCard
-            onClose={handleClosePopup}
-            showNewNoteCard={showNewNoteCard}
-            user={user}
-            type={"NEW"}
-          />
-        </div>
-      )}
-    </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 };

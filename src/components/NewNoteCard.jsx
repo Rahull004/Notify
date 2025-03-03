@@ -44,7 +44,7 @@ export const NewNoteCard = ({ onClose, user, type, draft, noteType }) => {
 
   const handleUpdateNote = async () => {
     try {
-      if (noteType === "DRAFT") {      
+      if (noteType === "DRAFT") {
         const updatedDraft = await updateDraftDetails(draft.$id, {
           title: title,
           category: selectedOption,
@@ -64,89 +64,95 @@ export const NewNoteCard = ({ onClose, user, type, draft, noteType }) => {
   };
 
   return (
-    <div className="bg-white py-4 px-5 rounded-xl shadow-xl absolute w-3/4 translate-x-[15%] md:translate-x-1/2 md:w-1/2 translate-y-1/2">
-      <div className="flex justify-between mt-2 items-center">
-        <h1 className="text-xl text-gray900-87 font-bold">Add note</h1>
-        <img src="./Edit.png" className="h-4 w-4" alt="Edit icon" />
-      </div>
-      <div className="flex gap-4 mt-6 flex-col md:flex-row">
-        <div className="flex flex-col flex-1">
-          <label
-            htmlFor="title"
-            className="text-sm text-gray900-60 font-semibold"
-          >
-            Title
-          </label>
-          <input
-            type="text"
-            id="title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="w-full rounded-lg p-2 mt-1 bg-gray200 focus:outline-none focus:ring-2 focus:ring-blue-300 text-gray900-60 placeholder-gray900-60 placeholder:text-sm"
-            placeholder="Add Title"
-          />
-        </div>
-        <div className="flex flex-col flex-1">
-          <label
-            htmlFor="category"
-            className="text-sm text-gray-900/80 font-semibold"
-          >
-            Category
-          </label>
-          <div className="relative">
-            <div
-              className="bg-gray200 p-[10px] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue400 cursor-pointer mt-1 text-gray900-87 font-semibold text-sm"
-              onClick={() => setIsOpen(!isOpen)}
+    <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl mx-4 overflow-hidden border border-gray-100">
+        <div className="p-6">
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="text-2xl font-bold text-gray-800">
+              {type === "NEW" ? "✨ Create New Note" : "✏️ Edit Note"}
+            </h1>
+            <button
+              onClick={onClose}
+              className="text-gray-500 hover:text-gray-700 transition-colors text-2xl"
             >
-              {selectedOption}
-            </div>
-            {isOpen && (
-              <div className="absolute mt-1 w-full bg-gray200 border border-gray-300 rounded-lg shadow-lg z-10">
-                {options.map((option, index) => (
-                  <div
-                    key={index}
-                    className={`p-2 cursor-pointer hover:bg-black-12 text-gray-900/80 border border-gray-200 font-semibold text-sm`}
-                    onClick={() => handleOptionClick(option)}
-                  >
-                    {option}
-                  </div>
-                ))}
+              &times;
+            </button>
+          </div>
+
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-600">
+                  Title
+                </label>
+                <input
+                  type="text"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+                  placeholder="Awesome note title..."
+                />
               </div>
-            )}
+
+              <div className="space-y-2 relative">
+                <label className="block text-sm font-medium text-gray-600">
+                  Category
+                </label>
+                <div className="relative">
+                  <div
+                    className="w-full p-3 border-2 border-gray-200 rounded-xl cursor-pointer bg-white flex items-center justify-between"
+                    onClick={() => setIsOpen(!isOpen)}
+                  >
+                    <span>{selectedOption}</span>
+                    <span className={`transform transition-transform ${isOpen ? 'rotate-180' : ''}`}>
+                      ▼
+                    </span>
+                  </div>
+                  {isOpen && (
+                    <div className="absolute w-full mt-2 bg-white border-2 border-gray-200 rounded-xl shadow-lg z-10 overflow-hidden">
+                      {options.map((option) => (
+                        <div
+                          key={option}
+                          className="p-3 hover:bg-blue-50 cursor-pointer transition-colors border-b border-gray-100 last:border-0"
+                          onClick={() => handleOptionClick(option)}
+                        >
+                          {option}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-600">
+                Description <span className="text-gray-400">(Optional)</span>
+              </label>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all h-40 resize-none"
+                placeholder="Write your amazing note content here..."
+              />
+            </div>
+
+            <div className="flex justify-end gap-4 mt-8">
+              <button
+                onClick={onClose}
+                className="px-6 py-2.5 text-gray-600 hover:bg-gray-50 rounded-xl transition-colors font-medium"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={type === "NEW" ? handleNewNote : handleUpdateNote}
+                className="px-8 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:shadow-lg transition-all font-medium"
+              >
+                {type === "NEW" ? "Create Note 🚀" : "Update Changes ✅"}
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-      <div className="flex items-center justify-between mt-10">
-        <div className="flex">
-          <p className="text-sm text-gray900-60 font-semibold">Description</p>
-          <span className="text-sm text-gray900-60 ml-1">(Optional)</span>
-        </div>
-      </div>
-      <textarea
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        name="description"
-        id="description"
-        className="w-full mt-4 bg-gray200 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue500 text-gray900-60 placeholder-gray900-60 h-32 resize-none"
-        placeholder="Add Description"
-      />
-      <div className="flex gap-6 text-sm items-center justify-end mt-4">
-        <button onClick={onClose}>Cancel</button>
-        {type === "NEW" ? (
-          <button
-            onClick={handleNewNote}
-            className="bg-blue400 hover:bg-blue500 rounded-3xl px-4 py-2 text-white"
-          >
-            Add
-          </button>
-        ) : (
-          <button
-            onClick={handleUpdateNote}
-            className="bg-blue400 hover:bg-blue500 rounded-3xl px-4 py-2 text-white"
-          >
-            Update
-          </button>
-        )}
       </div>
     </div>
   );
