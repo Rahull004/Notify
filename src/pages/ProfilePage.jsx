@@ -12,6 +12,7 @@ import { changePassword, changeUserName, updateUser } from "../appwrite/api";
 function ProfilePage() {
   const navigate = useNavigate();
   const { user, isLoading } = useUserContext();
+  console.log(user);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [newUsername, setNewUsername] = useState("");
@@ -26,24 +27,6 @@ function ProfilePage() {
   const [loading, setLoading] = useState(false);
   const [isGoogle, setIsGoogle] = useState(false);
 
-
-  useEffect(() => {
-    const getAccDetails = async () => {
-      try {
-        const accountDetails = await account.getSession("current");
-        if (accountDetails.provider === "google") {
-          setIsGoogle(true);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getAccDetails();
-  }, []);
-
-  if (user.email === "" && !isLoading) {
-    navigate("/signin");
-  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;

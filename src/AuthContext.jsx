@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router";
 import { getCurrentUser, saveUser } from "./appwrite/api";
 
 export const initialUser = {
@@ -11,70 +10,73 @@ export const initialUser = {
   rollno: "",
   phone: "",
   hostelname: "",
+  $id: "" // Added for consistency with Appwrite response
 };
 
-export const initial_state = {
+const AuthContext = createContext({
   user: initialUser,
-  isLoading: false,
+  isLoading: true,
   isAuthenticated: false,
-  setUser: () => {},
-  setAuthentication: () => {},
-};
-
-const AuthContext = createContext(initial_state);
+  setUser: () => { },
+  checkAuthStatus: async () => { },
+});
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(initialUser);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const navigate = useNavigate();
 
-  useEffect(() => {
-    const checkSession = async () => {
-      setLoading(true);
-      const user = await getCurrentUser();
-      if (user[0] === 0) {
-        const avatar = user[2];
+  const checkAuthStatus = async () => {
+    setIsLoading(true);
+    try {
+      const response = await getCurrentUser();
+
+      if (response[0] === 0) { // New user
+        const [status, accountData, avatar] = response;
         const newUser = await saveUser({
-          accountid: user[1].$id,
-          email: user[1].email,
+          accountid: accountData.$id,
+          email: accountData.email,
           url: avatar,
-          fullname: user[1].name,
+          fullname: accountData.name,
         });
+
         if (newUser) {
           setUser({
+            ...newUser,
             id: newUser.$id,
-            email: newUser.email,
-            fullname: newUser.fullname,
-            avatar: newUser.url,
-            roomno: newUser.roomno,
-            rollno: newUser.rollno,
-            phone: newUser.phone,
-            hostelname: newUser.hostelname,
+            avatar: newUser.url
           });
           setIsAuthenticated(true);
-          navigate("/allnotes");
-        } else {
-          alert("Something went wrong");
         }
-      } else if (user[0] !== undefined) {
-        setUser(user[3]);
+      } else if (response[3]) { // Existing user
+        setUser(response[3]);
         setIsAuthenticated(true);
+      } else {
+        setIsAuthenticated(false);
       }
-      setLoading(false);
-    };
-    checkSession();
-  }, [navigate]);
-
-  const value = {
-    user,
-    isLoading: loading,
-    isAuthenticated,
-    setUser,
-    setAuthentication: setIsAuthenticated,
+    } catch (error) {
+      setIsAuthenticated(false);
+      setUser(initialUser);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  useEffect(() => {
+    checkAuthStatus();
+  }, []);
+
+  return (
+    <AuthContext.Provider value={{
+      user,
+      isLoading,
+      isAuthenticated,
+      setUser,
+      checkAuthStatus
+    }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export const useUserContext = () => useContext(AuthContext);

@@ -23,7 +23,6 @@ const containerVariants = {
 
 export const Home = () => {
   const { user, isLoading } = useUserContext();
-  const navigate = useNavigate()
 
   if (isLoading) {
     return (

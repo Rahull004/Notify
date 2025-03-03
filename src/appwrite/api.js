@@ -149,7 +149,6 @@ export const resetPassword = async (userId, secret, password) => {
 export const getCurrentUser = async () => {
   try {
     const currentAccount = await account.get();
-
     if (!currentAccount) {
       throw new Error("unauthorized");
     }
@@ -172,7 +171,7 @@ export const getCurrentUser = async () => {
   }
 };
 
-export const updateUser = async(id,data) => {
+export const updateUser = async (id, data) => {
   try {
     console.log(data)
     const updatedUser = await databases.updateDocument(
@@ -205,7 +204,7 @@ export const logOut = async () => {
 
 
 export const saveNote = async (note) => {
-  try {    
+  try {
     note.body = JSON.stringify(note.body)
     const noteSaved = await databases.createDocument(
       appwriteConfig.databaseId,
@@ -339,7 +338,7 @@ export const searchNotes = async (query, category) => {
 
 export const pdfUpload = async ({ file, noteId }) => {
   console.log(file, noteId);
-  
+
   try {
     const upload = await storage.createFile(
       appwriteConfig.storageId,
@@ -458,7 +457,7 @@ export const updateDraft = async (draft, id) => {
   }
 }
 
-export const updateNoteDetails= async (id,note) => {
+export const updateNoteDetails = async (id, note) => {
   try {
     const updatedNote = await databases.updateDocument(
       appwriteConfig.databaseId,
@@ -478,7 +477,7 @@ export const updateNoteDetails= async (id,note) => {
 
 export const updateDraftDetails = async (id, draft) => {
   try {
-    console.log(id,"vgjnvigvngu");
+    console.log(id, "vgjnvigvngu");
     const updatedDraft = await databases.updateDocument(
       appwriteConfig.databaseId,
       appwriteConfig.draftId,
