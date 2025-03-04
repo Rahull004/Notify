@@ -1,4 +1,4 @@
-import { ID, Query } from "appwrite";
+import { ID, Permission, Query, Role } from "appwrite";
 import { account, appwriteConfig, avatars, databases, storage } from "./config";
 
 export const createUserAccount = async (user) => {
@@ -67,8 +67,8 @@ export const googleAuth = async (path) => {
   try {
     const res = await account.createOAuth2Session(
       "google",
-      `https://notify-bay-phi.vercel.app/signupcllg`,
-      `https://notify-bay-phi.vercel.app/signin`,
+      `http://localhost:5173/signupcllg`,
+      `http://localhost:5173/signin`,
     );
   } catch (error) {
     console.log(error);
@@ -203,19 +203,23 @@ export const logOut = async () => {
 };
 
 
-export const saveNote = async (note) => {
+export const saveNote = async (noteData) => {
   try {
-    note.body = JSON.stringify(note.body)
-    const noteSaved = await databases.createDocument(
+    const savedNotes = await databases.createDocument(
       appwriteConfig.databaseId,
       appwriteConfig.noteId,
       ID.unique(),
-      note
+      {
+        ...noteData,
+        body: JSON.stringify(noteData.body),
+        pdfs: noteData.pdfs,
+      }
     );
-    return noteSaved;
+
+    return savedNotes;
   } catch (error) {
-    console.log(error);
-    return error;
+    console.error("Failed to save note:", error);
+    throw error;
   }
 };
 
@@ -366,26 +370,15 @@ export const pdfUpload = async ({ file, noteId }) => {
       100
     );
 
-    if (!preview) {
-      throw new Error("error while getting file preview");
-    }
-
     const createPdf = await databases.createDocument(
       appwriteConfig.databaseId,
       appwriteConfig.pdfId,
       ID.unique(),
       {
-        fileUrl,
-        drafts: noteId,
+        fileUrl: fileUrl,
+        draft: noteId,
       }
     );
-
-    if (!createPdf) {
-      throw new Error("error while creating pdf");
-    }
-
-
-
     return createPdf;
   } catch (error) {
     console.log(error);

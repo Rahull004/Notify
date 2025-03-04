@@ -14,6 +14,8 @@ export const PdfCard = ({ note, setShowPdfCard }) => {
   const [isDragging, setIsDragging] = useState(false);
 
   const type = window.location.pathname.split("/")[1];
+  console.log(note);
+
 
   const handlePdfClick = (id) => {
     navigate(`/pdfviewer/${id}`);
@@ -70,7 +72,7 @@ export const PdfCard = ({ note, setShowPdfCard }) => {
       const progressInterval = setInterval(incrementProgress, 300);
 
       const uploadPromises = validFiles.map(file =>
-        pdfUpload({ file, noteId: note?.$id })
+        pdfUpload({ file, noteId: note.$id })
       );
 
       const results = await Promise.all(uploadPromises);
@@ -86,7 +88,7 @@ export const PdfCard = ({ note, setShowPdfCard }) => {
     } catch (error) {
       console.error('Upload error:', error);
     } finally {
-      clearInterval(progressInterval);
+      // clearInterval(progressInterval);
       setProgress(100);
       setTimeout(() => setLoading(false), 500);
     }

@@ -8,7 +8,6 @@ import { FileText, Mail, UploadCloud, User } from "lucide-react";
 
 function EditorNavbar({ note, type }) {
   const { user } = useUserContext();
-  console.log(note, user, "dhnfvdifvgjh");
 
   const navigate = useNavigate();
   const [showPdfCard, setShowPdfCard] = useState(false);
