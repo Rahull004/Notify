@@ -29,13 +29,11 @@ export const NoteCard = ({ note, user, type }) => {
   };
 
   const handleClosePopup = () => {
-    setshowNewUpdateCard(false);
+    setShowNewUpdateCard(false);
   };
 
-
-
   const handleEditClick = () => {
-    setshowNewUpdateCard(true)
+    setShowNewUpdateCard(true);
   };
 
   return (
@@ -91,8 +89,8 @@ export const NoteCard = ({ note, user, type }) => {
       <div className="flex items-center justify-between">
         <h1
           className={`text-[12px] py-2 px-3 ${note.category === "Community"
-              ? "bg-green-200 text-green-900"
-              : "bg-orange-200 text-orange-900"
+            ? "bg-green-200 text-green-900"
+            : "bg-orange-200 text-orange-900"
             } rounded-3xl`}
         >
           {note.category.toUpperCase()}
