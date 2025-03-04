@@ -106,81 +106,67 @@ export const PdfCard = ({ note, setShowPdfCard }) => {
   };
 
   return (
-    <div className="relative bg-white rounded-xl shadow-xl w-full max-h-[90vh] flex flex-col">
+    <div className="relative bg-white rounded-xl shadow-xl w-full max-w-4xl max-h-[80vh] flex flex-col">
       <div className="p-6 border-b border-gray-100 flex justify-between items-center">
-        <h2 className="text-xl font-semibold text-gray-800">PDF Attachments</h2>
+        <h2 className="text-2xl font-semibold text-gray-800">PDF Attachments</h2>
         <button
           onClick={() => setShowPdfCard(false)}
-          className="p-2 rounded-full hover:bg-gray-50 text-gray-500 hover:text-gray-700 transition-colors"
+          className="p-2 rounded-full hover:bg-gray-100 text-gray-500 hover:text-gray-700 transition-colors"
         >
-          <X className="w-5 h-5" />
+          <X className="w-6 h-6" />
         </button>
       </div>
 
-      <div className="flex-1 overflow-auto flex flex-col md:flex-row gap-6 p-6">
+      <div className="flex-1 overflow-hidden flex flex-col md:flex-row gap-6 p-6">
         {note?.user?.$id === user?.$id && type === "draft" && (
-          <div
-            className={`drop-zone md:w-1/2 h-64 md:h-auto mb-6 md:mb-0 border-2 ${isDragging
-                ? 'border-blue-500 bg-blue-50 shadow-inner'
+          <div className="md:w-1/3 lg:w-1/2 h-72 flex-shrink-0">
+            <div
+              className={`h-full border-2 ${isDragging
+                ? 'border-blue-500 bg-blue-50'
                 : 'border-dashed border-gray-300'
-              } rounded-xl transition-all duration-300 flex flex-col items-center justify-center cursor-pointer`}
-            onDragOver={handleDragOver}
-            onDragEnter={handleDragEnter}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-            onClick={handleClick}
-          >
-            {loading ? (
-              <div className="w-full max-w-xs space-y-4">
-                <div className="space-y-2">
+                } rounded-xl transition-all flex flex-col items-center justify-center cursor-pointer`}
+              onDragOver={handleDragOver}
+              onDragEnter={handleDragEnter}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              onClick={handleClick}
+            >
+              {loading ? (
+                <div className="w-full px-4 space-y-4">
                   <Progress
                     value={progress}
                     className="h-2 bg-gray-200"
                     indicatorClassName="bg-gradient-to-r from-blue-500 to-blue-600"
                   />
                   <p className="text-sm text-center text-gray-600">
-                    Uploading... {progress}%
+                    Uploading {progress}%
                   </p>
                 </div>
-                <p className="text-xs text-center text-gray-500">
-                  Please keep this window open
-                </p>
-              </div>
-            ) : (
-              <div className="text-center space-y-4 p-6">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full">
-                  <UploadCloud className="w-8 h-8 text-blue-600" />
-                </div>
-                <div className="space-y-1">
-                  <p className="font-medium text-gray-900">
-                    Drag & drop PDFs here
-                  </p>
-                  <p className="text-sm text-gray-500">
+              ) : (
+                <div className="text-center space-y-4 p-4">
+                  <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
+                    <UploadCloud className="w-8 h-8 text-blue-600" />
+                  </div>
+                  <h3 className="text-lg font-medium text-gray-900">
+                    Drag & drop PDFs
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-2">
                     or click to browse files
                   </p>
+                  <p className="text-xs text-gray-400">
+                    Max file size: 5MB • PDF only
+                  </p>
                 </div>
-                <p className="text-xs text-gray-400">
-                  Max file size: 5MB • PDF only
-                </p>
-                <input
-                  id="pdf-upload"
-                  type="file"
-                  className="hidden"
-                  onChange={handleFileChange}
-                  multiple
-                  accept="application/pdf"
-                />
-              </div>
-            )}
+              )}
+            </div>
           </div>
         )}
-
-        <div className="flex-1 overflow-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="flex-1 overflow-y-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-2">
             {pdfs.map((pdf) => (
               <div
                 key={pdf.$id}
-                className="group relative p-4 rounded-lg border border-gray-200 hover:border-blue-200 transition-colors bg-white hover:shadow-sm"
+                className="group relative p-4 rounded-lg border border-gray-200 hover:border-blue-200 bg-white transition-colors"
               >
                 <div
                   onClick={() => handlePdfClick(pdf.$id)}
@@ -191,12 +177,12 @@ export const PdfCard = ({ note, setShowPdfCard }) => {
                       <FileText className="w-6 h-6 text-blue-600" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 truncate">
+                      {/* <p className="text-sm font-medium text-gray-900 truncate">
                         {pdf.fileName}
-                      </p>
-                      <p className="text-xs text-gray-500 mt-1">
+                      </p> */}
+                      {/* <p className="text-xs text-gray-500 mt-1">
                         {Math.round(pdf.fileSize / 1024)} KB
-                      </p>
+                      </p> */}
                     </div>
                   </div>
                 </div>

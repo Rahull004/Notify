@@ -11,7 +11,7 @@ export const GuestRedirect = ({ children }) => {
         if (!isLoading && isAuthenticated) {
             navigate('/allnotes');
         }
-    }, [isLoading, isAuthenticated, navigate]);
+    }, [isLoading, isAuthenticated, navigate, user]);
 
     if (isLoading) {
         <div className="flex justify-center items-center h-screen w-screen">

@@ -29,9 +29,9 @@ function SignIn() {
     await googleAuth(searchParams.pathname);
   };
 
-  if (user.email !== "" && !isLoading) {
-    navigate("/allnotes");
-  }
+  // if (user.email !== "" && !isLoading) {
+  //   navigate("/allnotes");
+  // }
 
   const handleLogin = async (e) => {
     e.preventDefault();
