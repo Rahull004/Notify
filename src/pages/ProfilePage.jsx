@@ -67,7 +67,7 @@ function ProfilePage() {
   const handleChangeUsername = async (e) => {
     e.preventDefault();
     try {
-      setloading(true);
+      setLoading(true);
       const result = await changeUserName(user.$id, newUsername);
       if (result) {
         window.location.reload();
@@ -76,9 +76,9 @@ function ProfilePage() {
     } catch (error) {
       console.log(error);
       alert("Error while changing username");
-      setloading(false);
+      setLoading(false);
     } finally {
-      setloading(false);
+      setLoading(false);
     }
   };
 
@@ -93,7 +93,7 @@ function ProfilePage() {
       return;
     }
     try {
-      setloading(true);
+      setLoading(true);
       const result = await changePassword(newPassword, oldPassword);
       if (result) {
         window.location.reload();
@@ -102,9 +102,9 @@ function ProfilePage() {
     } catch (error) {
       console.log(error);
       alert("Error while changing password");
-      setloading(false);
+      setLoading(false);
     } finally {
-      setloading(false);
+      setLoading(false);
     }
   };
 

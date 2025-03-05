@@ -20,7 +20,7 @@ export const createUserAccount = async (user) => {
     const avatar = avatars.getInitials(user.name);
 
     const newUser = await saveUser({
-      accountid: newAccount.$id,
+      accountId: newAccount.$id,
       email: newAccount.email,
       url: avatar,
       fullname: newAccount.name,
@@ -155,7 +155,7 @@ export const getCurrentUser = async () => {
     const currentUser = await databases.listDocuments(
       appwriteConfig.databaseId,
       appwriteConfig.userId,
-      [Query.equal("accountid", currentAccount.$id)]
+      [Query.equal("accountId", currentAccount.$id)]
     );
 
     const avatar = avatars.getInitials(currentAccount.name);
@@ -205,18 +205,53 @@ export const logOut = async () => {
 
 export const saveNote = async (noteData) => {
   try {
-    const savedNotes = await databases.createDocument(
+    noteData.body = JSON.stringify(noteData.body);
+    const savedNote = await databases.createDocument(
       appwriteConfig.databaseId,
       appwriteConfig.noteId,
       ID.unique(),
       {
-        ...noteData,
-        body: JSON.stringify(noteData.body),
-        pdfs: noteData.pdfs,
+        title: noteData.title,
+        description: noteData.description,
+        body: noteData.body,
+        category: noteData.category,
+        user: noteData.user,
       }
     );
 
-    return savedNotes;
+    if (savedNote.$id) {
+      const createPdf = async (pdf) => {
+        const newPdf = await databases.createDocument(
+          appwriteConfig.databaseId,
+          appwriteConfig.pdfId,
+          ID.unique(),
+          pdf
+        );
+        return newPdf;
+      };
+      const newPdfs = [];
+      noteData.pdfs.forEach((pdf) => {
+        newPdfs.push(
+          createPdf({
+            fileUrl: pdf.fileUrl,
+            notes: savedNote.$id,
+          })
+        )
+      });
+
+      const newSavedNote = await databases.updateDocument(
+        appwriteConfig.databaseId,
+        appwriteConfig.noteId,
+        savedNote.$id,
+        {
+          pdfs: newPdfs,
+        }
+      )
+
+      return newSavedNote;
+    }
+
+    return null
   } catch (error) {
     console.error("Failed to save note:", error);
     throw error;
@@ -341,7 +376,7 @@ export const searchNotes = async (query, category) => {
 };
 
 export const pdfUpload = async ({ file, noteId }) => {
-  console.log(file, noteId);
+  console.log(file);
 
   try {
     const upload = await storage.createFile(
@@ -376,7 +411,7 @@ export const pdfUpload = async ({ file, noteId }) => {
       ID.unique(),
       {
         fileUrl: fileUrl,
-        draft: noteId,
+        drafts: noteId,
       }
     );
     return createPdf;
