@@ -22,11 +22,10 @@ function EditorNavbar({ note, type }) {
         user: note.user.$id,
         body: note.body,
       });
-      if (savedNote) {
-        navigate("/allnotes");
-      }
     } catch (error) {
       console.error("Error saving note:", error);
+    } finally {
+      navigate("/allnotes");
     }
   };
 
