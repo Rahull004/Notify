@@ -12,7 +12,6 @@ import { changePassword, changeUserName, updateUser } from "../appwrite/api";
 function ProfilePage() {
   const navigate = useNavigate();
   const { user, isLoading } = useUserContext();
-  console.log(user);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [newUsername, setNewUsername] = useState("");
@@ -26,6 +25,8 @@ function ProfilePage() {
   const [newRoomNo, setNewRoomNo] = useState("");
   const [loading, setLoading] = useState(false);
   const [isGoogle, setIsGoogle] = useState(false);
+
+  console.log(isGoogle);
 
 
   const handleChange = (e) => {

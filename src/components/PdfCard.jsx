@@ -4,17 +4,23 @@ import { deletePdfById, pdfUpload } from "../appwrite/api";
 import { Progress } from "@/components/ui/progress";
 import { useUserContext } from "@/AuthContext";
 import { FileText, Trash2, UploadCloud, X } from "lucide-react";
+import { DeleteConfirmationModal } from "./DeleteConfirmationModal";
 
-export const PdfCard = ({ note, setShowPdfCard }) => {
+export const PdfCard = ({ note, setShowPdfCard, onPdfUpdate }) => {
   const { user } = useUserContext();
   const [pdfs, setPdfs] = useState(note.pdfs || []);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+  const [pdfToDelete, setPdfToDelete] = useState(null);
 
   const type = window.location.pathname.split("/")[1];
   console.log(note);
+
+  useEffect(() => {
+    setPdfs(note.pdfs || []);
+  }, [note.pdfs]);
 
 
   const handlePdfClick = (id) => {
@@ -79,16 +85,15 @@ export const PdfCard = ({ note, setShowPdfCard }) => {
       const successfulUploads = results.filter(result => result?.$id);
 
       if (successfulUploads.length > 0) {
-        const newPdfs = successfulUploads.map(upload => ({
-          ...upload,
-          fileName: upload.fileName || upload.fileUrl.split('/').pop().split('?')[0]
-        }));
-        setPdfs(prev => [...prev, ...newPdfs]);
+        // Update local state first
+        setPdfs(prev => [...prev, ...successfulUploads]);
+        // Update parent component
+        onPdfUpdate([...note.pdfs, ...successfulUploads]);
       }
     } catch (error) {
       console.error('Upload error:', error);
     } finally {
-      // clearInterval(progressInterval);
+      clearInterval(progressInterval);
       setProgress(100);
       setTimeout(() => setLoading(false), 500);
     }
@@ -103,8 +108,20 @@ export const PdfCard = ({ note, setShowPdfCard }) => {
   };
 
   const handleDelete = async (id) => {
-    await deletePdfById(id);
-    setPdfs(prev => prev.filter(pdf => pdf.$id !== id));
+    setPdfToDelete(id);
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      await deletePdfById(pdfToDelete);
+      const updatedPdfs = pdfs.filter(pdf => pdf.$id !== pdfToDelete);
+      setPdfs(updatedPdfs);
+      onPdfUpdate(updatedPdfs);
+    } catch (error) {
+      console.error('Delete error:', error);
+    } finally {
+      setPdfToDelete(null);
+    }
   };
 
   return (
@@ -196,6 +213,14 @@ export const PdfCard = ({ note, setShowPdfCard }) => {
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
+                )}
+
+                {pdfToDelete && (
+                  <DeleteConfirmationModal
+                    pdfToDelete={pdfToDelete}
+                    setPdfToDelete={setPdfToDelete}
+                    onConfirmDelete={handleConfirmDelete}
+                  />
                 )}
               </div>
             ))}

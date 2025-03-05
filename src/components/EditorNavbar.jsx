@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useUserContext } from "../AuthContext";
 import logo from "/logo.png";
@@ -8,9 +8,17 @@ import { FileText, Mail, UploadCloud, User } from "lucide-react";
 
 function EditorNavbar({ note, type }) {
   const { user } = useUserContext();
-
   const navigate = useNavigate();
   const [showPdfCard, setShowPdfCard] = useState(false);
+  const [pdfCount, setPdfCount] = useState(note?.pdfs?.length || 0);
+
+  useEffect(() => {
+    setPdfCount(note?.pdfs?.length || 0);
+  }, [note]);
+
+  const handlePdfUpdate = (newPdfs) => {
+    setPdfCount(newPdfs.length);
+  };
 
   const handlePost = async () => {
     try {
@@ -75,7 +83,7 @@ function EditorNavbar({ note, type }) {
             >
               <FileText className="w-5 h-5 text-gray-600 group-hover:text-blue-600" />
               <span className="absolute -top-2 -right-2 bg-blue-100 text-blue-600 text-xs px-1.5 rounded-full">
-                {note?.pdfs?.length || 0}
+                {pdfCount}
               </span>
             </button>
 
@@ -115,7 +123,11 @@ function EditorNavbar({ note, type }) {
       {showPdfCard && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
           <div className="bg-white rounded-xl shadow-2xl max-w-3xl w-full mx-4 overflow-hidden">
-            <PdfCard note={note} setShowPdfCard={setShowPdfCard} />
+            <PdfCard
+              note={note}
+              setShowPdfCard={setShowPdfCard}
+              onPdfUpdate={handlePdfUpdate}
+            />
           </div>
         </div>
       )}

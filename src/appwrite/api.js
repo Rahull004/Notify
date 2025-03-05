@@ -122,7 +122,7 @@ export const passwordEmail = async (email) => {
   try {
     const response = await account.createRecovery(
       email,
-      "https://notify-bay-phi.vercel.app/forgetpassword",
+      "https://localhost:5173/forgetpassword",
     );
     return response;
   } catch (error) {

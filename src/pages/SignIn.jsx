@@ -44,6 +44,10 @@ function SignIn() {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setTimeout(() => {
+        window.location.reload()
+      })
     }
   };
 

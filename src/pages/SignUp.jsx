@@ -34,12 +34,16 @@ function SignUp() {
       const user = await createUserAccount({ name, email, password });
       if (!user) {
         alert("Account cannot be created");
-        navigate("/signup");
+        navigate("/signin");
       }
       setLoading(false);
     } catch (error) {
       console.log(error);
       setLoading(false);
+    } finally {
+      setTimeout(() => {
+        window.location.reload()
+      })
     }
   };
 
