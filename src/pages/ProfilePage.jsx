@@ -118,11 +118,11 @@ function ProfilePage() {
     };
     try {
       const result = updateUser(user?.$id, newDetails);
-      console.log(result);
 
       if (result) {
-        // window.location.reload();
-        return result;
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
       }
     } catch (error) {
       console.log(error);
