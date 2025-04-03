@@ -133,8 +133,8 @@ Notify is a versatile note-managing and sharing platform designed to help users 
 1. **Clone the Repository:**  
 
    ```bash
-   git clone https://github.com/yourusername/noteshare.git
-   cd noteshare
+   https://github.com/Rahull004/Notify.git
+   cd Notify
    ```  
 
 2. **Install Dependencies:**  
@@ -146,7 +146,7 @@ Notify is a versatile note-managing and sharing platform designed to help users 
 3. **Start the Application:**  
 
    ```bash
-   npm start
+   npm run dev
    ```  
 
 4. **Environment Setup:**  
