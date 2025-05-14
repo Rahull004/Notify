@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useUserContext } from "@/AuthContext";
-import { updateUser } from "@/appwrite/api";
+import { updateUser, saveGoogleUser } from "@/appwrite/api";
 import Navbar from "../components/Navbar";
 import { RingLoader } from "react-spinners";
 
@@ -11,29 +11,47 @@ const formVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease: "easeOut" }
-  }
+    transition: { duration: 0.6, ease: "easeOut" },
+  },
 };
 
 const inputVariants = {
   focus: { scale: 1.02 },
-  hover: { scale: 1.02 }
+  hover: { scale: 1.02 },
 };
 
 function SignUp() {
-  const { user } = useUserContext();
+  const { user, isLoading } = useUserContext();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     rollNo: user?.rollno || "",
     phoneNo: user?.phone || "",
     hostelName: user?.hostelname || "",
-    roomNo: user?.roomno || ""
+    roomNo: user?.roomno || "",
   });
   const [loading, setLoading] = useState(false);
+  // Save Google user data when component mounts
+  useEffect(() => {
+    const checkAndSaveOAuthUser = async () => {
+      if (!isLoading && user) {
+        try {
+          // Try to save the Google user data to database
+          const result = await saveGoogleUser();
+          if (result) {
+            console.log("Google user data saved successfully:", result);
+          }
+        } catch (error) {
+          console.error("Error saving OAuth user:", error);
+        }
+      }
+    };
+
+    checkAndSaveOAuthUser();
+  }, [user, isLoading]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -87,7 +105,7 @@ function SignUp() {
                     whileFocus="focus"
                   >
                     <label className="block text-gray-700 text-sm font-medium mb-2 capitalize">
-                      {key.replace(/([A-Z])/g, ' $1')}
+                      {key.replace(/([A-Z])/g, " $1")}
                     </label>
                     <input
                       name={key}
@@ -119,10 +137,7 @@ function SignUp() {
                 variants={formVariants}
               >
                 Already have an account?{" "}
-                <Link
-                  to="/signin"
-                  className="text-blue-600 hover:underline"
-                >
+                <Link to="/signin" className="text-blue-600 hover:underline">
                   Sign In
                 </Link>
               </motion.div>

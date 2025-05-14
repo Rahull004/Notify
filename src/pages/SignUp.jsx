@@ -4,7 +4,12 @@ import { useInView } from "react-intersection-observer";
 import { motion, AnimatePresence } from "framer-motion";
 import { RingLoader } from "react-spinners";
 import Navbar from "../components/Navbar";
-import { createUserAccount, githubAuth, googleAuth } from "../appwrite/api";
+import {
+  createUserAccount,
+  githubAuth,
+  googleAuth,
+  saveGoogleUser,
+} from "../appwrite/api";
 import { useUserContext } from "../AuthContext";
 
 function SignUp() {
@@ -19,6 +24,25 @@ function SignUp() {
     triggerOnce: true,
     threshold: 0.1,
   });
+  // Save Google user data if the user is from OAuth
+  useEffect(() => {
+    const checkAndSaveOAuthUser = async () => {
+      if (user && !isLoading) {
+        try {
+          // Try to save the Google user data to database
+          const result = await saveGoogleUser();
+          if (result) {
+            // If successful, navigate to the main page
+            navigate("/allnotes");
+          }
+        } catch (error) {
+          console.error("Error saving OAuth user:", error);
+        }
+      }
+    };
+
+    checkAndSaveOAuthUser();
+  }, [user, isLoading, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -41,9 +65,9 @@ function SignUp() {
       console.log(error);
       setLoading(false);
     } finally {
-      setTimeout(() => {
-        window.location.reload()
-      })
+      // setTimeout(() => {
+      //   window.location.reload()
+      // })
     }
   };
 
